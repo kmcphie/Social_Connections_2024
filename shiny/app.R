@@ -16,11 +16,70 @@ ui <- navbarPage(
     tabPanel("The Survey",
              h2(tags$b("Purpose of Our Research")),
              p(
-                 "We wanted to do this project because _____."
+                 "[We'll discuss why we want to do this project here]"
              ),
-             h3(tags$b("About the Survey")),
+             h3(tags$b("Draft of Survey Questions")),
              p(
-                 "Survey methodology, justification for why we asked what we did, etc."
+                 "Have you taken a gap year?
+Where are you living this semester?
+The Yard
+The Quad
+The River Houses
+Union Dorm
+Home (international student)
+Home (in the US)
+If you are living on campus, are you in a single or do you have suitemates?
+Single
+Suitemates
+Which gender identity do you most identify with?
+Specify your race and/or ethnicity
+Which pre-orientation, if any, did you participate in?
+Are you involved with any sports teams on campus?
+ List the four names of the people who you are closest friends with.
+Zoom lectures
+Breakout room of a class
+Entryway
+Pre-orientation program
+Club/extracurricular
+Donut/other randomized Slack bot
+Social media
+GroupMe
+Instagram
+Discord
+In-person (outside in courtyard or something)
+The courtyard
+The line of the dining hall
+The line to get tested for COVID-19
+Meet24
+How do you stay in contact with them? (multiple choice)
+Same options as above to pick from
+How many people have you met online that you now often meet up with in person?
+In your experience this year, what has been the best option for forming meaningful connections? 
+Zoom lectures
+Breakout room of a class
+Entryway
+Pre-orientation program
+Club/extracurricular
+Donut/other randomized Slack bot
+Social media
+GroupMe
+Instagram
+Discord
+In-person (outside in courtyard or something)
+The courtyard
+The line of the dining hall
+The line to get tested for COVID-19
+Meet24
+ When you do meet with people in-person, where do you go?
+The courtyard
+A restaurant in the square/the general area
+Name the most socially connected person in the class of 2024.
+How satisfied are you with your social connections with first-year students at Harvard?
+Very Satisfied
+Satisfied
+Neutral
+Dissatisfied
+Very Dissatisfied"
              ),
              h3(tags$b("Unrelated Placeholder Graph")),
              fluidPage(
