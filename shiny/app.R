@@ -135,9 +135,10 @@ Very Dissatisfied"
                 GitHub repo."
              ),
              p(
-                 "This project's GitHub repository lives"
-             ),
-             a("here", href="https://github.com/kmcphie/Social_Connections_2024")
+                 "This project's GitHub repository lives",
+                 a("here", href="https://github.com/kmcphie/Social_Connections_2024"),
+                 "."
+             )
     )
 )
 
