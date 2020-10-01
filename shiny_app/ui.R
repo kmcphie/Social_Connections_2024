@@ -13,14 +13,21 @@ ui <- navbarPage(
   
   ########## FIRST PAGE ##########
   
-  tabPanel("The Survey",
-           h2(tags$b("Purpose of Our Research")),
+  tabPanel("Overview",
+           h3(tags$b("Purpose of Our Research")),
            p(
-             "[We'll discuss why we want to do this project here]"
+             "We'll discuss why we want to do this project here."
+           ),
+           h3(tags$b("Collecting Data")),
+           p(
+             "We sent out a survey to the Class of 2024 to gather the data for 
+             our project. More information about the survey and who responded
+             will go here."
            ),
            h3(tags$b("Survey Questions")),
            includeHTML("survey_questions.html"),
-           a("View our survey methodology.", href="https://tinyurl.com/sc-2024-survey-methodology"),
+           a(tags$b("View more information about our survey methodology here."), 
+             href="https://tinyurl.com/sc-2024-survey-methodology"),
            h3(tags$b("Unrelated Placeholder Graph")),
            fluidPage(
              sidebarLayout(
@@ -39,8 +46,8 @@ ui <- navbarPage(
   tabPanel("The Social Web",
            h2(tags$b("Total Sample Size")),
            p(
-             "Information about the people we were able to get to answer our 
-            survey, and a graph showing how they are connected"
+             "Information about the people who answered our survey and a graph
+             showing how they are connected will go on this page."
            )
   ),
   
@@ -56,23 +63,11 @@ ui <- navbarPage(
   
   ########## FOURTH PAGE ##########
   
-  tabPanel("Comment Analysis",
-           h2(tags$b("Word Cloud Taken from Survey Comments")),
-           p(
-             "Here we'll have a graph showing common words taken from the 
-                 comments. We will analyze overall common sentiments from the survey 
-                 and summarize the results here."
-           )
-  ),
-  
-  ########## FIFTH PAGE ##########
-  
   tabPanel("Creators", 
            h2(tags$b("About Our Team")),
            p(
-             "We'll have bios and pictures of each of our team members here 
-                on this page, along with contact information and a link to the 
-                GitHub repo."
+             "Bios, pictures, and contact information for of each of our team 
+             members will go here on this page."
            ),
            p(
              "This project's GitHub repository lives",
