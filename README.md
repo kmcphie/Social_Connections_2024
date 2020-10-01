@@ -7,6 +7,6 @@
 [View the live Shiny App here](https://kmcphie.shinyapps.io/Social_Connections_2024/)
 
 ### Repository Guide
-* /shiny: Files to render Shiny App.
+* /shiny_app: Files to render Shiny App.
 * .gitignore
 * README.md
