@@ -133,7 +133,11 @@ Very Dissatisfied"
                  "We'll have bios and pictures of each of our team members here 
                 on this page, along with contact information and a link to the 
                 GitHub repo."
-             )
+             ),
+             p(
+                 "This project's GitHub repository lives"
+             ),
+             a("here", href="https://github.com/kmcphie/Social_Connections_2024")
     )
 )
 
