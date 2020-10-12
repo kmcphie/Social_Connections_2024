@@ -4,6 +4,7 @@
 
 library(shiny)
 library(shinythemes)
+library(tidyverse)
 
 # Read in datasets created using the 'gather_raw_data.R' script.
 
@@ -22,7 +23,7 @@ ui <- navbarPage(
            includeHTML("survey_questions.html"),
            a(tags$b("View more information about our survey methodology here."), 
              href="https://tinyurl.com/sc-2024-survey-methodology"),
-           h3(tags$b("Unrelated Placeholder Graph")),
+           h3(tags$b("Respondents")),
            fluidPage(
              sidebarLayout(
                sidebarPanel(
