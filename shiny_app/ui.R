@@ -16,13 +16,28 @@ ui <- navbarPage(
   tabPanel("Overview",
            h3(tags$b("Purpose of Our Research")),
            p(
-             "We'll discuss why we want to do this project here."
+             "How do we become friends with the people we are friends with? Are 
+             the friends we make truly representative of our interests or are
+             they actually determined by uncontrollable factors like the dorms
+             we live in, our extracurriculars, our race, and where we come from?
+             In seeking to answer this question and others like it, we mapped
+             and analyzed the literal social network of the Harvard Class of
+             2024.",
+             "We were interested to see how Harvard first-years formed social 
+             connections during this unprecedented year in particular, looking
+             at the means by which they formed connections and stayed connected
+             with each other, the literal web of social connections in the Class
+             of 2024, comparing the average level of connectedness to the
+             average level of connectedness from last year, and so on.",
            ),
            h3(tags$b("Collecting Data")),
            p(
              "We sent out a survey to the Class of 2024 to gather the data for 
-             our project. More information about the survey and who responded
-             will go here."
+             our project. We publicized our survey over emails scraped from the
+             Harvard facebook, Slack, and our own personal social media 
+             accounts. So far, we are still working to get as many people to 
+             respond as possible, so any results shown are incomplete as of 
+             yet."
            ),
            h3(tags$b("Survey Questions")),
            includeHTML("survey_questions.html"),
@@ -56,8 +71,7 @@ ui <- navbarPage(
   tabPanel("Analyzing the Data",
            h2(tags$b("[Insert Title Here]")),
            p(
-             "Depending on how we organize our survey, we will analyze our 
-                 results in different ways here."
+             "We will analyze our survey results on this page."
            )
   ),
   
@@ -67,7 +81,7 @@ ui <- navbarPage(
            h2(tags$b("About Our Team")),
            p(
              "Bios, pictures, and contact information for of each of our team 
-             members will go here on this page."
+             members will go on this page."
            ),
            p(
              "This project's GitHub repository lives",
