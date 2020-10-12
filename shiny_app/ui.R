@@ -24,16 +24,7 @@ ui <- navbarPage(
            a(tags$b("View more information about our survey methodology here."), 
              href="https://tinyurl.com/sc-2024-survey-methodology"),
            h3(tags$b("Respondents")),
-           fluidPage(
-             sidebarLayout(
-               sidebarPanel(
-                 selectInput(
-                   "plot_type",
-                   "Plot Type",
-                   c("Option A" = "a", "Option B" = "b")
-                 )),
-               mainPanel(plotOutput("line_plot")))
-           )
+           plotOutput("location_plot")
   ),
   
   ########## SECOND PAGE ##########

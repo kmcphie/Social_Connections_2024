@@ -8,7 +8,7 @@ library(readxl)
 
 responses <- read_excel("shiny_app/raw_data/survey_responses.xlsx")
 
-responses <- responses %>%
+responses_clean <- responses %>%
   rename(timestamp  = "Timestamp",
          name = "First and last name (this won't be linked to your responses ever, we just need to assign you a random ID)",
          gap_year = "1. Have you taken a gap year?",
@@ -36,7 +36,8 @@ responses <- responses %>%
          in_person = "12. When you do meet with people in-person, where do you go or what do you do? (Please remember that this survey is completely anonymous and your answers will not be used to get you in trouble.)",
          most_connected = "13. Name the person in the Class of 2024 who you think is the most socially connected. (First and last name)",
          satisfaction = "14. How satisfied are you with your social connections with other first-year students at Harvard?",
-         email = "Email Address"
-         )
+         email = "Email Address") %>%
+  mutate(id = 1:nrow(responses), .before = 1) %>%
+  select(!c("timestamp", "name", "email"))
 
-write_rds(responses, "shiny_app/responses.rds")
+write_rds(responses_clean, "shiny_app/responses.rds")
