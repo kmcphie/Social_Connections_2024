@@ -1,3 +1,7 @@
+# Read in datasets created using the 'gather_raw_data.R' script.
+
+responses <- readRDS("responses.rds")
+
 # Define server logic.
 
 server <- function(input, output) {

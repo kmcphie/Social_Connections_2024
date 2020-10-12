@@ -5,6 +5,10 @@
 library(shiny)
 library(shinythemes)
 
+# Read in datasets created using the 'gather_raw_data.R' script.
+
+responses <- readRDS("responses.rds")
+
 # Define UI.
 
 ui <- navbarPage(
