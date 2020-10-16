@@ -24,7 +24,6 @@ ui <- navbarPage(
            a(tags$b("View more information about our survey methodology here."), 
              href="https://tinyurl.com/sc-2024-survey-methodology"),
            h3(tags$b("Respondents")),
-           h2("Test"),
            plotOutput("location_plot")
   ),
   
