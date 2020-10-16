@@ -49,20 +49,42 @@ ui <- navbarPage(
   
   ########## FOURTH PAGE ##########
   
-  tabPanel("Creators", 
-           h2(tags$b("About Our Team")),
-           # p(
-           #   "Bios, pictures, and contact information for of each of our team 
-           #   members will go on this page."
-           # ),
-           fluidRow(
-             column(3, imageOutput("person")),
-             column(4, offset = 1, h1("Person"), br(), h3("Hi, I'm a placeholder!")),
+  tabPanel("About", 
+           h2(tags$b("About Our Project")),
+           p(
+             "This was a final project for",
+             a("Gov 50: Data", href="https://www.davidkane.info/files/gov_50_fall_2020.html"),
+             "at Harvard College."
            ),
            p(
              "This project's GitHub repository lives",
              a("here", href="https://github.com/kmcphie/Social_Connections_2024"),
              "."
+           ),
+           h2(tags$b("About Our Team")),
+           fluidRow(
+             column(3, imageOutput("elliott")),
+             column(4, offset = 1, 
+                    h3(tags$b("Person")), br(), 
+                    p("Hi, I'm a placeholder!")),
+           ),
+           fluidRow(
+             column(3, imageOutput("ava")),
+             column(4, offset = 1, 
+                    h3(tags$b("Person")), br(), 
+                    p("Hi, I'm a placeholder!")),
+           ),
+           fluidRow(
+             column(3, imageOutput("gio")),
+             column(4, offset = 1, 
+                    h3(tags$b("Person")), br(), 
+                    p("Hi, I'm a placeholder!")),
+           ),
+           fluidRow(
+             column(3, imageOutput("katherine")),
+             column(4, offset = 1, 
+                    h3(tags$b("Person")), br(), 
+                    p("Hi, I'm a placeholder!")),
            )
   )
 )

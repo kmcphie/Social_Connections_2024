@@ -34,7 +34,25 @@ server <- function(input, output) {
         )
   })
   
-  output$person <- renderImage({
+  output$elliott <- renderImage({
+    list(src = "person.png", 
+         width = 300, 
+         height = 400)
+  }, deleteFile = FALSE)
+  
+  output$ava <- renderImage({
+    list(src = "person.png", 
+         width = 300, 
+         height = 400)
+  }, deleteFile = FALSE)
+  
+  output$gio <- renderImage({
+    list(src = "person.png", 
+         width = 300, 
+         height = 400)
+  }, deleteFile = FALSE)
+  
+  output$katherine <- renderImage({
     list(src = "person.png", 
          width = 300, 
          height = 400)
