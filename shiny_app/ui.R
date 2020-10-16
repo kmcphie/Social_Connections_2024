@@ -19,13 +19,28 @@ ui <- navbarPage(
   ########## FIRST PAGE ##########
   
   tabPanel("Overview",
-           includeHTML("project_intro.html"),
-           includeHTML("survey_questions.html"),
-           a(tags$b("View more information about our survey methodology here."), 
-             href="https://tinyurl.com/sc-2024-survey-methodology"),
-           h3(tags$b("Respondents")),
-           plotOutput("location_dist"),
-           plotOutput("gender_dist")
+           fluidPage(
+             br(),
+             br(),
+             fluidRow(column(1), column(10,
+              h1(tags$b("Social Connectedness in the Harvard Class of 2024"), 
+                          align = "center"),
+              p(tags$b("Analyzing how Harvard first-years have been forming 
+                        social connections during the COVID-19 pandemic."),
+                align = "center"),
+              br(),
+              includeHTML("project_intro.html"),
+              a(tags$b("View more information about our survey methodology here."), 
+                href="https://tinyurl.com/sc-2024-survey-methodology"),
+              br(),
+              br(),
+              h3(tags$b("Respondents")),
+              br(),
+              plotOutput("location_dist"),
+              br(),
+              plotOutput("gender_dist")
+             ))
+           )
   ),
   
   ########## SECOND PAGE ##########
@@ -68,18 +83,21 @@ ui <- navbarPage(
                     h3(tags$b("Person")), br(), 
                     p("Hi, I'm a placeholder!")),
            ),
+           br(),
            fluidRow(
              column(3, imageOutput("ava")),
              column(4, offset = 1, 
                     h3(tags$b("Person")), br(), 
                     p("Hi, I'm a placeholder!")),
            ),
+           br(),
            fluidRow(
              column(3, imageOutput("gio")),
              column(4, offset = 1, 
                     h3(tags$b("Person")), br(), 
                     p("Hi, I'm a placeholder!")),
            ),
+           br(),
            fluidRow(
              column(3, imageOutput("katherine")),
              column(4, offset = 1, 
