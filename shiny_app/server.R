@@ -6,7 +6,7 @@ responses <- readRDS("responses.rds")
 
 server <- function(input, output) {
   
-  output$location_plot <- renderPlot({
+  output$location_dist <- renderPlot({
     
     responses %>%
       mutate(location = as_factor(location)) %>%
@@ -17,6 +17,22 @@ server <- function(input, output) {
         labs(
           title = "Survey Respondent Distribution by Location",
           x = "Location for Fall Semester",
+          y = "Count"
+        )
+    
+  })
+  
+  output$gender_dist <- renderPlot({
+    
+    responses %>%
+      mutate(gender = as_factor(gender)) %>%
+      select(id, gender) %>%
+      ggplot(aes(x = gender, fill = gender)) +
+        geom_bar() +
+        theme_bw() +
+        labs(
+          title = "Survey Respondent Distribution by Gender",
+          x = "Gender",
           y = "Count"
         )
     
