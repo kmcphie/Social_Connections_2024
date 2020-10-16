@@ -7,7 +7,6 @@ responses <- readRDS("responses.rds")
 server <- function(input, output) {
   
   output$location_dist <- renderPlot({
-    
     responses %>%
       mutate(location = as_factor(location)) %>%
       select(id, location) %>%
@@ -19,11 +18,9 @@ server <- function(input, output) {
           x = "Location for Fall Semester",
           y = "Count"
         )
-    
   })
   
   output$gender_dist <- renderPlot({
-    
     responses %>%
       mutate(gender = as_factor(gender)) %>%
       select(id, gender) %>%
@@ -35,7 +32,12 @@ server <- function(input, output) {
           x = "Gender",
           y = "Count"
         )
-    
   })
+  
+  output$person <- renderImage({
+    list(src = "person.png", 
+         width = 300, 
+         height = 400)
+  }, deleteFile = FALSE)
   
 }

@@ -51,9 +51,13 @@ ui <- navbarPage(
   
   tabPanel("Creators", 
            h2(tags$b("About Our Team")),
-           p(
-             "Bios, pictures, and contact information for of each of our team 
-             members will go on this page."
+           # p(
+           #   "Bios, pictures, and contact information for of each of our team 
+           #   members will go on this page."
+           # ),
+           fluidRow(
+             column(3, imageOutput("person")),
+             column(4, offset = 1, h1("Person"), br(), h3("Hi, I'm a placeholder!")),
            ),
            p(
              "This project's GitHub repository lives",
