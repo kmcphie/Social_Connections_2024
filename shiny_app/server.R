@@ -6,30 +6,74 @@ responses <- readRDS("responses.rds")
 
 server <- function(input, output) {
   
-  output$location_dist <- renderPlot({
-    responses %>%
-      mutate(location = as_factor(location)) %>%
-      select(id, location) %>%
-      ggplot(aes(x = location, fill = location)) +
+  output$respondent_dist <- renderPlot({
+    data <- switch(input$var,
+                   "Gap Year" = responses %>%
+                                  mutate(gap_year = as_factor(gap_year)) %>%
+                                  select(id, gap_year),
+                   "Location" = responses %>%
+                                  mutate(location = as_factor(location)) %>%
+                                  select(id, location),
+                   "Living" = responses %>%
+                                mutate(living = as_factor(living)) %>%
+                                select(id, living),
+                   "Gender" = responses %>%
+                                mutate(location = as_factor(location)) %>%
+                                select(id, location),
+                   "Race" = responses %>%
+                              mutate(race = as_factor(race)) %>%
+                              select(id, race),
+                   "Pre-Orientation Program" = responses %>%
+                                                 mutate(pre_o = as_factor(pre_o)) %>%
+                                                 select(id, pre_o),
+                   "Sports" = responses %>%
+                                mutate(sports = as_factor(sports)) %>%
+                                select(id, sports))
+    variable <- switch(input$var,
+                       "Gap Year" = responses$gap_year,
+                       "Location" = responses$location,
+                       "Living" = responses$living,
+                       "Gender" = responses$gender,
+                       "Race" = responses$race,
+                       "Pre-Orientation Program" = responses$pre_o,
+                       "Sports" = responses$sports)
+    title <- switch(input$var,
+                    "Gap Year" = "Survey Respondent Distribution by Gap Year",
+                    "Location" = "Survey Respondent Distribution by Location",
+                    "Living" = 
+                      "Survey Respondent Distribution by Living Situation",
+                    "Gender" = "Survey Respondent Distribution by Gender",
+                    "Race" = "Survey Respondent Distribution by Race",
+                    "Pre-Orientation Program" = 
+                      "Survey Respondent Distribution by Pre-Orientation Program",
+                    "Sports" = 
+                      "Survey Respondent Distribution by Sports Involvement")
+    x <- switch(input$var,
+                "Gap Year" = "Took a gap year",
+                "Location" = "Location for the Fall Semester",
+                "Living Situation (if on campus)",
+                "Gender" = "Gender",
+                "Race" = "Race",
+                "Pre-Orientation Program" = "Pre-Orientation Program",
+                "Sports" = "Involved in Sports")
+    legend <- switch(input$var,
+                "Gap Year" = "Gap Year",
+                "Location" = "Location",
+                "Living Situation",
+                "Gender" = "Gender",
+                "Race" = "Race",
+                "Pre-Orientation Program" = "Pre-Orientation Program",
+                "Sports" = "Sports")
+    data %>%
+      ggplot(aes(x = variable, fill = variable)) +
         geom_bar() +
         theme_bw() +
+        # theme(title = element_text(family = "Avenir"),
+        #       text = element_text(family = "Avenir"))
+        theme(legend.position = "top") +
         labs(
-          title = "Survey Respondent Distribution by Location",
-          x = "Location for Fall Semester",
-          y = "Count"
-        )
-  })
-  
-  output$gender_dist <- renderPlot({
-    responses %>%
-      mutate(gender = as_factor(gender)) %>%
-      select(id, gender) %>%
-      ggplot(aes(x = gender, fill = gender)) +
-        geom_bar() +
-        theme_bw() +
-        labs(
-          title = "Survey Respondent Distribution by Gender",
-          x = "Gender",
+          title = title,
+          x = x,
           y = "Count"
         )
   })

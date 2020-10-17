@@ -13,7 +13,7 @@ responses <- readRDS("responses.rds")
 # Define UI.
 
 ui <- navbarPage(
-  theme = shinytheme("flatly"),
+  theme = shinytheme("yeti"), # other options: sandstone, flatly, united, slate
   tags$b("Social Connectedness in the Class of 2024"),
   
   ########## FIRST PAGE ##########
@@ -30,15 +30,28 @@ ui <- navbarPage(
                 align = "center"),
               br(),
               includeHTML("project_intro.html"),
-              a(tags$b("View more information about our survey methodology here."), 
+              a(tags$b("Learn more about our survey methodology here."), 
                 href="https://tinyurl.com/sc-2024-survey-methodology"),
               br(),
               br(),
               h3(tags$b("Respondents")),
               br(),
-              plotOutput("location_dist"),
-              br(),
-              plotOutput("gender_dist"),
+              sidebarLayout(
+                sidebarPanel(
+                  helpText("Create Survey Respondent Distribution Graph"),
+                  selectInput("var", 
+                              label = "Choose Variable",
+                              choices = c("Gap Year", 
+                                          "Location", 
+                                          "Living",
+                                          "Gender", 
+                                          "Race", 
+                                          "Pre-Orientation Program",
+                                          "Sports"),
+                              selected = "Location")
+                ),
+                mainPanel(plotOutput("respondent_dist"))
+              ),
               br(),
               br()
              ))
@@ -54,7 +67,7 @@ ui <- navbarPage(
              fluidRow(column(1), column(10,
               h2(tags$b("Total Sample Size")),
               p(
-                "Information about the people who answered our survey and a graph
+                "Information about the people who answered our survey and graphs
                 showing how they are connected will go on this page."
               ),
               br(),
@@ -91,13 +104,17 @@ ui <- navbarPage(
               align = "center"),
               p(
                 "This was a final project for",
-                a("Gov 50: Data", href="https://www.davidkane.info/files/gov_50_fall_2020.html"),
+                a("Gov 50: Data", 
+                  href="https://www.davidkane.info/files/gov_50_fall_2020.html"
+                ),
                 "at Harvard College.",
                 align = "center"
               ),
               p(
                 "This project's GitHub repository lives",
-                a("here", href="https://github.com/kmcphie/Social_Connections_2024"),
+                a("here", 
+                  href="https://github.com/kmcphie/Social_Connections_2024"
+                ),
                 ".",
                 align = "center"
               ),
