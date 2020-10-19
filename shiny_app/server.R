@@ -56,26 +56,19 @@ server <- function(input, output) {
                 "Race" = "Race",
                 "Pre-Orientation Program" = "Pre-Orientation Program",
                 "Sports" = "Involved in Sports")
-    legend <- switch(input$var,
-                "Gap Year" = "Gap Year",
-                "Location" = "Location",
-                "Living Situation",
-                "Gender" = "Gender",
-                "Race" = "Race",
-                "Pre-Orientation Program" = "Pre-Orientation Program",
-                "Sports" = "Sports")
     data %>%
-      ggplot(aes(x = variable, fill = variable)) +
-        geom_bar() +
+      ggplot(aes(x = variable)) +
+        geom_bar(fill = "#6fb4d2") +
         theme_bw() +
-        # theme(title = element_text(family = "Avenir"),
-        #       text = element_text(family = "Avenir"))
-        theme(legend.position = "top") +
+        theme(legend.position = "none") +
         labs(
           title = title,
           x = x,
           y = "Count"
-        )
+        ) +
+        theme(title = element_text(size = 14, face = "bold"),
+              axis.title.x = element_text(size = 12, face = "plain"),
+              axis.title.y = element_text(size = 12, face= "plain"))
   })
   
   output$elliott <- renderImage({
