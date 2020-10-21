@@ -1,15 +1,17 @@
 ########## TODO ##########
 
-# add bios and headshots to the about page
-# use pdftools to parse pdf for emails
+# add bios and headshots to the about page -- everyone
+# spend some time pubbing the survey/getting emails -- everyone
 # email yao to ask for a list of first years in the class
+# email people already in the network -- Elliott
+# use pdftools to parse pdf for emails -- Katherine
 # check to see if there is a better package to make the cool graph than the one 
-# that Jeremiah used last year
-# include part about degree of separation
-# network analysis -- lots of fun R packages
+# that Jeremiah used last year -- Ava
+# include part about degree of separation -- Gio
+# network analysis -- lots of fun R packages -- Gio
 # https://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/
 # figuring out who is central (and it might be interesting to see if this  matches
-# who people think are the most connected)
+# who people think are the most connected) -- Gio
 
 ########## PREP ##########
 
