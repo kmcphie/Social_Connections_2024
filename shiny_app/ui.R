@@ -1,3 +1,16 @@
+########## TODO ##########
+
+# add bios and headshots to the about page
+# use pdftools to parse pdf for emails
+# email yao to ask for a list of first years in the class
+# check to see if there is a better package to make the cool graph than the one 
+# that Jeremiah used last year
+# include part about degree of separation
+# network analysis -- lots of fun R packages
+# https://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/
+# figuring out who is central (and it might be interesting to see if this  matches
+# who people think are the most connected)
+
 ########## PREP ##########
 
 # Load necessary libraries.
