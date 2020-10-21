@@ -1,5 +1,4 @@
 # Networking Practice 
-# 
 
 library(igraph)
 library(readr)
