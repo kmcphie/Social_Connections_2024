@@ -11,7 +11,9 @@ library(pdftools)
 
 ```{r}
 
+responses <- readRDS("shiny_app/responses.rds")
 
+responses
 
 ```
 
