@@ -1,0 +1,25 @@
+---
+title: "Testing Network"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(igraph)
+library(readr)
+library(tidyverse)
+library(shiny)
+library(shinythemes)
+library(readxl)
+```
+
+```{r}
+
+responses <- readRDS("shiny_app/responses.rds")
+
+responses
+
+# TODO: Ava I think you can test out network stuff here and it will be easier than
+# the other Network_Practice.R script!
+
+```
