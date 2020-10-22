@@ -71,26 +71,26 @@ server <- function(input, output) {
               axis.title.y = element_text(size = 12, face= "plain"))
   })
   
+  output$katherine <- renderImage({
+    list(src = "katherine.png", 
+         width = 300, 
+         height = 400)
+  }, deleteFile = FALSE)
+  
   output$elliott <- renderImage({
-    list(src = "person.png", 
+    list(src = "person.png", # TODO: replace "person.png" with headshot -- elliott
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
-    list(src = "person.png", 
+    list(src = "person.png", # TODO: replace "person.png" with headshot -- ava
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$gio <- renderImage({
-    list(src = "person.png", 
-         width = 300, 
-         height = 400)
-  }, deleteFile = FALSE)
-  
-  output$katherine <- renderImage({
-    list(src = "person.png", 
+    list(src = "person.png", # TODO: replace "person.png" with headshot -- gio
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
