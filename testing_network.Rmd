@@ -28,7 +28,7 @@ test_network <- graph_from_data_frame(d=test_edges, vertices=test_nodes, directe
 plot(test_network)
 
 nodes_responses <- responses %>%
-    select(id) # %>%
+    select(id) 
   # data.frame(id = id)
 
 edges_responses <- responses %>%
