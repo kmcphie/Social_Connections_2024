@@ -84,13 +84,13 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
-    list(src = "ava.png", # TODO: replace "person.png" with headshot -- ava
+    list(src = "ava.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$gio <- renderImage({
-    list(src = "person.png", # TODO: replace "person.png" with headshot -- gio
+    list(src = "gio.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
