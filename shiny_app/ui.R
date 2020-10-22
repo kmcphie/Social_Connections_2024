@@ -147,7 +147,11 @@ ui <- navbarPage(
                   Harvard Computer Society, Women in Computer Science, and 
                   Harvard Open Data Project. I also sing alto for University 
                   Choir, and  play trumpet in the Wind Ensemble! You can reach 
-                  me at katherinemcphie@college.harvard.edu.")),
+                  me at",
+                  a("katherinemcphie@college.harvard.edu",
+                    href="mailto:katherinemcphie@college.harvard.edu?Subject=Social%20Connections%20Project"
+                  ),
+                  ".")),
               ),
               br(),
               fluidRow(
@@ -159,8 +163,11 @@ ui <- navbarPage(
                          Government. On campus, I write for the Harvard 
                          Political and Economics Reviews, participate in the 
                          John Adams Society, and preside as the chairman of the 
-                         Harvard Junto. You can reach me at 
-                         edetjen@college.harvard.edu. ")),
+                         Harvard Junto. You can reach me at",
+                         a("edetjen@college.harvard.edu",
+                           href="mailto:edetjen@college.harvard.edu?Subject=Social%20Connections%20Project"
+                         ),
+                         ".")),
               ),
               br(),
               fluidRow(
@@ -170,15 +177,22 @@ ui <- navbarPage(
                        p("I am a first-year undergraduate at Harvard pursuing a 
                          concentration in Government. I am involved in the John 
                          Adams Society, Women in Business, and the Institute of 
-                         Politics. You can reach me at 
-                         avaswanson@college.harvard.edu. ")),
+                         Politics. You can reach me at",
+                         a("avaswanson@college.harvard.edu",
+                           href="mailto:avaswanson@college.harvard.edu?Subject=Social%20Connections%20Project"
+                         ),
+                         ".")),
               ),
               br(),
               fluidRow(
                 column(5, imageOutput("gio")),
                 column(5, offset = 0, 
                        h3(tags$b("Giovanni Salcedo")), br(), 
-                       p("You can reach me at gsalcedo@college.harvard.edu.")),
+                       p("You can reach me at",
+                         a("gsalcedo@college.harvard.edu",
+                           href="mailto:gsalcedo@college.harvard.edu?Subject=Social%20Connections%20Project"
+                         ),
+                         ".")),
               ),
               br(),
               br()
