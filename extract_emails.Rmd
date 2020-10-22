@@ -31,7 +31,7 @@ emails_only <- plyr::ldply(txt) %>%
   mutate(suffix = ".harvard.edu") %>%
   unite(full_email, email, suffix, sep = "")
 
-emails_only
+write_rds(emails_only, "emails.rds")
 
 ```
 
