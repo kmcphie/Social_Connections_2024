@@ -188,7 +188,12 @@ ui <- navbarPage(
                 column(5, imageOutput("gio")),
                 column(5, offset = 0, 
                        h3(tags$b("Giovanni Salcedo")), br(), 
-                       p("You can reach me at",
+                       p("Hi! My name is Giovanni Salcedo. I’m a sophomore at
+                         Harvard College planning to concentrate in Government
+                         on the Data Science Track. I hope to use my data
+                         science skills on public policy and social issues in
+                         the future. I love gaming, PC building, and amateur
+                         photography. You can reach me at",
                          a("gsalcedo@college.harvard.edu",
                            href="mailto:gsalcedo@college.harvard.edu?Subject=Social%20Connections%20Project"
                          ),
