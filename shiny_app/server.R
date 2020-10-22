@@ -84,7 +84,7 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
-    list(src = "person.png", # TODO: replace "person.png" with headshot -- ava
+    list(src = "ava.png", # TODO: replace "person.png" with headshot -- ava
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
