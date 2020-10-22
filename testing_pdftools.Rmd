@@ -1,22 +1,39 @@
 ---
 title: "Testing PDF Tools Package"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(pdftools)
-library(tm)
 ```
 
 ```{r}
 
-txt <- pdf_text("harvard_facebook.pdf")
+txt <- pdf_text("harvard_facebook.pdf") %>%
+  readr::read_lines() %>%
+  str_squish() %>%
+  str_replace_all(",", "") %>%
+  strsplit(" ") %>%
+  unlist()
 
-length(txt) # txt is 22 pages
+check_email <- function(word){
+  ifelse(str_detect(word, pattern = "@college"),
+         word,
+         "NA")
+}
 
-cat(txt[1]) # select just the first page of txt
+emails_only <- plyr::ldply(txt) %>%
+  mutate(email = map(V1, check_email)) %>%
+  select(email) %>%
+  filter(email != "NA") %>%
+  mutate(suffix = ".harvard.edu") %>%
+  unite(full_email, email, suffix, sep = "")
+
+emails_only
 
 ```
 
