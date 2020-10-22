@@ -7,13 +7,16 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(pdftools)
+library(tm)
 ```
 
 ```{r}
 
-responses <- readRDS("shiny_app/responses.rds")
+txt <- pdf_text("harvard_facebook.pdf")
 
-responses
+length(txt) # txt is 22 pages
+
+cat(txt[1]) # select just the first page of txt
 
 ```
 
