@@ -78,7 +78,7 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
   
   output$elliott <- renderImage({
-    list(src = "person.png", # TODO: replace "person.png" with headshot -- elliott
+    list(src = "elliott.png", # TODO: replace "person.png" with headshot -- elliott
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
