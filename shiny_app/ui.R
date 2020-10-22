@@ -139,31 +139,46 @@ ui <- navbarPage(
              )),
              fluidRow(column(3), column(9,
               fluidRow(
+                column(5, imageOutput("katherine")),
+                column(5, offset = 0, 
+                h3(tags$b("Katherine McPhie")), br(), 
+                p("I am a first-year undergraduate at Harvard pursuing a 
+                  concentration in Computer Science. On campus I am involved in 
+                  Harvard Computer Society, Women in Computer Science, and 
+                  Harvard Open Data Project. I also sing alto for University 
+                  Choir, and  play trumpet in the Wind Ensemble! You can reach 
+                  me at katherinemcphie@college.harvard.edu.")),
+              ),
+              br(),
+              fluidRow(
                 column(5, imageOutput("elliott")),
                 column(5, offset = 0, 
-                       h3(tags$b("Person")), br(), 
-                       p("Hi, I'm a placeholder!")),
+                       h3(tags$b("Elliott Detjen")), br(), 
+                       p("I am a first-year undergraduate at Harvard pursuing a 
+                         concentration in Economics with a secondary in 
+                         Government. On campus, I write for the Harvard 
+                         Political and Economics Reviews, participate in the 
+                         John Adams Society, and preside as the chairman of the 
+                         Harvard Junto. You can reach me at 
+                         edetjen@college.harvard.edu. ")),
               ),
               br(),
               fluidRow(
                 column(5, imageOutput("ava")),
                 column(5, offset = 0, 
-                       h3(tags$b("Person")), br(), 
-                       p("Hi, I'm a placeholder!")),
+                       h3(tags$b("Ava Swanson")), br(), 
+                       p("I am a first-year undergraduate at Harvard pursuing a 
+                         concentration in Government. I am involved in the John 
+                         Adams Society, Women in Business, and the Institute of 
+                         Politics. You can reach me at 
+                         avaswanson@college.harvard.edu. ")),
               ),
               br(),
               fluidRow(
                 column(5, imageOutput("gio")),
                 column(5, offset = 0, 
-                       h3(tags$b("Person")), br(), 
-                       p("Hi, I'm a placeholder!")),
-              ),
-              br(),
-              fluidRow(
-                column(5, imageOutput("katherine")),
-                column(5, offset = 0, 
-                       h3(tags$b("Person")), br(), 
-                       p("Hi, I'm a placeholder!")),
+                       h3(tags$b("Giovanni Salcedo")), br(), 
+                       p("You can reach me at gsalcedo@college.harvard.edu.")),
               ),
               br(),
               br()
