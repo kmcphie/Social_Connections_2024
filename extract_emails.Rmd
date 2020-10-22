@@ -1,8 +1,6 @@
 ---
-title: "Testing PDF Tools Package"
-output:
-  pdf_document: default
-  html_document: default
+title: "Extracting Emails"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
