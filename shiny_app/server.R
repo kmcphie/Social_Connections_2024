@@ -84,7 +84,7 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
-    list(src = "www/person.png",
+    list(src = "www/ava.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
