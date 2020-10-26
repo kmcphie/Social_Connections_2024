@@ -191,7 +191,7 @@ ui <- navbarPage(
                 column(5, imageOutput("ava")),
                 column(5, offset = 0, 
                        h5(tags$b("Ava Swanson")), br(), 
-                       p("I am a first-year undergraduate at Harvard pursuing a 
+                       p("Hi, I am Ava Swanson! I am a first-year undergraduate at Harvard pursuing a 
                          concentration in Government. I am involved in the John 
                          Adams Society, Women in Business, and the Institute of 
                          Politics. You can reach me at",
