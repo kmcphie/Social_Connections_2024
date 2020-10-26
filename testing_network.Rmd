@@ -115,6 +115,7 @@ plot(actorNetwork)
 # data frame with node data with the node label in the first column. (Note that 
 # igraph calls the nodes vertices, but it’s exactly the same thing.)
 ```
+
 ```{r}
 # Jeremiah's Code ---------------------------------------------------------
 
