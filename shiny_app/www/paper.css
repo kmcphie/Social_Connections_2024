@@ -1089,7 +1089,7 @@ html {
 }
 body {
     font-family: 'Lato', sans-serif;  /*/ font change from-- font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif; /*/
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.846;
     color: #666666;
         background-color: #ffffff;
@@ -8003,19 +8003,21 @@ input[type="checkbox"]:disabled:checked:after,
 	background-repeat: no-repeat;
 }
 .sc {
-	color: #000000;
+	color: #000000; /* 6fb4d2  */
 	text-align: center;
 	padding-top: 100px;
-	margin-top: 45px;
+	margin-top: 0px;
 	margin-bottom: 0px;
 	  background-color: #ffffff;
 	  opacity: 0.8;
     font-size: 80px;
+    font-weight: bold;
 }
 .sc_description {
 	color: #000000;
 	text-align: center;
-	padding-right: 30px;
+	padding-right: 75px;
+	padding-left: 75px;
 	padding-top: 45px;
 	padding-bottom: 45px;
 	width: 100%;
@@ -8036,8 +8038,9 @@ input[type="checkbox"]:disabled:checked:after,
     
  .sc_description {
 	color: #000000;
-	text-align: right;
+	text-align: center;
 	padding-right: 30px;
+	padding-left: 30px;
 	padding-top: 15px;
 	padding-bottom: 15px;
 	width: 100%;
