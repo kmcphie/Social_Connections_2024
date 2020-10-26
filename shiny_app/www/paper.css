@@ -2,23 +2,23 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 @import url('https://fonts.googleapis.com/css?family=Droid+Serif');
 /*!
-    * bootswatch v3.3.7
+* bootswatch v3.3.7
 * Homepage: http://bootswatch.com
 * Copyright 2012-2017 Thomas Park
 * Licensed under MIT
 * Based on Bootstrap
 */
-    /*!
-    * Bootstrap v3.3.7 (http://getbootstrap.com)
+/*!
+* Bootstrap v3.3.7 (http://getbootstrap.com)
 * Copyright 2011-2016 Twitter, Inc.
 * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 */
-    /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-    html {
-        font-family: 'Lato', sans-serif;  /*/ font-family: sans-serif; /*/
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-    }
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+  font-family: 'Lato', sans-serif;  /*/ font-family: sans-serif; /*/
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
 body {
     margin: 0;
 }
@@ -4194,8 +4194,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
     position: relative;  
-    min-height: 64px;              /*/ 64 /*/
-    margin-bottom: 23px;            /*/ 23 /*/
+    min-height: 64px;
+    margin-bottom: 23px;
     border: 1px solid transparent;
 }
 

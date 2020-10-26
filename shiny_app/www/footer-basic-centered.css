@@ -10,18 +10,6 @@
 	margin-top: 80px;
 }
 
-.footer-basic-centered .footer-company-motto{
-	color:  #8d9093;
-	font-size: 24px;
-	margin: 0;
-}
-
-.footer-basic-centered .footer-company-name{
-	color:  #8f9296;
-	font-size: 14px;
-	margin: 0;
-}
-
 .footer-basic-centered .footer-links{
 	list-style: none;
 	font-weight: bold;
@@ -36,20 +24,10 @@
 	color: inherit;
 }
 
-/* If you don't want the footer to be responsive, remove these media queries */
-
 @media (max-width: 600px) {
 
 	.footer-basic-centered{
 		padding: 35px;
-	}
-
-	.footer-basic-centered .footer-company-motto{
-		font-size: 18px;
-	}
-
-	.footer-basic-centered .footer-company-name{
-		font-size: 12px;
 	}
 
 	.footer-basic-centered .footer-links{
