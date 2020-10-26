@@ -72,25 +72,25 @@ server <- function(input, output) {
   })
   
   output$katherine <- renderImage({
-    list(src = "images/katherine.png", 
+    list(src = "www/katherine.png", 
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$elliott <- renderImage({
-    list(src = "images/elliott.png", # TODO: replace "person.png" with headshot (Elliott)
+    list(src = "www/person.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
-    list(src = "images/ava.png",
+    list(src = "www/person.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
   
   output$gio <- renderImage({
-    list(src = "images/gio.png",
+    list(src = "www/gio.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
