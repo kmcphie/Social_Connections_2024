@@ -35,7 +35,7 @@ ui <- navbarPage(
   inverse = TRUE,
   windowTitle = "Social Connections 2024",
   position = "fixed-top",
-  #footer = includeHTML("./www/include_footer.html"),
+  footer = includeHTML("./www/footer.html"),
   header = tags$style(
     ".navbar-right {
                        float: right !important;
@@ -51,7 +51,7 @@ ui <- navbarPage(
              br(),
              br(),
              fluidRow(column(1), column(10,
-              h1(tags$b("Social Connectedness in the Harvard Class of 2024"), 
+              h2(tags$b("Social Connectedness in the Harvard Class of 2024"), 
                           align = "center"),
               p(tags$b("Analyzing how Harvard first-years have been forming 
                         social connections during the COVID-19 pandemic."),
