@@ -15,7 +15,7 @@
 */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
-  font-family: 'Lato', sans-serif;  /*/ font-family: sans-serif; /*/
+  font-family: 'Lato', sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -4619,7 +4619,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
     color: #cccccc;
 }
 .navbar-inverse {
-    background-color: #6fb4d2; /*/ #f75148; = red/*/ /*/#2196f3; = original blue color/*/ 
+    background-color: #ffffff; /*/ #6fb4d2; = red/f75148*/ /*/#2196f3; = original blue color/*/ 
         border-color: #ffffff; /*/ transparent; = original /*/
 }
 .navbar-inverse .navbar-brand {
@@ -7990,40 +7990,41 @@ input[type="checkbox"]:disabled:checked:after,
 	}
 }
 
-/* Parallax Section */
+/* Social Connectedness Heading */
+
 .banner {
 	background-color: #000000;
-	background-image: url('https://static.pexels.com/photos/297755/pexels-photo-297755.jpeg');
-	/*/background-image: url('https://static.pexels.com/photos/467659/pexels-photo-467659.jpeg');/*/
-	height: 500px;
-	width: inherit;
+	background-image: url("https://i.insider.com/599730e621c3fc30008b49b3?width=1100&format=jpeg&auto=webp");
+	/* https://d1d5xqjpwbyss4.cloudfront.net/store_promo_images/3243/banner-3243.png?1561578705 */
+	height: 700px;
+	width: 1150px;
 	background-attachment: fixed;
 	background-size: cover;
 	background-repeat: no-repeat;
 }
-.parallax {
+.sc {
 	color: #000000;
 	text-align: center;
-	/*/padding-right: 100px;/*/
-	padding-right: -100px;
-	padding-top: 110px;
-	letter-spacing: 2px;
-	margin-top: 0px;
+	padding-top: 100px;
+	margin-top: 45px;
+	margin-bottom: 0px;
+	  background-color: #ffffff;
+	  opacity: 0.8;
     font-size: 80px;
 }
-.parallax_description {
+.sc_description {
 	color: #000000;
-	text-align: right;
+	text-align: center;
 	padding-right: 30px;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	width: 30%;
-	float: right;
+	padding-top: 45px;
+	padding-bottom: 45px;
+	width: 100%;
+	float: center;
 	font-weight: lighter;
 	line-height: 100%;
 	margin-top: 0px;
 	margin-right: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 45px;
 	margin-left: 0px;
     background-color: #ffffff;
     opacity: 0.8;
@@ -8033,7 +8034,7 @@ input[type="checkbox"]:disabled:checked:after,
 
 @media (max-width: 768px) {
     
- .parallax_description {
+ .sc_description {
 	color: #000000;
 	text-align: right;
 	padding-right: 30px;
@@ -8049,7 +8050,7 @@ input[type="checkbox"]:disabled:checked:after,
 	margin-left: 0px;
     background-color: #ffffff;
     opacity: 0.8;
-    font-size: 30px;
+    /*font-size: 30px;*/
 }
     
 }

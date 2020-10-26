@@ -48,21 +48,26 @@ ui <- navbarPage(
   
   tabPanel("Overview",
            fluidPage(
-             br(),
-             br(),
              fluidRow(column(1), column(10,
-              h2(tags$b("Social Connectedness in the Harvard Class of 2024"), 
-                          align = "center"),
-              p(tags$b("Analyzing how Harvard first-years have been forming 
-                        social connections during the COVID-19 pandemic."),
-                align = "center"),
+              # h3(tags$b("Social Connectedness in the Harvard Class of 2024"), 
+              #             align = "center"),
+              # h6(tags$b("Analyzing how Harvard first-years have been forming 
+              #           social connections during the COVID-19 pandemic."),
+              #   align = "center"),
+              HTML("<section class='banner'>
+                    <h2 class='sc'>Social Connectedness in the Harvard
+                    Class of 2024</h2>
+                    <p class='sc_description'>Analyzing how Harvard
+                    first-years have been forming social connections during the
+                    COVID-19 pandemic.</p>
+                    </section>"),
               br(),
               includeHTML("project_intro.html"),
               a(tags$b("Learn more about our survey methodology here."), 
                 href="https://tinyurl.com/sc-2024-survey-methodology"),
               br(),
               br(),
-              h3(tags$b("Respondents")),
+              h4(tags$b("Respondents")),
               br(),
               sidebarLayout(
                 sidebarPanel(
