@@ -28,20 +28,18 @@ responses <- readRDS("responses.rds")
 # Define UI.
 
 ui <- navbarPage(
-  #title = img(src="HR.LOGOred3_cropped.png", height = "40px"), 
+  #title = img(src="<LOGO>", height = "40px"), 
   id = "navBar",
   theme = "paper.css",
+  #theme = shinytheme("yeti"), # other options: sandstone, flatly, united, slate
   collapsible = TRUE,
   inverse = TRUE,
   windowTitle = "Social Connections 2024",
   position = "fixed-top",
   footer = includeHTML("./www/footer.html"),
   header = tags$style(
-    ".navbar-right {
-                       float: right !important;
-                       }",
+    ".navbar-right {float: right !important;}",
     "body {padding-top: 75px;}"),
-  #theme = shinytheme("yeti"), # other options: sandstone, flatly, united, slate
   tags$b("Social Connectedness in the Class of 2024"),
   
   ########## FIRST PAGE ##########
