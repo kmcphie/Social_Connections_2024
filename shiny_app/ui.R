@@ -64,7 +64,7 @@ ui <- navbarPage(
                                           "Race", 
                                           "Pre-Orientation Program",
                                           "Sports"),
-                              selected = "Location")
+                              selected = "Living")
                 ),
                 mainPanel(plotOutput("respondent_dist"))
               ),
