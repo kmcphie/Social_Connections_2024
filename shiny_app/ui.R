@@ -1,19 +1,4 @@
-########## TODO ##########
-
-# add bios and headshots to the about page -- everyone
-# spend some time pubbing the survey/getting emails -- everyone
-# email yao to ask for a list of first years in the class
-# email people already in the network -- Elliott
-# use pdftools to parse pdf for emails -- Katherine
-# check to see if there is a better package to make the cool graph than the one 
-# that Jeremiah used last year -- Ava
-# include part about degree of separation -- Gio
-# network analysis -- lots of fun R packages -- Gio
-# https://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/
-# figuring out who is central (and it might be interesting to see if this  matches
-# who people think are the most connected) -- Gio
-
-########## PREP ##########
+########## ########## PREP ##########
 
 # Load necessary libraries.
 
@@ -42,7 +27,7 @@ ui <- navbarPage(
     "body {padding-top: 75px;}"),
   tags$b("Social Connectedness in the Class of 2024"),
   
-  ########## FIRST PAGE ##########
+  ########## FIRST PAGE: OVERVIEW ##########
   
   tabPanel("Overview",
            fluidPage(
@@ -89,7 +74,7 @@ ui <- navbarPage(
             )
   ),
   
-  ########## SECOND PAGE ##########
+  ########## SECOND PAGE: SOCIAL WEB ##########
   
   tabPanel("The Social Web",
            fluidPage(
@@ -106,7 +91,7 @@ ui <- navbarPage(
            )
   ),
   
-  ########## THIRD PAGE ##########
+  ########## THIRD PAGE: ANALYSIS ##########
   
   tabPanel("Analyzing the Data",
            fluidPage(
@@ -123,7 +108,7 @@ ui <- navbarPage(
            )
   ),
   
-  ########## FOURTH PAGE ##########
+  ########## FOURTH PAGE: ABOUT ##########
   
   tabPanel("About", 
            fluidPage(

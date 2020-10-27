@@ -6,6 +6,8 @@ responses <- readRDS("responses.rds")
 
 server <- function(input, output) {
   
+  ########## FIRST PAGE: OVERVIEW ##########
+  
   output$respondent_dist <- renderPlot({
     data <- switch(input$var,
                    "Gap Year" = responses %>%
@@ -70,6 +72,12 @@ server <- function(input, output) {
               axis.title.x = element_text(size = 12, face = "plain"),
               axis.title.y = element_text(size = 12, face= "plain"))
   })
+  
+  ########## SECOND PAGE: SOCIAL WEB ##########
+  
+  ########## THIRD PAGE: ANALYSIS ##########
+  
+  ########## FOURTH PAGE: ABOUT ##########
   
   output$katherine <- renderImage({
     list(src = "www/katherine.png", 
