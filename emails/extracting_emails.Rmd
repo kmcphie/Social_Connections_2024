@@ -1,0 +1,37 @@
+---
+title: "Extracting Emails"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(pdftools)
+```
+
+```{r}
+
+txt <- pdf_text("harvard_facebook.pdf") %>%
+  readr::read_lines() %>%
+  str_squish() %>%
+  str_replace_all(",", "") %>%
+  strsplit(" ") %>%
+  unlist()
+
+check_email <- function(word){
+  ifelse(str_detect(word, pattern = "@college"),
+         word,
+         "NA")
+}
+
+emails_only <- plyr::ldply(txt) %>%
+  mutate(email = map(V1, check_email)) %>%
+  select(email) %>%
+  filter(email != "NA") %>%
+  mutate(suffix = ".harvard.edu") %>%
+  unite(full_email, email, suffix, sep = "")
+
+write_csv(emails_only, "emails.csv")
+
+```
+
