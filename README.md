@@ -9,7 +9,7 @@ In seeking to answer this question and others like it, we mapped and analyzed th
 
 ### Repository Guide
 * /shiny_app: Files to render Shiny App.
-* .gitignore
-* README.md
 * testing: .Rmd scripts for testing purposes only
 * emails: scraping emails from the Harvard facebook to help with survey publicizing
+* .gitignore
+* README.md
