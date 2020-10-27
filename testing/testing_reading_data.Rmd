@@ -1,14 +1,17 @@
-########## PREP ##########
+---
+title: "Testing Reading Data"
+output: html_document
+---
 
-# Load necessary libraries.
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 library(readxl)
+```
 
-# Load in the data.
+```{r}
+responses <- read_excel("../shiny_app/raw_data/responses_1.xlsx")
 
-responses <- read_excel("shiny_app/raw_data/responses_1.xlsx")
-
-# Clean the data and add an ID column.
+glimpse(responses)
 
 responses_clean <- responses %>%
   rename(gap_year = "1. Have you taken a gap year?",
@@ -38,6 +41,6 @@ responses_clean <- responses %>%
          satisfaction = "14. How satisfied are you with your social connections with other first-year students at Harvard?") %>%
   mutate(id = 1:nrow(responses), .before = 1)
 
-# Read the cleaned data into a new RDS document.
+View(responses_clean)
+```
 
-write_rds(responses_clean, "shiny_app/responses.rds")
