@@ -96,10 +96,12 @@ ui <- navbarPage(
   
   tabPanel("Analyzing the Data",
            fluidPage(
-             br(),
-             br(),
              fluidRow(column(1), column(10,
+              br(),
+              br(),
               h4(tags$b("Analyzing the Data")),
+              br(),
+              br(),
               mainPanel(plotOutput("satisfaction")),
               br(),
               br()

@@ -11,11 +11,21 @@ library(tidyverse)
 
 ```{r}
 responses_clean %>%
-      select(id, satisfaction) %>%
-      mutate(satisfaction = as_factor(satisfaction))
-
-
-      ggplot(aes(x = satisfaction, y = count)) +
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  summarize(Very_Dissatisfied = sum(satisfaction == "Very Dissatisfied"),
+            Dissatisfied = sum(satisfaction == "Dissatisfied"),
+            Neutral = sum(satisfaction == "Neutral"),
+            Satisfied = sum(satisfaction == "Satisfied"),
+            Very_Satisfied = sum(satisfaction == "Very Satisfied")) %>%
+  pivot_longer(everything(), names_to = "satisfaction", values_to = "count") %>%
+  
+      ggplot(aes(x = fct_relevel(satisfaction, 
+                               levels = c("Very_Dissatisfied",
+                                          "Dissatisfied",
+                                          "Neutral",
+                                          "Satisfied",
+                                          "Very_Satisfied")), 
+                 y = count)) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
       theme(legend.position = "none") +

@@ -76,14 +76,27 @@ server <- function(input, output) {
   
   output$satisfaction <- renderPlot({
     responses %>%
-      select(id, satisfaction) %>%
-      ggplot(aes(x = satisfaction)) +
-      geom_bar(fill = "#6fb4d2") +
+      mutate(satisfaction = as_factor(satisfaction)) %>%
+      summarize(Very_Dissatisfied = sum(satisfaction == "Very Dissatisfied"),
+                Dissatisfied = sum(satisfaction == "Dissatisfied"),
+                Neutral = sum(satisfaction == "Neutral"),
+                Satisfied = sum(satisfaction == "Satisfied"),
+                Very_Satisfied = sum(satisfaction == "Very Satisfied")) %>%
+      pivot_longer(everything(), names_to = "satisfaction", values_to = "count") %>%
+      
+      ggplot(aes(x = fct_relevel(satisfaction, 
+                                 levels = c("Very_Dissatisfied",
+                                            "Dissatisfied",
+                                            "Neutral",
+                                            "Satisfied",
+                                            "Very_Satisfied")), 
+                 y = count)) +
+      geom_col(fill = "#6fb4d2") +
       theme_bw() +
       theme(legend.position = "none") +
       labs(
         title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
-        x = "Self-Reported Level of Satisfaction with Social Connections",
+        x = "Satisfaction with Social Connections",
         y = "Count"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
