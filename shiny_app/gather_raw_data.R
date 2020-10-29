@@ -36,7 +36,7 @@ responses_clean <- responses_1 %>%
          in_person = "12. When you do meet with people in-person, where do you go or what do you do? (Please remember that this survey is completely anonymous and your answers will not be used to get you in trouble.)",
          most_connected = "13. Name the person in the Class of 2024 who you think is the most socially connected. (First and last name)",
          satisfaction = "14. How satisfied are you with your social connections with other first-year students at Harvard?") %>%
-  mutate(id = 1:nrow(responses), .before = 1)
+  mutate(id = 1:nrow(responses_1), .before = 1)
 
 # Read the cleaned data into a new RDS document.
 
