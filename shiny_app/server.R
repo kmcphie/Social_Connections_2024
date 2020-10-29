@@ -75,7 +75,7 @@ server <- function(input, output) {
   ########## THIRD PAGE: ANALYSIS ##########
   
   output$satisfaction <- renderPlot({
-    responses_clean %>%
+    responses %>%
       select(id, satisfaction) %>%
       ggplot(aes(x = satisfaction)) +
       geom_bar(fill = "#6fb4d2") +

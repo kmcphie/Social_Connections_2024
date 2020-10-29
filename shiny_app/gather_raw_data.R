@@ -6,11 +6,11 @@ library(readxl)
 
 # Load in the data.
 
-responses <- read_excel("shiny_app/raw_data/responses_1.xlsx")
+responses_1 <- read_excel("shiny_app/raw_data/responses_1.xlsx")
 
 # Clean the data and add an ID column.
 
-responses_clean <- responses %>%
+responses_clean <- responses_1 %>%
   rename(gap_year = "1. Have you taken a gap year?",
          location = "2. Where are you living this semester?",
          living = "3. If you are living on campus, are you in a single or do you have suitemates?",

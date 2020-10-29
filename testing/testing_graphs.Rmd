@@ -1,0 +1,31 @@
+---
+title: "Testing Graphs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r}
+responses_clean %>%
+      select(id, satisfaction) %>%
+      mutate(satisfaction = as_factor(satisfaction))
+
+
+      ggplot(aes(x = satisfaction, y = count)) +
+      geom_col(fill = "#6fb4d2") +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
+        y = "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain"))
+```
+
