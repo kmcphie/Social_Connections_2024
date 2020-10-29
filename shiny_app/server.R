@@ -42,14 +42,11 @@ server <- function(input, output) {
     title <- switch(input$var,
                     "Gap Year" = "Survey Respondent Distribution by Gap Year",
                     "Location" = "Survey Respondent Distribution by Location",
-                    "Living" = 
-                      "Survey Respondent Distribution by Living Situation",
+                    "Living" = "Survey Respondent Distribution by Living Situation",
                     "Gender" = "Survey Respondent Distribution by Gender",
                     "Race" = "Survey Respondent Distribution by Race",
-                    "Pre-Orientation Program" = 
-                      "Survey Respondent Distribution by Pre-Orientation Program",
-                    "Sports" = 
-                      "Survey Respondent Distribution by Sports Involvement")
+                    "Pre-Orientation Program" = "Survey Respondent Distribution by Pre-Orientation Program",
+                    "Sports" = "Survey Respondent Distribution by Sports Involvement")
     x <- switch(input$var,
                 "Gap Year" = "Took a gap year",
                 "Location" = "Location for the Fall Semester",
@@ -76,6 +73,23 @@ server <- function(input, output) {
   ########## SECOND PAGE: SOCIAL WEB ##########
   
   ########## THIRD PAGE: ANALYSIS ##########
+  
+  output$satisfaction <- renderPlot({
+    responses_clean %>%
+      select(id, satisfaction) %>%
+      ggplot(aes(x = satisfaction)) +
+      geom_bar(fill = "#6fb4d2") +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
+        y = "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain"))
+  })
   
   ########## FOURTH PAGE: ABOUT ##########
   

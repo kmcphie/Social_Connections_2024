@@ -100,9 +100,7 @@ ui <- navbarPage(
              br(),
              fluidRow(column(1), column(10,
               h4(tags$b("Analyzing the Data")),
-              p(
-                "Interesting findings from the survey will go on this page."
-              ),
+              mainPanel(plotOutput("satisfaction")),
               br(),
               br()
              ))
