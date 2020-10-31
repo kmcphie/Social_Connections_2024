@@ -113,7 +113,7 @@ server <- function(input, output) {
   }, deleteFile = FALSE)
   
   output$elliott <- renderImage({
-    list(src = "www/person.png",
+    list(src = "www/elliott.png",
          width = 300, 
          height = 400)
   }, deleteFile = FALSE)
