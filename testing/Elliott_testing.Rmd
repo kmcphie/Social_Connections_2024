@@ -7,24 +7,41 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(rstanarm)
+
+sat_con <- responses_clean %>%
+  select(group_size, satisfaction, pre_o, sports, race, gap_year, location) %>%
+  group_by(race) %>%
+  ggplot(aes(x = satisfaction, y = group_size, color = location, alpha = 0.5)) +
+  geom_point(na.rm = FALSE) +
+  geom_jitter() +
+  geom_smooth(se = FALSE, echo = FALSE)
+
+sat_con
+
+responses_clean$satisfaction <- as.integer(as.character(responses_clean$satisfaction))
+responses_clean$group_size <- as.integer(as.character(responses_clean$group_size))
+
+class(responses_clean$group_size)
+
+
+nice <- stan_glm(data = responses_clean,
+                 formula = group_size ~ 1,
+                 refresh = 0,
+                 family = gaussian())
+
+nice
+
+graph <- nice %>%
+  as_tibble() %>%
+  rename(mu = `(Intercept)`) %>%
+  ggplot(aes(x = mu)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), binwidth = 0.1,
+                 fill = "dodgerblue", alpha = 0.5)
+
+graph
+
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
