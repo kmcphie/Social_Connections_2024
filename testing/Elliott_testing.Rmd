@@ -15,14 +15,11 @@ sat_con <- responses_clean %>%
   select(group_size, satisfaction, pre_o, sports, race, gap_year, location) %>%
   group_by(race) %>%
   ggplot(aes(x = satisfaction, y = group_size, color = location, alpha = 0.5)) +
-  geom_point(na.rm = FALSE) +
-  geom_jitter() +
-  geom_smooth(se = FALSE, echo = FALSE)
+  geom_bar(na.rm = FALSE) +
+  geom_jitter()
 
 sat_con
 
-responses_clean$satisfaction <- as.integer(as.character(responses_clean$satisfaction))
-responses_clean$group_size <- as.integer(as.character(responses_clean$group_size))
 
 class(responses_clean$group_size)
 
@@ -42,6 +39,146 @@ graph <- nice %>%
                  fill = "dodgerblue", alpha = 0.5)
 
 graph
+
+```
+
+```{r location}
+    
+dorm <- responses_clean %>%
+  summarize("Yard" = sum(location == "The Yard"),
+            "Home (US)" = sum(location == "At Home (in the US)"),
+            "Home (International)" = sum(location == "At Home (international student)"),
+            "Quad" = sum(location == "The Quad"),
+            "Union" = sum(location == "Union Dorm"),
+            "River" = sum(location == "A River House")) %>%
+  pivot_longer(everything(), names_to = "location", values_to = "count") %>%
+  arrange(desc(.))
+
+dorm_graph <- dorm %>%
+  ggplot(aes(x = location, y = count / sum(count), fill = location)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent) +
+  geom_text(aes(label = count), size = 3, 
+            position = position_nudge(y  = 0.015)) +
+  coord_flip() +
+  theme_bw() +
+  labs(x = "Location", y = "Percentage of Respondents")
+  
+dorm_graph
+
+```
+
+```{r satisfaction, top 4 (using Jeremiah code for side by side comparison)}
+
+library(ggthemes)
+
+      freshmen_satisfaction <- responses_clean %>%
+        nest(top4 = c(p1_name, p2_name,
+                      p3_name, p4_name)) %>%
+        select(id, satisfaction, top4, Name)
+      
+      # List of all names listed in top 4 friends, with repeats
+      
+      freshmen_top4_list <- unlist(freshmen_satisfaction$top4)
+      
+      # Calculate overall satisfaction score mean
+      
+      all_freshmen_satisfaction_mean <- freshmen_satisfaction %>%
+        summarize(mean = mean(satisfaction, na.rm = TRUE)) %>%
+        pull(mean)
+      
+      # Create a tibble for comparing satisfaction levels vs. whether or not
+      # they appear.
+      
+      compare_satisfaction <- freshmen_satisfaction %>%
+        mutate(appear = Name %in% freshmen_top4_list) %>%
+        group_by(appear) %>%
+        summarize(mean_satis = mean(satisfaction, na.rm = TRUE))
+      
+      compare_satisfaction %>%
+        ggplot(aes(x = appear, y = mean_satis, fill = appear)) +
+        geom_bar(stat = "identity") + 
+        guides(fill=FALSE) +
+        scale_x_discrete(labels = c("No", "Yes")) +
+        labs(
+          x = "Did the respondent's name appear in other respondents' top 4 friends lists?",
+          y = "Mean Satisfaction Score",
+          title = "Comparing mean satisfaction scores of respondents",
+          subtitle = "Respondents who appeared in others lists were more satisfied",
+          caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+        ) +
+        geom_hline(yintercept = all_freshmen_satisfaction_mean) +
+        theme_economist()
+
+      
+      freshmen <- read_csv("data/FINAL_PUBLIC_DATA-4-23-20.csv") %>%
+        clean_names() %>%
+        mutate(
+          id = as.character(id),
+          first_id = as.character(first_id),
+          second_id = as.character(second_id),
+          third_id = as.character(third_id),
+          fourth_id = as.character(fourth_id)
+        )
+      
+      myPalette <- brewer.pal(5, "Set2") 
+      
+      total_students <- 1650
+      
+      total_respondents <- freshmen %>% nrow()
+      
+      # Rescale satisfaction level for bar plot
+      
+      freshmen_satisfaction <- freshmen %>%
+        nest(top4 = c(first_id, second_id,
+                      third_id, fourth_id)) %>%
+        select(id, satisfied, top4) %>%
+        mutate(satisfaction_lvl = case_when(satisfied == "Very Satisfied" ~ 2,
+                                            satisfied == "Satisfied" ~ 1,
+                                            satisfied == "Neutral" ~ 0,
+                                            satisfied == "Dissatisfied" ~ -1,
+                                            satisfied == "Very Dissatisfied" ~ -2))
+      
+      # List of all names listed in top 4 friends, with repeats
+      
+      freshmen_top4_list <- unlist(freshmen_satisfaction$top4)
+      
+      # Name search function: counts how many times name appeared in list
+      
+      name_search <- function(name){
+        a <- table(freshmen_top4_list)
+        
+        unname(a[names(a) == name])
+      }
+      
+      # Create tibble with number of appearances column
+      # Group respondents by number of appearances they had
+      # Find mean of each group
+      
+      satisfaction_scatter_tbl <- freshmen_satisfaction %>%
+        mutate(appearances = map(id, ~ name_search(.))) %>%
+        unnest(appearances)
+      
+      # Create scatter plot (appearances vs. mean satisfaction level)
+      
+      satisfaction_scatter_tbl %>%
+        ggplot(aes(x = appearances, y = satisfaction_lvl)) +
+        geom_point(position = "jitter") +
+        geom_smooth(method='lm', formula= y~x) +
+        stat_cor(label.x = 5, label.y = 1.5) +
+        labs(
+          x = "Number of appearances in top 4 friend lists",
+          y = "Satisfaction level
+    (-2 = Very Dissatisfied, 2 = Very Satisfied)",
+          title = "Number of appearances and satisfaction level of
+    Harvard social culture",
+          subtitle = "Respondents who appeared more frequently reported to be more satisfied",
+          caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+        ) + 
+        theme_economist()
+      
+
+
 
 ```
 

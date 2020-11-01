@@ -10,7 +10,7 @@ library(tidyverse)
 ```
 
 ```{r}
-responses_clean %>%
+overall_satisfaction <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   summarize(Very_Dissatisfied = sum(satisfaction == "Very Dissatisfied"),
             Dissatisfied = sum(satisfaction == "Dissatisfied"),
@@ -18,8 +18,7 @@ responses_clean %>%
             Satisfied = sum(satisfaction == "Satisfied"),
             Very_Satisfied = sum(satisfaction == "Very Satisfied")) %>%
   pivot_longer(everything(), names_to = "satisfaction", values_to = "count") %>%
-  
-      ggplot(aes(x = fct_relevel(satisfaction, 
+  ggplot(aes(x = fct_relevel(satisfaction, 
                                levels = c("Very_Dissatisfied",
                                           "Dissatisfied",
                                           "Neutral",
