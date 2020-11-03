@@ -124,16 +124,20 @@ Top_4_Contacting <- read_csv("shiny_app/raw_data/Top_4_Contacting.csv", col_type
 ))
 
 
+
 cross <- Top_4_Contacting %>%
   select(c(-x, -y, -respondent, -top_4)) %>%
-mutate(cross_check = !(cross$top_4_trim %in% cross$respondent_trim))
-
+  mutate(cross_check = !(cross$top_4_trim %in% cross$respondent_trim))
 
 filtered <- cross %>%
   select(top_4_trim, cross_check) %>%
   filter(cross_check == TRUE)
- 
-filtered
+
+top_4_trim_unique <- unique(filtered$top_4_trim) %>%
+  as_tibble() %>%
+  drop_na()
+
+top_4_trim_unique 
 
 # Names attached to TRUE values in the cross_check column are individuals mentioned in
 # a respondent's top four friends, but these individuals have not filled out the survey.
