@@ -45,7 +45,9 @@ overall_satisfaction <- responses_clean %>%
 overall_satisfaction_by_location <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   select(satisfaction, location) %>%
-  filter( location %in% c("The Yard", "A River House",  "At Home (in the US)",
+  filter( location %in% c("The Yard", 
+                          "A River House", 
+                          "At Home (in the US)",
                           "At Home (international student)")) %>%
   group_by(satisfaction, location) %>%
   summarize(num = n(), .groups = "drop") %>%
@@ -54,7 +56,7 @@ overall_satisfaction_by_location <- responses_clean %>%
   facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
   theme_minimal() +
-  labs(title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+  labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
        x = "Self-Reported Level of Satisfaction with Social Connections",
        y = "Count") +
       theme(title = element_text(size = 14, face = "bold"),
