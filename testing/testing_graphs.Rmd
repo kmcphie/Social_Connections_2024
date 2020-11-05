@@ -44,10 +44,13 @@ overall_satisfaction <- responses_clean %>%
 overall_satisfaction_by_location <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   select(satisfaction, location) %>%
-  group_by(satisfaction) %>%
+  filter( location %in% c("The Yard", "A River House",  "At Home (in the US)",
+                          "At Home (international student)")) %>%
+  group_by(satisfaction, location) %>%
   summarize(num = n(), .groups = "drop") %>%
   ggplot(aes(x = satisfaction, y = num)) +
   geom_col() +
+  facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
   labs(title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
