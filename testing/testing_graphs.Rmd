@@ -39,9 +39,38 @@ overall_satisfaction <- responses_clean %>%
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain"))
+
+overall_satisfaction2 <- responses_clean %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  group_by(satisfaction) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = satisfaction, y = count)) +
+      geom_col(fill = "#6fb4d2") +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
+        y = "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain"))
+
+overall_satisfaction2
+
+overall_satisfaction3 <- responses_clean %>%
+  group_by(satisfaction) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = satisfaction, y = count)) +
+  geom_col(fill = "#6fb4d2")
+
+overall_satisfaction3
+  
 ```
 
 ```{r}
+# Satisfaction by Location 
+
 overall_satisfaction_by_location <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   select(satisfaction, location) %>%
@@ -50,13 +79,13 @@ overall_satisfaction_by_location <- responses_clean %>%
                           "At Home (in the US)",
                           "At Home (international student)")) %>%
   group_by(satisfaction, location) %>%
-  summarize(num = n(), .groups = "drop") %>%
-  ggplot(aes(x = satisfaction, y = num)) +
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = satisfaction, y = count)) +
   geom_col() +
   facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
-  theme_minimal() +
-  labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
+  theme_bw() +
+  labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
        x = "Self-Reported Level of Satisfaction with Social Connections",
        y = "Count") +
       theme(title = element_text(size = 14, face = "bold"),
