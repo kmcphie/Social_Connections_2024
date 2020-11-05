@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
 library(tidyverse)
+library(ggthemes)
 ```
 
 ```{r}
@@ -52,7 +53,7 @@ overall_satisfaction_by_location <- responses_clean %>%
   geom_col() +
   facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
-  theme_bw() +
+  theme_minimal() +
   labs(title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
        x = "Self-Reported Level of Satisfaction with Social Connections",
        y = "Count") +
