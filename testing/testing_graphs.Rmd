@@ -10,9 +10,11 @@ library(tidyverse)
 ```
 
 ```{r}
+# Satisfaction Graph 
+
 overall_satisfaction <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
-  summarize(Very_Dissatisfied = sum(satisfaction == "Very Dissatisfied"),
+  summarize(Very_Dissatisfied = n(satisfaction == "Very Dissatisfied"),
             Dissatisfied = sum(satisfaction == "Dissatisfied"),
             Neutral = sum(satisfaction == "Neutral"),
             Satisfied = sum(satisfaction == "Satisfied"),
@@ -36,5 +38,25 @@ overall_satisfaction <- responses_clean %>%
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain"))
+```
+
+```{r}
+overall_satisfaction_by_location <- responses_clean %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  select(satisfaction, location) %>%
+  group_by(satisfaction) %>%
+  summarize(num = n(), .groups = "drop") %>%
+  ggplot(aes(x = satisfaction, y = num)) +
+  geom_col() +
+  geom_col(fill = "#6fb4d2") +
+  theme_bw() +
+  labs(title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+       x = "Self-Reported Level of Satisfaction with Social Connections",
+       y = "Count") +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain"))
+
+overall_satisfaction_by_location
 ```
 
