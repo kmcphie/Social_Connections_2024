@@ -1,6 +1,6 @@
 # Read in datasets created using the 'gather_raw_data.R' script.
 
-responses <- readRDS("responses.rds")
+responses <- readRDS("responses_test.rds")
 
 # Define server logic.
 
@@ -76,14 +76,10 @@ server <- function(input, output) {
   
   output$satisfaction <- renderPlot({
     responses %>%
+      filter(satisfaction != "NA") %>%
       mutate(satisfaction = as_factor(satisfaction)) %>%
-      summarize(Very_Dissatisfied = sum(satisfaction == "Very Dissatisfied"),
-                Dissatisfied = sum(satisfaction == "Dissatisfied"),
-                Neutral = sum(satisfaction == "Neutral"),
-                Satisfied = sum(satisfaction == "Satisfied"),
-                Very_Satisfied = sum(satisfaction == "Very Satisfied")) %>%
-      pivot_longer(everything(), names_to = "satisfaction", values_to = "count") %>%
-      
+      group_by(satisfaction) %>%
+      summarize(count = n()) %>%
       ggplot(aes(x = fct_relevel(satisfaction, 
                                  levels = c("Very_Dissatisfied",
                                             "Dissatisfied",

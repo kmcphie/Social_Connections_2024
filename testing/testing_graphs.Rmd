@@ -13,14 +13,16 @@ library(ggthemes)
 ```{r}
 # Satisfaction Graph 
 
+View(responses_clean)
 overall_satisfaction <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
-  summarize(Very_Dissatisfied = n(satisfaction == "Very Dissatisfied"),
-            Dissatisfied = sum(satisfaction == "Dissatisfied"),
-            Neutral = sum(satisfaction == "Neutral"),
-            Satisfied = sum(satisfaction == "Satisfied"),
-            Very_Satisfied = sum(satisfaction == "Very Satisfied")) %>%
-  pivot_longer(everything(), names_to = "satisfaction", values_to = "count") %>%
+  filter(satisfaction != "NA") %>%
+  group_by(satisfaction) %>%
+  summarize(count = n())
+
+View(overall_satisfaction)
+
+overall_satisfaction %>%
   ggplot(aes(x = fct_relevel(satisfaction, 
                                levels = c("Very_Dissatisfied",
                                           "Dissatisfied",
@@ -38,7 +40,9 @@ overall_satisfaction <- responses_clean %>%
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain"))
+            axis.title.y = element_text(size = 12, face= "plain")) 
+
+overall_satisfaction
 
 overall_satisfaction2 <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
