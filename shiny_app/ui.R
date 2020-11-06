@@ -104,8 +104,8 @@ ui <- navbarPage(
               br(),
               mainPanel(plotOutput("satisfaction")),
               br(),
-              br(),
-              mainPanel(plotOutput("sat_by_loc"))
+              br()
+              # mainPanel(plotOutput("sat_by_loc"))
              ))
            )
   ),

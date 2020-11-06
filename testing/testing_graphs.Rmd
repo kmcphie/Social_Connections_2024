@@ -45,6 +45,11 @@ overall_satisfaction %>%
 sat_by_loc <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
+  mutate(satisfaction = str_replace(satisfaction, pattern = "Very Satisfied", replacement = "2"),
+             satisfaction = str_replace(satisfaction, pattern = "Satisfied", replacement = "1"),
+             satisfaction = str_replace(satisfaction, pattern = "Neutral", replacement = "0"),
+             satisfaction = str_replace(satisfaction, pattern = "Dissatisfied", replacement = "-1"),
+             satisfaction = str_replace(satisfaction, pattern = "Very Dissatisfied", replacement = "-2"))
   group_by(satisfaction, location) %>%
   summarize(count = n())
 
