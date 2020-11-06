@@ -7561,7 +7561,7 @@ input[type="checkbox"]:disabled:checked:after,
 	background-image: url("https://i.insider.com/599730e621c3fc30008b49b3?width=1100&format=jpeg&auto=webp");
 	/* https://d1d5xqjpwbyss4.cloudfront.net/store_promo_images/3243/banner-3243.png?1561578705 */
 	height: 700px;
-	width: 1150px; /* 1150px; */ /* inherit */
+	width: 1000px; /* 1150px; */ /* inherit */
 	background-attachment: fixed;
 	background-size: cover;
 	background-repeat: no-repeat;

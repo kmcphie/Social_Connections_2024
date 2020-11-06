@@ -115,7 +115,7 @@ server <- function(input, output) {
   output$elliott <- renderImage({
     list(src = "www/elliott.png",
          width = 300, 
-         height = 400)
+         height = 310)
   }, deleteFile = FALSE)
   
   output$ava <- renderImage({
