@@ -42,7 +42,34 @@ overall_satisfaction %>%
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) 
 
-overall_satisfaction
+sat_by_loc <- responses_clean %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  filter(satisfaction != "NA") %>%
+  group_by(satisfaction, location) %>%
+  summarize(count = n())
+
+View(sat_by_loc)
+
+sat_by_loc %>%
+  ggplot(aes(x = fct_relevel(satisfaction, 
+                               levels = c("Very_Dissatisfied",
+                                          "Dissatisfied",
+                                          "Neutral",
+                                          "Satisfied",
+                                          "Very_Satisfied")), 
+                 y = count)) +
+      geom_col(fill = "#6fb4d2") +
+      facet_wrap(~ location) +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
+        y = "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) 
 
 overall_satisfaction2 <- responses_clean %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%

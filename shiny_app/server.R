@@ -91,13 +91,41 @@ server <- function(input, output) {
       theme_bw() +
       theme(legend.position = "none") +
       labs(
-        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        title = "Overall Satisfaction with Social Connections\nAmong Harvard First-Years",
         x = "Satisfaction with Social Connections",
         y = "Count"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain"))
+  })
+  
+  output$sat_by_loc <- renderPlot({
+    responses_clean %>%
+      mutate(satisfaction = as_factor(satisfaction)) %>%
+      filter(satisfaction != "NA",
+             !(location %in% c("Apley Court", "NA"))) %>%
+      group_by(satisfaction, location) %>%
+      summarize(count = n()) %>%
+      ggplot(aes(x = fct_relevel(satisfaction, 
+                                 levels = c("Very Dissatisfied",
+                                            "Dissatisfied",
+                                            "Neutral",
+                                            "Satisfied",
+                                            "Very Satisfied")), 
+                 y = count)) +
+      geom_col(fill = "#6fb4d2") +
+      facet_wrap(~ location) +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Overall Satisfaction with Social Connections\nAmong Harvard First-Years By Location",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
+        y = "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) 
   })
   
   ########## FOURTH PAGE: ABOUT ##########
