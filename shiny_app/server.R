@@ -81,11 +81,11 @@ server <- function(input, output) {
       group_by(satisfaction) %>%
       summarize(count = n()) %>%
       ggplot(aes(x = fct_relevel(satisfaction, 
-                                 levels = c("Very_Dissatisfied",
+                                 levels = c("Very Dissatisfied",
                                             "Dissatisfied",
                                             "Neutral",
                                             "Satisfied",
-                                            "Very_Satisfied")), 
+                                            "Very Satisfied")), 
                  y = count)) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
