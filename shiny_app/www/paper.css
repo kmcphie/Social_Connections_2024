@@ -7561,7 +7561,7 @@ input[type="checkbox"]:disabled:checked:after,
 	background-image: url("https://i.insider.com/599730e621c3fc30008b49b3?width=1100&format=jpeg&auto=webp");
 	/* https://d1d5xqjpwbyss4.cloudfront.net/store_promo_images/3243/banner-3243.png?1561578705 */
 	height: 700px;
-	width: 1000px; /* 1150px; */ /* inherit */
+	width: inherit; /* 1150px; */ /* inherit */
 	background-attachment: fixed;
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -7585,7 +7585,7 @@ input[type="checkbox"]:disabled:checked:after,
 	padding-top: 45px;
 	padding-bottom: 45px;
 	width: 100%;
-	float: center;
+	float: inherit;
 	font-weight: lighter;
 	line-height: 100%;
 	margin-top: 0px;
@@ -7598,7 +7598,7 @@ input[type="checkbox"]:disabled:checked:after,
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 2000px) { /* 768 */
     
  .sc_description {
 	color: #000000;
@@ -7608,7 +7608,7 @@ input[type="checkbox"]:disabled:checked:after,
 	padding-top: 15px;
 	padding-bottom: 15px;
 	width: 100%;
-	float: right;
+	float: inherit;
 	font-weight: lighter;
 	line-height: 100%;
 	margin-top: 0px;
