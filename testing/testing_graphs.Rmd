@@ -105,3 +105,47 @@ overall_satisfaction_by_location <- responses_clean %>%
 overall_satisfaction_by_location
 ```
 
+```{r}
+# Predicted Satisfaction Based on Meeting 
+
+set.seed(10)
+closeness_model <- stan_glm(p1_closeness ~ p1_meet - 1,
+                            data = responses_clean,
+                            refresh = 0)
+
+mean_value <- closeness_model %>% 
+  as_tibble() %>% 
+  pivot_longer(cols = 1:26,
+               names_to = "meet",
+               values_to = "value") %>%
+  filter(meet %in% c("p1_meetZoom lecture", 
+                     "p1_meetSocial media (GroupMe, Instagram, Discord, etc.)",
+                     "p1_meetIn-person (The courtyard, the line at the dining hall, etc.)")) %>%
+  # pull(value) %>%
+  group_by(meet) %>%
+  summarize(mean = mean(value))
+
+closeness_model %>%
+  as_tibble() %>%
+  pivot_longer(cols = 1:26,
+               names_to = "meet",
+               values_to = "value") %>%
+  filter(meet %in% c("p1_meetZoom lecture", 
+                     "p1_meetSocial media (GroupMe, Instagram, Discord, etc.)",
+                     "p1_meetIn-person (The courtyard, the line at the dining hall, etc.)")) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(aes(y = after_stat(count/sum(count))), 
+                   binwidth = 0.07,
+                 fill = "#6fb4d2",
+                 color = "white") +
+  facet_wrap(~ meet) +
+  labs(title = "Posterior Probability Distribution",
+         subtitle = "Closeness Based on Meeting",
+         x = "Closeness",
+         y = "Probability") +
+  # geom_vline(xintercept = mean_value,
+  #            color = "red") +
+  theme_bw()
+  
+```
+
