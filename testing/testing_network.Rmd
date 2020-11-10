@@ -18,9 +18,7 @@ library(visNetwork)
 # visNetwork testing 
 
 nodes_responses <- responses_clean %>%
-    select(id) 
-
-nodes <- data.frame(id = 1:309)
+  select(id) 
 
 edges_responses <- responses_clean %>%
   filter(location == "The Yard") %>%
@@ -29,6 +27,7 @@ edges_responses <- responses_clean %>%
   select(id, from, to)
 
 visNetwork(nodes_responses, edges_responses)
+
 ```
 
 ```{r}
