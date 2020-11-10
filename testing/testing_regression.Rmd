@@ -78,6 +78,15 @@ rf_res <- rf_wflow %>%
 ```
 
 
+```{r}
+ggplot(responses_clean, aes(x = group_size)) +
+geom_density()
+
+stan_glm(group_size ~ gender + gap_year + living + location,
+         data = responses_clean,
+         refresh = 0,
+         family = poisson())
+```
 
 
 

@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
 library(tidyverse)
 library(ggthemes)
+library(rstanarm)
 ```
 
 ```{r}
@@ -99,8 +100,13 @@ overall_satisfaction_by_location <- responses_clean %>%
        x = "Self-Reported Level of Satisfaction with Social Connections",
        y = "Count") +
       theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain"))
+            axis.title.x = element_text(size = 9, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+  scale_x_discrete(labels = c("Very \n Dissatisfied",
+                              "Dissatisfied",
+                              "Neutral",
+                              "Satisfied",
+                              "Very \n Satisfied"))
 
 overall_satisfaction_by_location
 ```
@@ -112,6 +118,8 @@ set.seed(10)
 closeness_model <- stan_glm(p1_closeness ~ p1_meet - 1,
                             data = responses_clean,
                             refresh = 0)
+
+closeness_model
 
 mean_value <- closeness_model %>% 
   as_tibble() %>% 
