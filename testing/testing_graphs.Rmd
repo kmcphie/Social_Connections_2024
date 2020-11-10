@@ -119,8 +119,6 @@ closeness_model <- stan_glm(p1_closeness ~ p1_meet - 1,
                             data = responses_clean,
                             refresh = 0)
 
-closeness_model
-
 mean_value <- closeness_model %>% 
   as_tibble() %>% 
   pivot_longer(cols = 1:26,

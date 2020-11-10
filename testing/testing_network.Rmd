@@ -23,8 +23,9 @@ nodes_responses <- responses_clean %>%
 nodes <- data.frame(id = 1:309)
 
 edges_responses <- responses_clean %>%
+  filter(location == "The Yard") %>%
   mutate(from = id) %>%
-  mutate(to = sports) %>%
+  mutate(to = location) %>%
   select(id, from, to)
 
 visNetwork(nodes_responses, edges_responses)
