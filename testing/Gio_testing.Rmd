@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(visNetwork)
 library(tidyverse)
+
 ```
 
 ```{r}
@@ -17,15 +18,14 @@ library(tidyverse)
 # create the groups and tie them to each student
 
 nodes <- responses_clean %>% 
-  select(id) %>% 
-  mutate(group = id)
+  select(id)
 edges <- responses_clean %>% 
+  filter(location == "The Yard") %>% 
   mutate(from = id) %>%
-  mutate(to = sports) %>%
-  select(from, to)
+  mutate(to = location) %>%
+  select(id, from, to)
 
-visNetwork(nodes, edges) %>% 
-  visGroups(groupname = "id", color = "darkblue", shape = "square", size = 65)
+visNetwork(nodes, edges)
 ```
 
 ```{r}
