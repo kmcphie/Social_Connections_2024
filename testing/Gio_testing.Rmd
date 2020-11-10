@@ -1,0 +1,32 @@
+---
+title: "Gio Testing"
+author: "Giovanni Salcedo"
+date: "11/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(visNetwork)
+library(tidyverse)
+```
+
+```{r}
+nodes <- responses_test %>% 
+  select(id) %>% 
+  mutate(group = id)
+edges <- responses_test %>% 
+  mutate(from = id) %>%
+  mutate(to = sports) %>%
+  select(from, to)
+
+visNetwork(nodes, edges) %>% 
+  visGroups(groupname = "id", color = "darkblue", shape = "square", size = 65)
+```
+
+```{r}
+table(responses_test$most_connected)
+```
+
+
+
