@@ -1,0 +1,66 @@
+---
+title: "Gio Testing"
+author: "Giovanni Salcedo"
+date: "11/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(visNetwork)
+library(tidyverse)
+```
+
+```{r}
+
+# Still learning visNetwork, having trouble figuring out how to
+# create the groups and tie them to each student
+
+nodes <- responses_clean %>% 
+  select(id) %>% 
+  mutate(group = id)
+edges <- responses_clean %>% 
+  mutate(from = id) %>%
+  mutate(to = sports) %>%
+  select(from, to)
+
+visNetwork(nodes, edges) %>% 
+  visGroups(groupname = "id", color = "darkblue", shape = "square", size = 65)
+```
+
+```{r}
+
+# List of most connected people and how many times they're listed
+
+most_connected_list <- as.data.frame(table(responses_clean$most_connected)) %>% 
+  rename(Person = Var1) %>% 
+  arrange(desc(Freq))
+
+# List of 1st closest people and how many times they're listed
+
+p1_list <- as.data.frame(table(responses_clean$p1_name)) %>% 
+  rename(Person = Var1) %>% 
+  arrange(desc(Freq))
+
+# List of 2nd closest people and how many times they're listed
+
+p2_list <- as.data.frame(table(responses_clean$p2_name)) %>% 
+  rename(Person = Var1) %>% 
+  arrange(desc(Freq))
+
+# List of 3rd closest people and how many times they're listed
+
+p3_list <- as.data.frame(table(responses_clean$p3_name)) %>% 
+  rename(Person = Var1) %>% 
+  arrange(desc(Freq))
+
+# List of 4th closest people and how many times they're listed
+
+p4_list <- as.data.frame(table(responses_clean$p4_name)) %>% 
+  rename(Person = Var1) %>% 
+  arrange(desc(Freq))
+
+```
+
+
+
