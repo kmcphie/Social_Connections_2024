@@ -7,6 +7,15 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# GRAPHS BELOW
+
+# Jeremiah Mean Satisfaction by Top 4 Comparison
+# Location by Virtual Conversion Facet Graph
+# Comparing Mean Virtual Conversion Count by Location
+# Model with Satisfaction as a Function of Group Size (Virtual Conversion) & On-Campus
+# Expectations vs. Reality
+
 ```
 
 ```{r comparison}
@@ -19,7 +28,7 @@ library(ggthemes)
         nest(top4 = c(p1_name, p2_name,
                       p3_name, p4_name)) %>%
         select(id, satisfaction, top4, name)
-
+      
       # List of all names listed in top 4 friends, with repeats
       
       freshmen_top4_list <- unlist(freshmen_satisfaction$top4)
@@ -73,8 +82,7 @@ off_campus <- responses_clean %>%
                               pattern = "NA", 
                               replacement = "Off-Campus"))
 
-loc_by_group_size <- responses_clean %>%
-  # mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>% 
+groupsize_location <- responses_clean %>%
   mutate(location = str_replace(location, 
                               pattern = "At Home in US", 
                               replacement = "Off-Campus")) %>%
@@ -106,7 +114,7 @@ loc_by_group_size <- responses_clean %>%
   geom_bar(position = "stack", fill = "#6fb4d2") +
   facet_grid(~ location) +
   theme_bw() +
-  labs(x = "Virtual to In-Person Conversion Count", y = "Percentage of First Year Class") +
+  labs(title = "Comparing Virtual Conversion Counts by Student Location", x = "Virtual to In-Person Conversion Count", y = "Percentage of First Year Class") +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 7, 
     face=3)) +
@@ -123,7 +131,9 @@ loc_by_group_size <- responses_clean %>%
 # a satisfaction level. Maybe pop in a gganimate. 
 # Perhaps do a separate geom_point fully compiled group size vs satisfaction 
 # with gganimated coloring by different variables. 
-   
+ 
+```
+```{r mean virtual conversions by location graph}
 
 freshmen_location <- responses_clean %>%
     mutate(location = str_replace(location, 
@@ -161,12 +171,13 @@ graph_location_gs_means <- location_gs_means %>%
   geom_bar(stat = "identity") +
   labs(x = "Location",
           y = "Mean Virtual Conversion Count",
-          title = "Comparing Virtual Conversion Counts by Location",
-          subtitle = "Respondents who appeared in others lists were more satisfied",
-          caption = "Mean Total = 3.747") +
+          title = "Comparing Mean Virtual Conversion Count by Location",
+          subtitle = 
+         "Examining the number of virtual contacts converted into in-person relationships", 
+       caption = "Total Mean of 3.747 Relationships") +
   geom_hline(yintercept = location_gs_means$mean_total) +
   theme_bw()
- 
+
 ```
 
 ```{r satisfaction/group_size by demographic totals}
@@ -267,13 +278,17 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
 # hextable
 # fmt_number https://gt.rstudio.com/reference/fmt_number.html
 
+```
+
+```{r}
+
+# Expectations vs. Reality
 
 
-on_campus <- responses_clean %>%
-  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
-  select(on_campus)
 
 
 
 
 ```
+
+
