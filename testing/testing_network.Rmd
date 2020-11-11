@@ -14,38 +14,48 @@ library(shiny)
 library(shinythemes)
 library(readxl)
 library(visNetwork)
+library(network) 
+library(sna)
+library(ggraph)
+library(threejs)
+library(networkD3)
+library(ndtv)
 ```
 
 ```{r}
 # visNetwork testing 
 
 nodes_responses <- responses_clean %>%
-  select(id) 
+  filter(location == "The Yard") %>%
+  select(id, location) %>%
+  mutate(group = case_when(location == "The Yard" ~ "Student")) %>%
+  mutate(label = id) %>%
+  select(id, group, label)
 
 edges_responses <- responses_clean %>%
   filter(location == "The Yard") %>%
   mutate(from = id) %>%
-  mutate(to = location) %>%
-  select(id, from, to)
+  mutate(to = sports) %>%
+  select(from, to)
 
 visNetwork(nodes_responses, edges_responses)
+```
 
+```{r}
 id <- responses_clean %>%
   select(id) 
 
-to <- responses_clean %>%
+from <- responses_clean %>%
   select(id)
 
-from <- responses_clean %>%
-  select(sports) %>%
-  group_by(sports) %>%
-  mutate(from = case_when(sports == "No" ~ 1,
+to <- responses_clean %>%
+  mutate(to = case_when(sports == "No" ~ 1,
                          sports == "Yes (Varsity)" ~ 2,
                          sports == "Yes (Club)" ~ 3)) %>%
-  select(from)
+  select(to)
 
-nodes <- data.frame(id = id)
-edges <- data.frame(from = from,
+nodes <- data.frame(id = 1:390)
+edges <- data.frame(from = 1:390,
                     to = to)
   
   visNetwork(nodes, edges)
@@ -53,25 +63,17 @@ edges <- data.frame(from = from,
 ```
 
 ```{r}
-# We can use the graph_from_data_frame function, which takes two arguments: d, 
-# the data frame with the edge list in the first two columns; and vertices, a 
-# data frame with node data with the node label in the first column. (Note that 
+# We can use the graph_from_data_frame function, which takes two arguments: d,
+# the data frame with the edge list in the first two columns; and vertices, a
+# data frame with node data with the node label in the first column. (Note that
 # igraph calls the nodes vertices, but it’s exactly the same thing.)
 
-# edges <- responses_clean %>%
-#   select(id, gap_year) %>%
-#   mutate(from = 1:309) %>%
-#   rename("to" = gap_year)
-# 
-# test_nodes <- data.frame(id = 1:309)
-# test_edges <- data.frame(from = c(1:309), to = (1))
-# 
-# test_network <- graph_from_data_frame(d=test_edges, vertices=test_nodes, directed=F)
-# 
-# plot(test_network)
-# 
-# test_response_network <- graph_from_data_frame(d=edges_responses, vertices=nodes_responses, directed=F)
+test_nodes <- data.frame(id = 1:30)
+test_edges <- data.frame(from = c(1:10, 11:20, 21:30), to = c(1,11,21))
 
+test_network <- graph_from_data_frame(d=test_edges, vertices=test_nodes, directed=F)
+
+plot(test_network)
 ```
 
 ```{r}
