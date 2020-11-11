@@ -38,20 +38,7 @@ edges_responses <- responses_clean %>%
   mutate(to = sports) %>%
   select(from, to)
 
-visNetwork(nodes_responses, edges_responses) %>%
-  visGroups(groupname = "Dorms", color = "darkblue", shape = "square", size = 65) %>%
-    visGroups(groupname = "Sports", color = "darkgreen", shape = "square", size = 45)
-
-nodes <- data.frame(id = 1:10, group = c(rep("A", 5), rep("B", 5)))
-edges <- data.frame(from = c(2:5, 6:10), to = c(1,2))
-
-visNetwork(nodes, edges, width = "100%") %>% 
-  # # darkblue square with shadow for group "A"
-  # visGroups(groupname = "A", color = "darkblue", shape = "square", 
-  #           shadow = list(enabled = TRUE)) %>% 
-  # # red triangle for group "B"
-  # visGroups(groupname = "B", color = "red", shape = "triangle") %>%
-  visGroups(groupname = "Sports", color = "darkgreen", shape = "square", size = 45)
+visNetwork(nodes_responses, edges_responses)
 ```
 
 ```{r}
