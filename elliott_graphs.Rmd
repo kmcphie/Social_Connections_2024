@@ -1,0 +1,211 @@
+---
+title: "Elliott_graphs"
+author: "Elliott Detjen"
+date: "11/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r comparison}
+# '23 Class vs '24 Class Mean Satisfaction Comparison/Showing up Top 4
+
+library(ggthemes)
+
+      freshmen_satisfaction <- responses_clean %>%
+        nest(top4 = c(p1_name, p2_name,
+                      p3_name, p4_name)) %>%
+        select(id, satisfaction, top4, name)
+      
+      # List of all names listed in top 4 friends, with repeats
+      
+      freshmen_top4_list <- unlist(freshmen_satisfaction$top4)
+      
+      # Calculate overall satisfaction score mean
+      
+      all_freshmen_satisfaction_mean <- freshmen_satisfaction %>%
+        summarize(mean = mean(satisfaction, na.rm = TRUE)) %>%
+        pull(mean)
+      
+      # Create a tibble for comparing satisfaction levels vs. whether or not
+      # they appear.
+      
+      compare_satisfaction <- freshmen_satisfaction %>%
+        mutate(appear = name %in% freshmen_top4_list) %>%
+        group_by(appear) %>%
+        summarize(mean_satis = mean(satisfaction, na.rm = TRUE))
+      
+      compare_satisfaction %>%
+        ggplot(aes(x = appear, y = mean_satis, fill = appear)) +
+        geom_bar(stat = "identity") + 
+        guides(fill=FALSE) +
+        scale_x_discrete(labels = c("No", "Yes")) +
+        labs(
+          x = "Did the respondent's name appear in other respondents' top 4 friends lists?",
+          y = "Mean Satisfaction Score",
+          title = "Comparing mean satisfaction scores of respondents",
+          subtitle = "Respondents who appeared in others lists were more satisfied",
+          caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+        ) +
+        geom_hline(yintercept = all_freshmen_satisfaction_mean) +
+        theme_bw()
+      
+```
+
+```{r breakdown}
+
+overall_satisfaction <- responses_clean %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  filter(satisfaction != "NA") %>%
+  group_by(satisfaction) %>%
+  summarize(count = n())
+
+satg_neg2 <- responses_clean %>%
+  select(group_size, satisfaction) %>%
+  filter(satisfaction == -2) %>%
+  group_by(group_size) %>%
+  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
+  geom_bar() +
+  theme_bw()
+
+satg_neg1 <- responses_clean %>%
+  select(group_size, satisfaction) %>%
+  filter(satisfaction == -1) %>%
+  group_by(group_size) %>%
+  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
+  geom_bar() +
+  theme_bw()
+
+satg0 <- responses_clean %>%
+  select(group_size, satisfaction) %>%
+  filter(satisfaction == 0) %>%
+  group_by(group_size) %>%
+  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
+  geom_bar() +
+  theme_bw()
+
+satg1 <- responses_clean %>%
+  select(group_size, satisfaction) %>%
+  filter(satisfaction == 1) %>%
+  group_by(group_size) %>%
+  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
+  geom_bar() +
+  theme_bw()
+
+satg2 <- responses_clean %>%
+  select(group_size, satisfaction) %>%
+  filter(satisfaction == 2) %>%
+  group_by(group_size) %>%
+  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
+  geom_bar() +
+  theme_bw()
+
+responses_clean %>%
+  select(satisfaction, group_size) %>%
+  ggplot(aes(x = satisfaction, y = group_size)) +
+  geom_point() +
+  geom_jitter() +
+  theme_bw()
+
+print(sat_sums)
+
+ex <- responses_clean %>%
+  group_by(`satisfaction`) %>%
+  summarize(sat = sum(`satisfaction`))
+
+
+sat_by_group_size <- responses_clean %>%
+  mutate_all(~replace(., is.na(.), 0)) %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  mutate(group_size = as_factor(group_size)) %>%
+  select(satisfaction, group_size) %>%
+  group_by(satisfaction, group_size) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = group_size, y = satisfaction)) +
+  geom_col() +
+  facet_wrap(~ satisfaction) +
+  geom_col(fill = "#6fb4d2") +
+  theme_bw()
+ 
+  
+   scale_y_discrete(labels = c("Very \n Dissatisfied",
+                              "Dissatisfied",
+                              "Neutral",
+                              "Satisfied",
+                              "Very \n Satisfied"))
+
+
+
+
+# Have 5 separate graphs. Each titled a "satisfied" variant." X-axis is group
+# size, with y being the count of individuals with a discrete group sizes within
+# a satisfaction level. Maybe pop in a gganimate. 
+# Perhaps do a separate geom_point fully compiled group size vs satisfaction 
+# with gganimated coloring by different variables. 
+   
+satg_tot <- responses_clean %>%
+  select(group_size, satisfaction, gender, pre_o, location, sports) %>%
+  mutate(gender = str_replace(gender, 
+                              pattern = "Genderqueer/Gender Non-Conforming", 
+                              replacement = "Other")) %>%
+  mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                              replacement = "Other")) %>%
+  group_by(satisfaction, group_size) %>%
+  ggplot(aes(x = satisfaction, y = group_size, color = gender)) +
+  geom_point() +
+  geom_jitter() +
+  facet_wrap(~ gender) +
+  theme_bw()
+  
+
+satg_tot
+
+geom_contour()
+
+   
+   
+# +
+#   labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
+#        x = "Self-Reported Level of Satisfaction with Social Connections",
+#        y = "Count") +
+#       theme(title = element_text(size = 14, face = "bold"),
+#             axis.title.x = element_text(size = 9, face = "plain"),
+#             axis.title.y = element_text(size = 12, face= "plain")) +
+#   scale_x_discrete(labels = c("Very \n Dissatisfied",
+#                               "Dissatisfied",
+#                               "Neutral",
+#                               "Satisfied",
+#                               "Very \n Satisfied"))
+```
+
+```{r model}
+
+library(gtsummary)
+library(broom.mixed)
+
+model_data <- responses_clean %>%
+  mutate(gender = str_replace(gender, 
+                              pattern = "Genderqueer/Gender Non-Conforming", 
+                              replacement = "Other")) %>%
+  mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                              replacement = "Other"))
+
+fit_gs <- stan_glm(data = model_data,
+                   formula = satisfaction ~ group_size + gender - 1,
+                   family = gaussian(),
+                   refresh = 0)
+
+# print(fit_gs, digits = 5)
+
+tbl_regression(fit_gs, intercept = TRUE) %>%
+  as_gt() %>%
+  tab_header(title = "Regression of Satisfaction",
+             subtitle = "The Effect of Group Size and Gender on Satisfaction")
+
+
+# Interpret + digits + should I graph this? + statistically significant?
+
+```
+

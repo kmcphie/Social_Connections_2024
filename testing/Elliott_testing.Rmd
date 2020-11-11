@@ -70,6 +70,8 @@ dorm_graph
 
 ```{r satisfaction, top 4 (using Jeremiah code for side by side comparison)}
 
+# '23 Class vs '24 Class Mean Satisfaction Comparison/Showing up Top 4
+
 library(ggthemes)
 
       freshmen_satisfaction <- responses_clean %>%
