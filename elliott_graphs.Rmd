@@ -12,13 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r comparison}
 # '23 Class vs '24 Class Mean Satisfaction Comparison/Showing up Top 4
 
+library(tidyverse)
 library(ggthemes)
 
       freshmen_satisfaction <- responses_clean %>%
         nest(top4 = c(p1_name, p2_name,
                       p3_name, p4_name)) %>%
         select(id, satisfaction, top4, name)
-      
+
       # List of all names listed in top 4 friends, with repeats
       
       freshmen_top4_list <- unlist(freshmen_satisfaction$top4)
@@ -37,6 +38,7 @@ library(ggthemes)
         group_by(appear) %>%
         summarize(mean_satis = mean(satisfaction, na.rm = TRUE))
       
+      
       compare_satisfaction %>%
         ggplot(aes(x = appear, y = mean_satis, fill = appear)) +
         geom_bar(stat = "identity") + 
@@ -54,90 +56,67 @@ library(ggthemes)
       
 ```
 
-```{r breakdown}
+```{r location/group_size, fig.height = 2.5, fig.width= 6} 
 
-overall_satisfaction <- responses_clean %>%
-  mutate(satisfaction = as_factor(satisfaction)) %>%
-  filter(satisfaction != "NA") %>%
-  group_by(satisfaction) %>%
-  summarize(count = n())
+off_campus <- responses_clean %>%
+  select(location) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "At Home in US", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "At Home internationally", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "Off-campus in the Cambridge area", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "NA", 
+                              replacement = "Off-Campus"))
 
-satg_neg2 <- responses_clean %>%
-  select(group_size, satisfaction) %>%
-  filter(satisfaction == -2) %>%
-  group_by(group_size) %>%
-  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
-  geom_bar() +
-  theme_bw()
-
-satg_neg1 <- responses_clean %>%
-  select(group_size, satisfaction) %>%
-  filter(satisfaction == -1) %>%
-  group_by(group_size) %>%
-  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
-  geom_bar() +
-  theme_bw()
-
-satg0 <- responses_clean %>%
-  select(group_size, satisfaction) %>%
-  filter(satisfaction == 0) %>%
-  group_by(group_size) %>%
-  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
-  geom_bar() +
-  theme_bw()
-
-satg1 <- responses_clean %>%
-  select(group_size, satisfaction) %>%
-  filter(satisfaction == 1) %>%
-  group_by(group_size) %>%
-  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
-  geom_bar() +
-  theme_bw()
-
-satg2 <- responses_clean %>%
-  select(group_size, satisfaction) %>%
-  filter(satisfaction == 2) %>%
-  group_by(group_size) %>%
-  ggplot(aes(x = group_size, fill = "##6fb4d2")) +
-  geom_bar() +
-  theme_bw()
-
-responses_clean %>%
-  select(satisfaction, group_size) %>%
-  ggplot(aes(x = satisfaction, y = group_size)) +
-  geom_point() +
-  geom_jitter() +
-  theme_bw()
-
-print(sat_sums)
-
-ex <- responses_clean %>%
-  group_by(`satisfaction`) %>%
-  summarize(sat = sum(`satisfaction`))
-
-
-sat_by_group_size <- responses_clean %>%
+loc_by_group_size <- responses_clean %>%
+  # mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>% 
+  mutate(location = str_replace(location, 
+                              pattern = "At Home in US", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "At Home internationally", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "Off-campus in the Cambridge area", 
+                              replacement = "Off-Campus")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "NA", 
+                              replacement = "Off-Campus")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "Apley Court", 
+                              replacement = "The Yard")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "The Yard", 
+                              replacement = "Freshman Housing")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "Union Dorm", 
+                              replacement = "Freshman Housing")) %>%
+  select(satisfaction, group_size, location) %>%
+  filter(!is.na(location)) %>%
   mutate_all(~replace(., is.na(.), 0)) %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   mutate(group_size = as_factor(group_size)) %>%
-  select(satisfaction, group_size) %>%
   group_by(satisfaction, group_size) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  ggplot(aes(x = group_size, y = satisfaction)) +
-  geom_col() +
-  facet_wrap(~ satisfaction) +
-  geom_col(fill = "#6fb4d2") +
-  theme_bw()
- 
-  
-   scale_y_discrete(labels = c("Very \n Dissatisfied",
-                              "Dissatisfied",
-                              "Neutral",
-                              "Satisfied",
-                              "Very \n Satisfied"))
+  ggplot(aes(x = group_size, y = after_stat(count / sum(count)), fill = location)) +
+  geom_bar(position = "stack", fill = "#6fb4d2") +
+  facet_grid(~ location) +
+  theme_bw() +
+  labs(x = "Virtual to In-Person Conversion Count", y = "Percentage of First Year Class") +
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(size = 7, 
+    face=3)) +
+  coord_flip() +
+  theme(panel.spacing = unit(2, "lines"))
 
 
-
+# How to use after_stat to normalize based on each individual facet wrap data graph, not 
+# on total count from entire data. 
+   
 
 # Have 5 separate graphs. Each titled a "satisfied" variant." X-axis is group
 # size, with y being the count of individuals with a discrete group sizes within
@@ -145,25 +124,85 @@ sat_by_group_size <- responses_clean %>%
 # Perhaps do a separate geom_point fully compiled group size vs satisfaction 
 # with gganimated coloring by different variables. 
    
+
+freshmen_location <- responses_clean %>%
+    mutate(location = str_replace(location, 
+                              pattern = "At Home in US", 
+                              replacement = "Off-Campus")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "At Home internationally", 
+                              replacement = "Off-Campus")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "Off-campus in the Cambridge area", 
+                              replacement = "Off-Campus")) %>%
+    mutate(location = str_replace(location, 
+                                pattern = "NA", 
+                              replacement = "Off-Campus")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "Apley Court", 
+                              replacement = "The Yard")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "The Yard", 
+                              replacement = "Freshman Housing")) %>%
+    mutate(location = str_replace(location, 
+                              pattern = "Union Dorm", 
+                              replacement = "Freshman Housing")) %>%
+  select(location, group_size)
+
+# Converting into broader groups of housing.
+      
+location_gs_means <- freshmen_location %>%
+  group_by(location) %>%
+  summarize(mean_gs = mean(group_size, na.rm = TRUE)) %>%
+  mutate(mean_total = mean(mean_gs))
+
+graph_location_gs_means <- location_gs_means %>%
+  ggplot(aes(x = location, y = mean_gs, fill = location)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Location",
+          y = "Mean Virtual Conversion Count",
+          title = "Comparing Virtual Conversion Counts by Location",
+          subtitle = "Respondents who appeared in others lists were more satisfied",
+          caption = "Mean Total = 3.747") +
+  geom_hline(yintercept = location_gs_means$mean_total) +
+  theme_bw()
+ 
+```
+
+```{r satisfaction/group_size by demographic totals}
+
+#satg_tot
+
 satg_tot <- responses_clean %>%
-  select(group_size, satisfaction, gender, pre_o, location, sports) %>%
+  select(group_size, satisfaction, gender, pre_o, location, sports, gap_year) %>%
   mutate(gender = str_replace(gender, 
                               pattern = "Genderqueer/Gender Non-Conforming", 
                               replacement = "Other")) %>%
   mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
                               replacement = "Other")) %>%
   group_by(satisfaction, group_size) %>%
-  ggplot(aes(x = satisfaction, y = group_size, color = gender)) +
+  ggplot(aes(x = satisfaction, y = group_size, color = pre_o)) +
   geom_point() +
   geom_jitter() +
-  facet_wrap(~ gender) +
-  theme_bw()
-  
+  facet_wrap(~ pre_o) +
+  theme_bw() +
+  geom_smooth(formula = y ~ x, se = FALSE, color = "black", method = "loess") +
+  labs(x = "Satisfaction Level", y = "Number of Social Conversions", caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+        )
+ 
+ # scale_x_discrete(labels = c("Very \n Dissatisfied",
+  #                              "Dissatisfied",
+  #                              "Neutral",
+  #                              "Satisfied",
+  #                              "Very \n Satisfied"))
+  # 
 
 satg_tot
 
-geom_contour()
 
+responses_clean
+
+# help with satg_tot labels, maybe look at interactive/animating
    
    
 # +
@@ -178,34 +217,63 @@ geom_contour()
 #                               "Neutral",
 #                               "Satisfied",
 #                               "Very \n Satisfied"))
+
+# look at gender ratios between groups of 4 potentially
+
 ```
+
 
 ```{r model}
 
 library(gtsummary)
 library(broom.mixed)
+library(rstanarm)
+library(gt)
 
 model_data <- responses_clean %>%
   mutate(gender = str_replace(gender, 
                               pattern = "Genderqueer/Gender Non-Conforming", 
                               replacement = "Other")) %>%
   mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
-                              replacement = "Other"))
+                              replacement = "Other")) %>%
+  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
+  select(on_campus, gender, satisfaction, group_size)
+
+# group all on campus individuals to be on campus and alternatively
 
 fit_gs <- stan_glm(data = model_data,
-                   formula = satisfaction ~ group_size + gender - 1,
+                   formula = satisfaction ~ group_size + on_campus + on_campus*group_size - 1,
                    family = gaussian(),
                    refresh = 0)
 
-# print(fit_gs, digits = 5)
+print(fit_gs, digits = 5)
+
+fit_graph <- fit_gs %>%
+  as_tibble() %>%
+  ggplot(aes(x = group_size, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  theme_bw()
 
 tbl_regression(fit_gs, intercept = TRUE) %>%
   as_gt() %>%
+ # fmt_number(columns = 2:3, decimal = 3) %>%
   tab_header(title = "Regression of Satisfaction",
              subtitle = "The Effect of Group Size and Gender on Satisfaction")
 
 
 # Interpret + digits + should I graph this? + statistically significant?
+# on or off campus, meaningful difference 
+# hextable
+# fmt_number https://gt.rstudio.com/reference/fmt_number.html
+
+
+
+on_campus <- responses_clean %>%
+  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
+  select(on_campus)
+
+
+
 
 ```
-
