@@ -273,6 +273,8 @@ library(tidyverse)
 
 expectations <- read_excel("shiny_app/raw_data/expectations.xlsx")
 
+# TRUE/FALSE Dissonace1 Match Graph
+
 dissonance1 <- expectations %>%
         select(best, p_meet_total) %>%
         mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
@@ -296,6 +298,7 @@ dissonance1_digits <- expectations %>%
   summarize(sum = sum(reality == TRUE),
             sum2 = sum(reality == FALSE))
 
+# Top Expectations Graph
 
 top_best_freq <- expectations %>%
   group_by(best) %>%
@@ -314,6 +317,7 @@ top_best_freq %>%
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 8))
 
+# Top Realities Graph
 
 top_pmeet_freq <- expectations %>%
   group_by(p_meet_total) %>%
