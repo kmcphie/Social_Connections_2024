@@ -54,7 +54,7 @@ responses_clean$group_size <- as.integer(as.character(responses_clean$group_size
 ```
 
 ```{r}
-# Getting ids for the p1-p4 columns 
+# Getting ids for the p1-p4, most_connected, and name columns 
 
 # Does something but no quite it 
 id_responses_clean <- responses_clean %>%
@@ -63,6 +63,7 @@ id_responses_clean <- responses_clean %>%
           p3_id = group_indices(., p3_name),
           p4_id = group_indices(., p4_name)) %>%
   select(p1_id, p2_id, p3_id, p4_id, id)
+
 
 # This doesn't do what I thought it would
 id2_responses_clean <- responses_clean %>%
@@ -73,16 +74,23 @@ id2_responses_clean <- responses_clean %>%
          p4_id = as.factor(p4_name)) %>%
   select(p1_id, p2_id, p3_id, p4_id, id)
 
-# This successfully assign a matching id for the p1-p4 columns!!!
+
+# This successfully assign a matching id for the p1-p4, most_connected, and name
+# columns!!!
 id3_responses_clean <- responses_clean %>%
   select(p1_name, p2_name, p3_name, p4_name, name, most_connected, id) %>%
   pivot_longer(cols = 1:6,
-               names_to = "top4",
+               names_to = "degree",
                values_to = "name") %>%
   mutate(p_id = group_indices(., name)) %>%
-  arrange(p_id)
-  # pivot_wider(names_from = top4,
-  #             values_from = p_id) %>%
-  # select(id, p1_name, p2_name, p3_name, p4_name)
+  select(id, degree, p_id) %>%
+  pivot_wider(names_from = degree,
+              values_from = p_id) %>%
+  select(name, p1_name, p2_name, p3_name, p4_name, most_connected) %>%
+  rename("id" = name,
+         "first_id" = p1_name,
+         "second_id" = p2_name,
+         "third_id" = p3_name,
+         "fourth_id" = p4_name)
 ```
 
