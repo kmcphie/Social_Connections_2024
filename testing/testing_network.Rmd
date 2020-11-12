@@ -26,20 +26,20 @@ library(RColorBrewer)
 ```{r}
 # visNetwork testing 
 
-# nodes_responses <- responses_clean %>%
-#   filter(location == "The Yard") %>%
-#   select(id, location) %>%
-#   mutate(group = case_when(location == "The Yard" ~ "Student")) %>%
-#   mutate(label = id) %>%
-#   select(id, group, label)
-# 
-# edges_responses <- responses_clean %>%
-#   filter(location == "The Yard") %>%
-#   mutate(from = id) %>%
-#   mutate(to = sports) %>%
-#   select(from, to)
-# 
-# visNetwork(nodes_responses, edges_responses)
+nodes_responses <- responses_clean %>%
+  filter(location == "The Yard") %>%
+  select(id, location) %>%
+  mutate(group = case_when(location == "The Yard" ~ "Student")) %>%
+  mutate(label = id) %>%
+  select(id, group, label)
+
+edges_responses <- responses_clean %>%
+  filter(location == "The Yard") %>%
+  mutate(from = id) %>%
+  mutate(to = sports) %>%
+  select(from, to)
+
+visNetwork(nodes_responses, edges_responses)
 ```
 
 ```{r}
