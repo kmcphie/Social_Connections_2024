@@ -50,6 +50,11 @@ responses_clean <- responses %>%
 
 responses_clean$satisfaction <- as.integer(as.character(responses_clean$satisfaction))
 responses_clean$group_size <- as.integer(as.character(responses_clean$group_size))
+  
+```
+
+```{r}
+# Getting ids for the p1-p4 columns 
 
 # Does something but no quite it 
 id_responses_clean <- responses_clean %>%
@@ -77,7 +82,7 @@ id3_responses_clean <- responses_clean %>%
   mutate(p_id = group_indices(., name)) %>%
   arrange(p_id)
   # pivot_wider(names_from = top4,
-  #             values_from = p_id)
-  
+  #             values_from = p_id) %>%
+  # select(id, p1_name, p2_name, p3_name, p4_name)
 ```
 
