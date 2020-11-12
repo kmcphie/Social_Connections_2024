@@ -178,14 +178,11 @@ edges_full <- network_responses_clean %>%
       
       nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
       
-      
       g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
-      
-      
+    
       l <- layout_on_sphere(g)
       
       
-      #png("ms_6/helen_plot.png", 1800, 1800) 
       plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
       
 # visNetwork(nodes, edges)
