@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Location by Virtual Conversion Facet Graph
 # Comparing Mean Virtual Conversion Count by Location
 # Model with Satisfaction as a Function of Group Size (Virtual Conversion) & On-Campus
-# Expectations vs. Reality
+# Expectations vs. Reality in Creating Connections
 
 ```
 
@@ -173,7 +173,7 @@ graph_location_gs_means <- location_gs_means %>%
           y = "Mean Virtual Conversion Count",
           title = "Comparing Mean Virtual Conversion Count by Location",
           subtitle = 
-         "Examining the number of virtual contacts converted into in-person relationships", 
+         "Examining the number of virtual contacts converted into in-person connections", 
        caption = "Total Mean of 3.747 Relationships") +
   geom_hline(yintercept = location_gs_means$mean_total) +
   theme_bw()
@@ -192,10 +192,10 @@ satg_tot <- responses_clean %>%
   mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
                               replacement = "Other")) %>%
   group_by(satisfaction, group_size) %>%
-  ggplot(aes(x = satisfaction, y = group_size, color = pre_o)) +
+  ggplot(aes(x = satisfaction, y = group_size, color = gender)) +
   geom_point() +
   geom_jitter() +
-  facet_wrap(~ pre_o) +
+  facet_wrap(~ gender) +
   theme_bw() +
   geom_smooth(formula = y ~ x, se = FALSE, color = "black", method = "loess") +
   labs(x = "Satisfaction Level", y = "Number of Social Conversions", caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
@@ -209,27 +209,6 @@ satg_tot <- responses_clean %>%
   # 
 
 satg_tot
-
-
-responses_clean
-
-# help with satg_tot labels, maybe look at interactive/animating
-   
-   
-# +
-#   labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
-#        x = "Self-Reported Level of Satisfaction with Social Connections",
-#        y = "Count") +
-#       theme(title = element_text(size = 14, face = "bold"),
-#             axis.title.x = element_text(size = 9, face = "plain"),
-#             axis.title.y = element_text(size = 12, face= "plain")) +
-#   scale_x_discrete(labels = c("Very \n Dissatisfied",
-#                               "Dissatisfied",
-#                               "Neutral",
-#                               "Satisfied",
-#                               "Very \n Satisfied"))
-
-# look at gender ratios between groups of 4 potentially
 
 ```
 
@@ -284,9 +263,30 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
 
 # Expectations vs. Reality
 
+# Created new dataset that puts all of the ways people met their four people
+# into a single column alongside "best way to meet someone" column, location,
+# and the how do you stay in contact column.
 
+library(readxl)
+expectations <- read_excel("shiny_app/raw_data/expectations.xlsx")
 
+dissonance1 <- expectations %>%
+        select(best, p_meet_total) %>%
+        mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
+        drop_na() %>%
+  ggplot(aes(x = reality)) +
+  geom_bar(fill = "#6fb4d2") +
+  theme_bw() +
+  labs(x = "Matches", y = "Count",
+       title = " Frequency of Reality Meeting Expectations",
+       subtitle = " Aligning respondent speculation on best ways to connect with people vs\n how respondents actually meet their top four friends")
+  
+dissonance1
 
+top5_means <- expectations %>%
+  select(best) %>%
+  group_by(best) %>%
+  count("Zoom lecture", wt = runs)
 
 
 ```
