@@ -119,3 +119,64 @@ plot(test_network)
 #                    zoomView = FALSE,
 #                    navigationButtons = TRUE)
 ```
+
+```{r}
+#Helen_plot (static network)
+output$helen_plot <- renderPlot({
+      survey_data <- read_csv("data/FINAL_PUBLIC_DATA-4-23-20.csv") 
+      library(RColorBrewer)
+      color <- brewer.pal(4, "Set3") 
+      
+      # Created a friend network plot
+      
+      edges_full <- survey_data %>% 
+        select(id, first_id, second_id, third_id, fourth_id) %>% 
+        pivot_longer(cols = c(first_id, second_id, third_id, fourth_id), names_to = "degree", values_to = "endpoint") %>% 
+        mutate(colors = case_when(
+          degree == "first_id" ~ color[1],
+          degree == "second_id" ~ color[2],
+          degree == "third_id" ~ color[3],
+          degree == "fourth_id" ~ color[4]
+        ))
+      
+      # Specified the edges, nodes, and top four friends
+      
+      edges <- edges_full %>% 
+        select(id, endpoint)
+      
+      nodes <- survey_data %>% 
+        select(id) 
+      
+      first <- survey_data %>% 
+        select(first_id) 
+      
+      second <- survey_data %>% 
+        select(second_id) 
+      
+      third <- survey_data %>% 
+        select(third_id) 
+      
+      fourth <- survey_data %>% 
+        select(fourth_id) 
+      
+      all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
+      
+      
+      nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
+      
+      
+      g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
+      
+      
+      l <- layout_on_sphere(g)
+      
+      
+      #png("ms_6/helen_plot.png", 1800, 1800) 
+      plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
+      title("Friend Network",cex.main=3,col.main="black")
+      
+      legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
+             col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
+    })
+```
+
