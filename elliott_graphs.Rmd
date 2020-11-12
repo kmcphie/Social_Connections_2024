@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Location by Virtual Conversion Facet Graph
 # Comparing Mean Virtual Conversion Count by Location
 # Model with Satisfaction as a Function of Group Size (Virtual Conversion) & On-Campus
-# Expectations vs. Reality in Creating Connections
+# Expectations vs. Reality in Creating Connections (Matching Alignment graph + Popular Mediums)
 
 ```
 
@@ -261,13 +261,16 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
 
 ```{r}
 
-# Expectations vs. Reality
+# Expectations vs. Reality: dissonance1 graph and category ferquency
 
 # Created new dataset that puts all of the ways people met their four people
 # into a single column alongside "best way to meet someone" column, location,
 # and the how do you stay in contact column.
 
 library(readxl)
+library(data.table)
+library(tidyverse)
+
 expectations <- read_excel("shiny_app/raw_data/expectations.xlsx")
 
 dissonance1 <- expectations %>%
@@ -278,16 +281,56 @@ dissonance1 <- expectations %>%
   geom_bar(fill = "#6fb4d2") +
   theme_bw() +
   labs(x = "Matches", y = "Count",
-       title = " Frequency of Reality Meeting Expectations",
-       subtitle = " Aligning respondent speculation on best ways to connect with people vs\n how respondents actually meet their top four friends")
-  
+       title = "Frequency of Reality Meeting Expectations",
+       subtitle = "Number of matches between speculation and reality on best channels to connect with peers") +
+  annotate("text", x = 1, y = 140, label = "84") +
+  annotate("text", x = 2, y = 270, label = "246") 
+
 dissonance1
 
-top5_means <- expectations %>%
-  select(best) %>%
-  group_by(best) %>%
-  count("Zoom lecture", wt = runs)
+dissonance1_digits <- expectations %>%
+        select(best, p_meet_total) %>%
+        mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
+        drop_na() %>%
+  group_by(reality) %>%
+  summarize(sum = sum(reality == TRUE),
+            sum2 = sum(reality == FALSE))
 
+
+top_best_freq <- expectations %>%
+  group_by(best) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  drop_na() %>%
+  slice(1:5)
+
+top_best_freq %>%
+  mutate(best = fct_reorder(best, n)) %>%
+  ggplot(aes(x = best, y = n / sum(n))) +
+  geom_col(fill = "#6fb4d2") +
+  theme_bw() +
+  labs(title = "Expectations" , subtitle = "How Respondents Speculated on the Best Mediums for Connecting with Peers (Top 5)", y = "Count",
+       x = "Expected Medium") +
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(size = 8))
+
+
+top_pmeet_freq <- expectations %>%
+  group_by(p_meet_total) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  slice(1:5)
+
+top_pmeet_freq %>%
+  mutate(p_meet_total = fct_reorder(p_meet_total, n)) %>%
+  ggplot(aes(x = p_meet_total, y = n / sum(n))) +
+  geom_col(fill = "#6fb4d2") +
+  theme_bw() +
+  labs(title = "Reality" , subtitle = "How Respondents Reported Actually Meeting Their Closest 4 Friends (Top 5 Mediums)",
+       x = "Reality Medium",
+       y = "Count") +
+    scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(size = 8))
 
 ```
 
