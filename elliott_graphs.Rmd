@@ -167,8 +167,8 @@ location_gs_means <- freshmen_location %>%
   mutate(mean_total = mean(mean_gs))
 
 graph_location_gs_means <- location_gs_means %>%
-  ggplot(aes(x = location, y = mean_gs, fill = location)) +
-  geom_bar(stat = "identity") +
+  ggplot(aes(x = location, y = mean_gs)) +
+  geom_bar(stat = "identity", fill = "#6fb4d2") +
   labs(x = "Location",
           y = "Mean Virtual Conversion Count",
           title = "Comparing Mean Virtual Conversion Count by Location",
@@ -307,13 +307,13 @@ top_best_freq <- expectations %>%
   drop_na() %>%
   slice(1:5)
 
-top_best_freq %>%
+best_graph <- top_best_freq %>%
   mutate(best = fct_reorder(best, n)) %>%
   ggplot(aes(x = best, y = n / sum(n))) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
-  labs(title = "Expectations" , subtitle = "How Respondents Speculated on the Best Mediums for Connecting with Peers (Top 5)", y = "Count",
-       x = "Expected Medium") +
+  labs(title = "Expectations" , subtitle = "How Respondents Speculated on the Best Mediums for Connecting with Peers (Top 5)", y = "Percentage of Respondents",
+       x = "Expectation") +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 8))
 
@@ -325,17 +325,57 @@ top_pmeet_freq <- expectations %>%
   arrange(desc(n)) %>%
   slice(1:5)
 
-top_pmeet_freq %>%
+pmeet_graph <- top_pmeet_freq %>%
   mutate(p_meet_total = fct_reorder(p_meet_total, n)) %>%
   ggplot(aes(x = p_meet_total, y = n / sum(n))) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
-  labs(title = "Reality" , subtitle = "How Respondents Reported Actually Meeting Their Closest 4 Friends (Top 5 Mediums)",
-       x = "Reality Medium",
-       y = "Count") +
+  labs(title = "Reality" , subtitle = "How Respondents Reported Actually Meeting Their Closest 4 Friends (Top 5)",
+       x = "Reality",
+       y = "Percentage of Respondents") +
     scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 8))
 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+# Multiplot function found online by Winston Chang's R Cookbook
+
+multiplot(best_graph, pmeet_graph) %>%
+  grid.newpage()
 ```
 
 
