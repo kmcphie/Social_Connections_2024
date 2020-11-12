@@ -12,8 +12,6 @@ library(tidyverse)
 ```{r}
 responses <- read_excel("../shiny_app/raw_data/responses_1.xlsx")
 
-glimpse(responses)
-
 responses_clean <- responses %>%
   rename(gap_year = "1. Have you taken a gap year?",
          location = "2. Where are you living this semester?",
@@ -53,7 +51,33 @@ responses_clean <- responses %>%
 responses_clean$satisfaction <- as.integer(as.character(responses_clean$satisfaction))
 responses_clean$group_size <- as.integer(as.character(responses_clean$group_size))
 
-View(responses_clean)
+# Does something but no quite it 
+id_responses_clean <- responses_clean %>%
+   mutate(p1_id = group_indices(., p1_name),
+          p2_id = group_indices(., p2_name),
+          p3_id = group_indices(., p3_name),
+          p4_id = group_indices(., p4_name)) %>%
+  select(p1_id, p2_id, p3_id, p4_id, id)
 
+# This doesn't do what I thought it would
+id2_responses_clean <- responses_clean %>%
+  select(p1_name, p2_name, p3_name, p4_name, id) %>%
+  mutate(p1_id = as.factor(p1_name),
+         p2_id = as.factor(p2_name),
+         p3_id = as.factor(p3_name),
+         p4_id = as.factor(p4_name)) %>%
+  select(p1_id, p2_id, p3_id, p4_id, id)
+
+# This successfully assign a matching id for the p1-p4 columns!!!
+id3_responses_clean <- responses_clean %>%
+  select(p1_name, p2_name, p3_name, p4_name, id) %>%
+  pivot_longer(cols = 1:4,
+               names_to = "top4",
+               values_to = "name") %>%
+  mutate(p_id = group_indices(., name)) %>%
+  arrange(p_id)
+  # pivot_wider(names_from = top4,
+  #             values_from = p_id)
+  
 ```
 
