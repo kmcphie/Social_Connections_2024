@@ -82,16 +82,27 @@ sat_by_loc %>%
 ```{r}
 # Satisfaction by Location 
 
-overall_satisfaction_by_location <- responses_clean %>%
+overall_satisfaction_by_location <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
+  filter(satisfaction != "NA") %>%
   select(satisfaction, location) %>%
-  filter( location %in% c("The Yard", 
+  filter(location %in% c("The Yard", 
                           "A River House", 
                           "At Home (in the US)",
                           "At Home (international student)")) %>%
   group_by(satisfaction, location) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  ggplot(aes(x = satisfaction, y = count)) +
+  summarize(count = n(), .groups = "drop")
+
+View(overall_satisfaction_by_location)
+
+overall_satisfaction_by_location %>%
+  ggplot(aes(x = fct_relevel(satisfaction,
+                             levels = c("Very Dissatisfied",
+                                          "Dissatisfied",
+                                          "Neutral",
+                                          "Satisfied",
+                                          "Very Satisfied")), 
+             y = count)) +
   geom_col() +
   facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
@@ -107,8 +118,6 @@ overall_satisfaction_by_location <- responses_clean %>%
                               "Neutral",
                               "Satisfied",
                               "Very \n Satisfied"))
-
-overall_satisfaction_by_location
 ```
 
 ```{r}

@@ -76,3 +76,5 @@ responses_test <- responses_2 %>%
          satisfaction = "14. How satisfied are you with your social connections with other first-year students at Harvard?",
          name = "First and last name (this won't be linked to your responses ever, we just need to assign you a random ID)") %>%
   mutate(id = 1:nrow(responses_2), .before = 1)
+
+write_rds(responses_clean, "shiny_app/responses_test.rds")
