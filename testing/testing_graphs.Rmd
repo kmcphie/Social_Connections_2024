@@ -14,22 +14,19 @@ library(rstanarm)
 ```{r}
 # Satisfaction Graph 
 
-View(responses_clean)
-overall_satisfaction <- responses_clean %>%
+View(responses_test)
+
+overall_satisfaction <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
   group_by(satisfaction) %>%
-  summarize(count = n())
-
-View(overall_satisfaction)
-
-overall_satisfaction %>%
+  summarize(count = n(), .groups = "drop") %>%
   ggplot(aes(x = fct_relevel(satisfaction, 
-                               levels = c("Very_Dissatisfied",
+                               levels = c("Very Dissatisfied",
                                           "Dissatisfied",
                                           "Neutral",
                                           "Satisfied",
-                                          "Very_Satisfied")), 
+                                          "Very Satisfied")), 
                  y = count)) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
@@ -43,46 +40,13 @@ overall_satisfaction %>%
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) 
 
-sat_by_loc <- responses_clean %>%
-  mutate(satisfaction = as_factor(satisfaction)) %>%
-  filter(satisfaction != "NA") %>%
-  mutate(satisfaction = str_replace(satisfaction, pattern = "Very Satisfied", replacement = "2"),
-             satisfaction = str_replace(satisfaction, pattern = "Satisfied", replacement = "1"),
-             satisfaction = str_replace(satisfaction, pattern = "Neutral", replacement = "0"),
-             satisfaction = str_replace(satisfaction, pattern = "Dissatisfied", replacement = "-1"),
-             satisfaction = str_replace(satisfaction, pattern = "Very Dissatisfied", replacement = "-2"))
-  group_by(satisfaction, location) %>%
-  summarize(count = n())
-
-View(sat_by_loc)
-
-sat_by_loc %>%
-  ggplot(aes(x = fct_relevel(satisfaction, 
-                               levels = c("Very_Dissatisfied",
-                                          "Dissatisfied",
-                                          "Neutral",
-                                          "Satisfied",
-                                          "Very_Satisfied")), 
-                 y = count)) +
-      geom_col(fill = "#6fb4d2") +
-      facet_wrap(~ location) +
-      theme_bw() +
-      theme(legend.position = "none") +
-      labs(
-        title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
-        x = "Self-Reported Level of Satisfaction with Social Connections",
-        y = "Count"
-      ) +
-      theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) 
-  
+overall_satisfaction
 ```
 
 ```{r}
 # Satisfaction by Location 
 
-overall_satisfaction_by_location <- responses_test %>%
+satisfaction_by_location <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
   select(satisfaction, location) %>%
@@ -91,11 +55,7 @@ overall_satisfaction_by_location <- responses_test %>%
                           "At Home (in the US)",
                           "At Home (international student)")) %>%
   group_by(satisfaction, location) %>%
-  summarize(count = n(), .groups = "drop")
-
-View(overall_satisfaction_by_location)
-
-overall_satisfaction_by_location %>%
+  summarize(count = n(), .groups = "drop") %>%
   ggplot(aes(x = fct_relevel(satisfaction,
                              levels = c("Very Dissatisfied",
                                           "Dissatisfied",
@@ -118,6 +78,8 @@ overall_satisfaction_by_location %>%
                               "Neutral",
                               "Satisfied",
                               "Very \n Satisfied"))
+
+satisfaction_by_location
 ```
 
 ```{r}

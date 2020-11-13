@@ -1,6 +1,6 @@
 # Read in datasets created using the 'gather_raw_data.R' script.
 
-responses <- readRDS("responses.rds")
+responses <- readRDS("responses_test.rds")
 
 # Define server logic.
 
@@ -74,10 +74,10 @@ server <- function(input, output) {
   
   ########## THIRD PAGE: ANALYSIS ##########
   
-  output$satisfaction <- renderPlot({
+  output$overall_satisfaction <- renderPlot({
     responses %>%
-      filter(satisfaction != "NA") %>%
       mutate(satisfaction = as_factor(satisfaction)) %>%
+      filter(satisfaction != "NA") %>%
       group_by(satisfaction) %>%
       summarize(count = n(), .groups = "drop") %>%
       ggplot(aes(x = fct_relevel(satisfaction, 
@@ -91,42 +91,49 @@ server <- function(input, output) {
       theme_bw() +
       theme(legend.position = "none") +
       labs(
-        title = "Overall Satisfaction with Social Connections\nAmong Harvard First-Years",
-        x = "Satisfaction with Social Connections",
+        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        x = "Self-Reported Level of Satisfaction with Social Connections",
         y = "Count"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain"))
+            axis.title.y = element_text(size = 12, face= "plain")) 
   })
   
-  # NB: this graph was supposed to be a graph of satisfaction by location but
-  # it's not working (it shows up when I run the app, but gives an error when
-  # I try to publish) -- Katherine
-  
-  # output$sat_by_loc <- renderPlot({
-  #   responses_clean %>%
-  #     filter(satisfaction != "NA",
-  #            !(location %in% c("Apley Court", "NA"))) %>%
-  #     mutate(satisfaction = as_factor(satisfaction),
-  #            location = as_factor(location)) %>%
-  #     group_by(satisfaction, location) %>%
-  #     summarize(count = n(), .groups = "drop") %>%
-  #     ggplot(aes(x = satisfaction, 
-  #                y = count)) +
-  #     geom_col(fill = "#6fb4d2") +
-  #     facet_wrap(~ location) +
-  #     theme_bw() +
-  #     theme(legend.position = "none") +
-  #     labs(
-  #       title = "Overall Satisfaction with Social Connections\nAmong Harvard First-Years By Location",
-  #       x = "Self-Reported Level of Satisfaction with Social Connections",
-  #       y = "Count"
-  #     ) +
-  #     theme(title = element_text(size = 14, face = "bold"),
-  #           axis.title.x = element_text(size = 12, face = "plain"),
-  #           axis.title.y = element_text(size = 12, face= "plain")) 
-  # })
+  output$satisfaction_by_location <- renderPlot({
+    responses %>%
+      mutate(satisfaction = as_factor(satisfaction)) %>%
+      filter(satisfaction != "NA") %>%
+      select(satisfaction, location) %>%
+      filter(location %in% c("The Yard", 
+                             "A River House", 
+                             "At Home (in the US)",
+                             "At Home (international student)")) %>%
+      group_by(satisfaction, location) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_relevel(satisfaction,
+                                 levels = c("Very Dissatisfied",
+                                            "Dissatisfied",
+                                            "Neutral",
+                                            "Satisfied",
+                                            "Very Satisfied")), 
+                 y = count)) +
+      geom_col() +
+      facet_wrap(~location) +
+      geom_col(fill = "#6fb4d2") +
+      theme_bw() +
+      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
+           x = "Self-Reported Level of Satisfaction with Social Connections",
+           y = "Count") +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 9, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_x_discrete(labels = c("Very \n Dissatisfied",
+                                  "Dissatisfied",
+                                  "Neutral",
+                                  "Satisfied",
+                                  "Very \n Satisfied"))
+  })
   
   ########## FOURTH PAGE: ABOUT ##########
   
