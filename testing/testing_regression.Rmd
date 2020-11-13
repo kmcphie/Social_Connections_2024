@@ -5,6 +5,11 @@ date: "11/3/2020"
 output: html_document
 ---
 
+Include  model  that  supplements overall points made in the project
+(Could do satisfaction ~ various other factors)
+Analysis of probability
+Show actual regression and table output ideally, but at least description
+
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(rstanarm)
@@ -21,6 +26,8 @@ fit <- stan_glm(gap_yeardummy ~ p1_closeness + gender + race,
                 data = responses_clean,
                 refresh = 0,
                 family = binomial())
+
+
 ```
 
 
