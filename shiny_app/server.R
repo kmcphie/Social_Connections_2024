@@ -86,18 +86,19 @@ server <- function(input, output) {
                                             "Neutral",
                                             "Satisfied",
                                             "Very Satisfied")), 
-                 y = count)) +
+                 y = count / sum(count))) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
       theme(legend.position = "none") +
       labs(
         title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
         x = "Self-Reported Level of Satisfaction with Social Connections",
-        y = "Count"
+        y = "Percent"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) 
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
   })
   
   output$satisfaction_by_location <- renderPlot({
@@ -117,14 +118,14 @@ server <- function(input, output) {
                                             "Neutral",
                                             "Satisfied",
                                             "Very Satisfied")), 
-                 y = count)) +
+                 y = count / sum(count))) +
       geom_col() +
       facet_wrap(~location) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
       labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
            x = "Self-Reported Level of Satisfaction with Social Connections",
-           y = "Count") +
+           y = "Percent") +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) +
@@ -132,7 +133,8 @@ server <- function(input, output) {
                                   "Dissatisfied",
                                   "Neutral",
                                   "Satisfied",
-                                  "Very \n Satisfied"))
+                                  "Very \n Satisfied")) +
+      scale_y_continuous(labels = scales::percent_format())
   })
   
   ########## FOURTH PAGE: ABOUT ##########

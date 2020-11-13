@@ -162,12 +162,13 @@ ui <- navbarPage(
                 column(5, imageOutput("katherine")),
                 column(5, offset = 0, 
                       h5(tags$b("Katherine McPhie")), br(), 
-                      p("Hi, I'm Katherine! I'm a first-year undergraduate at Harvard 
-                        pursuing a concentration in Computer Science. On campus I am 
-                        involved in Harvard Computer Society, Women in Computer 
-                        Science, and Harvard Open Data Project. I also sing alto for 
-                        University Choir, and  play trumpet in the Wind Ensemble! You 
-                        can reach me at",
+                      p("Hi, I'm Katherine! I'm a first-year undergraduate at 
+                        Harvard pursuing a concentration in Computer Science. On 
+                        campus I am involved in Harvard Computer Society, Women 
+                        in Computer Science, Women Engineers Code, and Harvard 
+                        Open Data Project. I also sing alto for University Choir
+                        and  play trumpet in the Wind Ensemble! You can reach me 
+                        at",
                         a("katherinemcphie@college.harvard.edu",
                           href="mailto:katherinemcphie@college.harvard.edu?Subject=Social%20Connections%20Project"
                         ),

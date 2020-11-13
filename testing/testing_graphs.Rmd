@@ -12,7 +12,7 @@ library(rstanarm)
 ```
 
 ```{r}
-# Satisfaction Graph 
+# Overall Satisfaction 
 
 View(responses_test)
 
@@ -27,18 +27,19 @@ overall_satisfaction <- responses_test %>%
                                           "Neutral",
                                           "Satisfied",
                                           "Very Satisfied")), 
-                 y = count)) +
+                 y = count / sum(count))) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
       theme(legend.position = "none") +
       labs(
         title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
         x = "Self-Reported Level of Satisfaction with Social Connections",
-        y = "Count"
+        y = "Percent"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) 
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
 
 overall_satisfaction
 ```
@@ -52,8 +53,8 @@ satisfaction_by_location <- responses_test %>%
   select(satisfaction, location) %>%
   filter(location %in% c("The Yard", 
                           "A River House", 
-                          "At Home (in the US)",
-                          "At Home (international student)")) %>%
+                          "At Home",
+                          "The Quad")) %>%
   group_by(satisfaction, location) %>%
   summarize(count = n(), .groups = "drop") %>%
   ggplot(aes(x = fct_relevel(satisfaction,
@@ -62,22 +63,23 @@ satisfaction_by_location <- responses_test %>%
                                           "Neutral",
                                           "Satisfied",
                                           "Very Satisfied")), 
-             y = count)) +
+             y = count / sum(count))) +
   geom_col() +
   facet_wrap(~location) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
   labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
        x = "Self-Reported Level of Satisfaction with Social Connections",
-       y = "Count") +
-      theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 9, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) +
+       y = "Percent") +
+  theme(title = element_text(size = 14, face = "bold"),
+        axis.title.x = element_text(size = 12, face = "plain"),
+        axis.title.y = element_text(size = 12, face= "plain")) +
   scale_x_discrete(labels = c("Very \n Dissatisfied",
                               "Dissatisfied",
                               "Neutral",
                               "Satisfied",
-                              "Very \n Satisfied"))
+                              "Very \n Satisfied")) +
+  scale_y_continuous(labels = scales::percent_format())
 
 satisfaction_by_location
 ```
@@ -111,6 +113,9 @@ satisfaction_summary <- responses_test %>%
 
 # Mean satisfaction is 0.1653944
 ```
+
+Look at satisfaction for students who just came off a gap year
+Satisfaction for people in singles vs. people with suitemates
 
 
 ```{r}
