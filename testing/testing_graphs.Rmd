@@ -83,6 +83,37 @@ satisfaction_by_location
 ```
 
 ```{r}
+# Mean satisfaction (after re-scaling from -2 to 2)
+
+satisfaction_summary <- responses_test %>%
+  mutate(satisfaction = as_factor(satisfaction)) %>%
+  filter(satisfaction != "NA") %>%
+  group_by(satisfaction) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  mutate(satisfaction = str_replace(satisfaction, 
+                                    pattern = "Very Satisfied", 
+                                    replacement = "2"),
+             satisfaction = str_replace(satisfaction, 
+                                        pattern = "Very Dissatisfied", 
+                                        replacement = "-2"),
+             satisfaction = str_replace(satisfaction, 
+                                        pattern = "Satisfied", 
+                                        replacement = "1"),
+             satisfaction = str_replace(satisfaction, 
+                                        pattern = "Neutral", 
+                                        replacement = "0"),
+             satisfaction = str_replace(satisfaction, 
+                                        pattern = "Dissatisfied", 
+                                        replacement = "-1")) %>%
+  mutate(satisfaction = as.numeric(satisfaction)) %>%
+  mutate(total = satisfaction * count) %>%
+  summarize(avg_satisfaction = sum(total) / sum(count))
+
+# Mean satisfaction is 0.1653944
+```
+
+
+```{r}
 # Predicted Satisfaction Based on Meeting 
 
 set.seed(10)

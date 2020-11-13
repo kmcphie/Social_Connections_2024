@@ -101,11 +101,29 @@ ui <- navbarPage(
               br(),
               h4(tags$b("Analyzing the Data")),
               br(),
-              br(),
-              mainPanel(plotOutput("overall_satisfaction"),
-                        br(),
-                        br(),
-                        plotOutput("satisfaction_by_location"))
+              h6(tags$b("Overall Satisfaction with Social Connections")),
+              mainPanel(
+                br(),
+                p("Survey respondents were asked to rate their overall level of 
+                satisfaction with their social connections with other 
+                first-year students. Each respondent was given 5 options: Very 
+                Dissatisfied, Dissatisfied, Neutral, Satisfied, or Very 
+                Satisfied. If we assign each option to a number, with -2
+                corresponding to 'Very Dissatisfied' and 2 corresponding to
+                'Very Satisfied', the average satisfaction across all survey
+                respondents is 0.17. The graph below shows the distribution of 
+                responses. "),
+                br(),
+                plotOutput("overall_satisfaction"),
+                br(),
+                p("When looking at how survey respondents' satisfaction differed
+                  by location, interesting trends emerged. Students in the Yard
+                  reported higher levels of satisfaction overall, followed by
+                  students in the River Houses, students in the Quad, and 
+                  students living at home (both international students and 
+                  students in the US."),
+                br(),
+                plotOutput("satisfaction_by_location"))
              ))
            )
   ),

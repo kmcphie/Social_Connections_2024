@@ -107,8 +107,8 @@ server <- function(input, output) {
       select(satisfaction, location) %>%
       filter(location %in% c("The Yard", 
                              "A River House", 
-                             "At Home (in the US)",
-                             "At Home (international student)")) %>%
+                             "At Home",
+                             "The Quad")) %>%
       group_by(satisfaction, location) %>%
       summarize(count = n(), .groups = "drop") %>%
       ggplot(aes(x = fct_relevel(satisfaction,
