@@ -92,5 +92,24 @@ id3_responses_clean <- responses_clean %>%
          "second_id" = p2_name,
          "third_id" = p3_name,
          "fourth_id" = p4_name)
+
+
+# Entire dataset with correct ids
+id4_responses <- responses_clean %>%
+  pivot_longer(cols = c(p1_name, p2_name, 
+                        p3_name, p4_name, 
+                        name, most_connected),
+               names_to = "degree",
+               values_to = "name") %>%
+  mutate(endpoint = group_indices(., name)) %>%
+  select(-c(id, name)) %>%
+  pivot_wider(names_from = degree,
+              values_from = endpoint,
+              names_repair = "minimal") %>%
+  rename("id" = name,
+         "first_id" = p1_name,
+         "second_id" = p2_name,
+         "third_id" = p3_name,
+         "fourth_id" = p4_name)
 ```
 
