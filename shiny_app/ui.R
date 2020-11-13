@@ -94,11 +94,8 @@ ui <- navbarPage(
              fluidRow(column(1), column(10,
               br(),
               br(),
-              h4(tags$b("Analyzing the Data")),
-              br(),
-              h6(tags$b("Overall Satisfaction with Social Connections")),
               mainPanel(
-                br(),
+                h4(tags$b("Satisfaction with Social Connections")),
                 p("Survey respondents were asked to rate their overall level of 
                 satisfaction with their social connections with other 
                 first-year students. Each respondent was given 5 options: Very 
@@ -108,17 +105,36 @@ ui <- navbarPage(
                 'Very Satisfied', the average satisfaction across all survey
                 respondents is 0.17. The graph below shows the distribution of 
                 responses. "),
-                br(),
                 plotOutput("overall_satisfaction"),
                 br(),
                 p("When looking at how survey respondents' satisfaction differed
                   by location, interesting trends emerged. Students in the Yard
                   reported higher levels of satisfaction overall, followed by
-                  students in the River Houses, students in the Quad, and 
-                  students living at home (both international students and 
-                  students in the US."),
+                  students in the River Houses, then students in the Quad, and 
+                  then students living at home (both international students and 
+                  students in the US)."),
+                plotOutput("satisfaction_by_location"),
                 br(),
-                plotOutput("satisfaction_by_location"))
+                p("We were curious to see what the overall satisfaction levels
+                  would be for students who took gap years. For people accepted
+                  to Class of 2024 who had just graduated high school, there
+                  was the option to take a gap year in hopes of escaping a 
+                  strange school year and having a more typical freshman year --
+                  about 20% opted to do so, in fact. Members of the Class of 
+                  2024 who had just gotten off of a gap year, on the other hand, 
+                  didn't have the option to take another gap year, so we 
+                  wondered if this would correspond to lower levels of 
+                  satisfaction overall. However, the data actually showed that 
+                  there is roughly the same distribution of satisfaction for 
+                  those who took gap years as for the class in general, only
+                  slightly more skewed in the 'Dissatisfied' direction."),
+                plotOutput("gap_year_satisfaction"),
+                br(),
+                p("We were also curious to see if of the people on campus, the
+                  people with suitemates would be more satisfied on average
+                  than people placed in singles. However, here as well, the 
+                  trends between the two seemed to be pretty similar."),
+                plotOutput("satisfaction_by_living"))
              ))
            )
   ),

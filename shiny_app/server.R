@@ -71,6 +71,39 @@ server <- function(input, output) {
         #scale_y_continuous(labels = scales::percent_format())
   })
   
+  output$satisfaction_by_living <- renderPlot({
+    responses %>%
+      mutate(satisfaction = as_factor(satisfaction)) %>%
+      filter(satisfaction != "NA",
+             living != "Not Applicable") %>%
+      select(satisfaction, living) %>%
+      group_by(satisfaction, living) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_relevel(satisfaction,
+                                 levels = c("Very Dissatisfied",
+                                            "Dissatisfied",
+                                            "Neutral",
+                                            "Satisfied",
+                                            "Very Satisfied")), 
+                 y = count / sum(count))) +
+      geom_col() +
+      facet_wrap(~living) +
+      geom_col(fill = "#6fb4d2") +
+      theme_bw() +
+      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Living Situation",
+           x = "Self-Reported Level of Satisfaction with Social Connections",
+           y = "Percent") +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_x_discrete(labels = c("Very \n Dissatisfied",
+                                  "Dissatisfied",
+                                  "Neutral",
+                                  "Satisfied",
+                                  "Very \n Satisfied")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
   ########## SECOND PAGE: SOCIAL WEB ##########
   
   ########## THIRD PAGE: ANALYSIS ##########
@@ -92,7 +125,7 @@ server <- function(input, output) {
       theme_bw() +
       theme(legend.position = "none") +
       labs(
-        title = "Overall Satisfaction with Social Connections Among Harvard First-Years",
+        title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
         x = "Self-Reported Level of Satisfaction with Social Connections",
         y = "Percent"
       ) +
@@ -125,6 +158,38 @@ server <- function(input, output) {
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
       labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
+           x = "Self-Reported Level of Satisfaction with Social Connections",
+           y = "Percent") +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_x_discrete(labels = c("Very \n Dissatisfied",
+                                  "Dissatisfied",
+                                  "Neutral",
+                                  "Satisfied",
+                                  "Very \n Satisfied")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$gap_year_satisfaction <- renderPlot({
+    responses %>%
+      mutate(satisfaction = as_factor(satisfaction)) %>%
+      select(satisfaction, gap_year) %>%
+      filter(satisfaction != "NA",
+             gap_year == "Yes") %>%
+      group_by(satisfaction, gap_year) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_relevel(satisfaction,
+                                 levels = c("Very Dissatisfied",
+                                            "Dissatisfied",
+                                            "Neutral",
+                                            "Satisfied",
+                                            "Very Satisfied")), 
+                 y = count / sum(count))) +
+      geom_col() +
+      geom_col(fill = "#6fb4d2") +
+      theme_bw() +
+      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years Who Took a Gap Year Last Year",
            x = "Self-Reported Level of Satisfaction with Social Connections",
            y = "Percent") +
       theme(title = element_text(size = 14, face = "bold"),
