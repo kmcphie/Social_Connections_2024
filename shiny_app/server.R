@@ -56,7 +56,7 @@ server <- function(input, output) {
                 "Pre-Orientation Program" = "Pre-Orientation Program",
                 "Sports" = "Involved in Sports")
     data %>%
-      ggplot(aes(x = variable)) +
+      ggplot(aes(x = variable)) + #TODO: figure out how to put this in pct format
         geom_bar(fill = "#6fb4d2") +
         theme_bw() +
         theme(legend.position = "none") +
@@ -68,6 +68,7 @@ server <- function(input, output) {
         theme(title = element_text(size = 14, face = "bold"),
               axis.title.x = element_text(size = 12, face = "plain"),
               axis.title.y = element_text(size = 12, face= "plain"))
+        #scale_y_continuous(labels = scales::percent_format())
   })
   
   ########## SECOND PAGE: SOCIAL WEB ##########

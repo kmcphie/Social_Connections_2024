@@ -47,15 +47,10 @@ ui <- navbarPage(
                     </section>"),
               br(),
               includeHTML("project_intro.html"),
-              a(tags$b("Learn more about our survey methodology here."), 
-                href="https://tinyurl.com/sc-2024-survey-methodology"),
-              br(),
-              br(),
-              h4(tags$b("Respondents")),
               br(),
               sidebarLayout(
                 sidebarPanel(
-                  helpText("Create Survey Respondent Distribution Graph"),
+                  #helpText("Create Survey Respondent Distribution Graph"),
                   selectInput("var", 
                               label = "Choose Variable",
                               choices = c("Gap Year", 
