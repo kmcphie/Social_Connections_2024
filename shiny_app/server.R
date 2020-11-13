@@ -126,7 +126,7 @@ server <- function(input, output) {
            x = "Self-Reported Level of Satisfaction with Social Connections",
            y = "Count") +
       theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 9, face = "plain"),
+            axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) +
       scale_x_discrete(labels = c("Very \n Dissatisfied",
                                   "Dissatisfied",

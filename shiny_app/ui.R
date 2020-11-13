@@ -102,10 +102,10 @@ ui <- navbarPage(
               h4(tags$b("Analyzing the Data")),
               br(),
               br(),
-              mainPanel(plotOutput("overall_satisfaction")),
-              br(),
-              br(),
-              mainPanel(plotOutput("satisfaction_by_location"))
+              mainPanel(plotOutput("overall_satisfaction"),
+                        br(),
+                        br(),
+                        plotOutput("satisfaction_by_location"))
              ))
            )
   ),
