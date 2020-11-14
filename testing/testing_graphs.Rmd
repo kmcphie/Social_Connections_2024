@@ -157,7 +157,10 @@ satisfaction_by_living <- responses_test %>%
          living != "Not Applicable") %>%
   select(satisfaction, living) %>%
   group_by(satisfaction, living) %>%
-  summarize(count = n(), .groups = "drop") %>%
+  summarize(count = n(), .groups = "drop") 
+
+View(satisfaction_by_living)
+
   ggplot(aes(x = fct_relevel(satisfaction,
                              levels = c("Very Dissatisfied",
                                           "Dissatisfied",
