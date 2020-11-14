@@ -58,6 +58,7 @@ server <- function(input, output) {
     data %>%
       ggplot(aes(x = variable)) + #TODO: figure out how to put this in pct format
         geom_bar(fill = "#6fb4d2") +
+      coord_flip() +
         theme_bw() +
         theme(legend.position = "none") +
         labs(
