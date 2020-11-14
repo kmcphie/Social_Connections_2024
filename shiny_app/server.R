@@ -11,26 +11,33 @@ server <- function(input, output) {
   output$respondent_dist <- renderPlot({
     data <- switch(input$var,
                    "Gap Year" = responses %>%
-                                  mutate(gap_year = as_factor(gap_year)) %>%
-                                  select(id, gap_year),
+                     mutate(gap_year = as_factor(gap_year)) %>%
+                     select(id, gap_year) %>%
+                     mutate(count = n()),
                    "Location" = responses %>%
-                                  mutate(location = as_factor(location)) %>%
-                                  select(id, location),
+                     mutate(location = as_factor(location)) %>%
+                     select(id, location) %>%
+                     mutate(count = n()),
                    "Living" = responses %>%
-                                mutate(living = as_factor(living)) %>%
-                                select(id, living),
+                     mutate(living = as_factor(living)) %>%
+                     select(id, living) %>%
+                     mutate(count = n()),
                    "Gender" = responses %>%
-                                mutate(location = as_factor(location)) %>%
-                                select(id, location),
+                     mutate(location = as_factor(location)) %>%
+                     select(id, location) %>%
+                     mutate(count = n()),
                    "Race" = responses %>%
-                              mutate(race = as_factor(race)) %>%
-                              select(id, race),
+                     mutate(race = as_factor(race)) %>%
+                     select(id, race) %>%
+                     mutate(count = n()),
                    "Pre-Orientation Program" = responses %>%
-                                                 mutate(pre_o = as_factor(pre_o)) %>%
-                                                 select(id, pre_o),
+                     mutate(pre_o = as_factor(pre_o)) %>%
+                     select(id, pre_o) %>%
+                     mutate(count = n()),
                    "Sports" = responses %>%
-                                mutate(sports = as_factor(sports)) %>%
-                                select(id, sports))
+                     mutate(sports = as_factor(sports)) %>%
+                     select(id, sports)) %>%
+      mutate(count = n())
     variable <- switch(input$var,
                        "Gap Year" = responses$gap_year,
                        "Location" = responses$location,
@@ -45,31 +52,32 @@ server <- function(input, output) {
                     "Living" = "Survey Respondent Distribution by Living Situation",
                     "Gender" = "Survey Respondent Distribution by Gender",
                     "Race" = "Survey Respondent Distribution by Race",
-                    "Pre-Orientation Program" = "Survey Respondent Distribution by Pre-Orientation Program",
+                    "Pre-Orientation Program" = "Survey Respondent Distribution by \nPre-Orientation Program",
                     "Sports" = "Survey Respondent Distribution by Sports Involvement")
-    x <- switch(input$var,
-                "Gap Year" = "Took a gap year",
-                "Location" = "Location for the Fall Semester",
-                "Living Situation (if on campus)",
-                "Gender" = "Gender",
-                "Race" = "Race",
-                "Pre-Orientation Program" = "Pre-Orientation Program",
-                "Sports" = "Involved in Sports")
+    # x <- switch(input$var,
+    #             "Gap Year" = "Took a gap year",
+    #             "Location" = "Location for the Fall Semester",
+    #             "Living Situation (if on campus)",
+    #             "Gender" = "Gender",
+    #             "Race" = "Race",
+    #             "Pre-Orientation Program" = "Pre-Orientation Program",
+    #             "Sports" = "Involved in Sports")
     data %>%
-      ggplot(aes(x = variable)) + #TODO: figure out how to put this in pct format
-        geom_bar(fill = "#6fb4d2") +
+      ggplot(aes(x = fct_infreq(variable))) + 
+      geom_bar(aes(y = after_stat(count / sum(count))),
+               fill = "#6fb4d2") +
       coord_flip() +
-        theme_bw() +
-        theme(legend.position = "none") +
-        labs(
-          title = title,
-          x = x,
-          y = "Count"
-        ) +
-        theme(title = element_text(size = 14, face = "bold"),
-              axis.title.x = element_text(size = 12, face = "plain"),
-              axis.title.y = element_text(size = 12, face= "plain"))
-        #scale_y_continuous(labels = scales::percent_format())
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(
+        title = title,
+        x = NULL, # x
+        y = "Percent" # "Count"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
   })
   
   output$satisfaction_by_living <- renderPlot({
@@ -254,6 +262,52 @@ server <- function(input, output) {
       theme_bw() +
       labs(
         title = "Way First-Years \n Met Closest Friends",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$stay_in_contact <- renderPlot({
+    responses %>%
+      mutate(contact = as_factor(contact)) %>%
+      filter(contact != "NA" & contact != "contact") %>%
+      group_by(contact) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(contact))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Ways That First-Years \n Stay Connected",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$in_person <- renderPlot({
+    responses %>%
+      mutate(in_person = as_factor(in_person)) %>%
+      filter(in_person != "NA" & in_person != "in_person") %>%
+      group_by(in_person) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(in_person))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Things That First-Years \n Do In-Person",
         x = NULL,
         y = "Percent"
       ) +
