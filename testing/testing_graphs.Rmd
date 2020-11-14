@@ -11,11 +11,30 @@ library(ggthemes)
 library(rstanarm)
 ```
 
-```{r}
-# Overall Satisfaction 
+```{r Best}
+best_way <- responses_final %>%
+  select(best) %>%
+  mutate(count = n()) %>%
+  ggplot(aes(x = fct_infreq(best))) +
+    geom_col(aes(y = count / sum(count)),
+             fill = "#6fb4d2") +
+    coord_flip() +
+    theme_bw() +
+    labs(
+      title = "Best Perceived Way \n to Form Connections",
+        x = NULL, # "Reported Best Way to Make Connections"
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
 
-View(responses_test)
+best_way
+```
 
+
+```{r Overall Satisfaction}
 overall_satisfaction <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
@@ -44,9 +63,7 @@ overall_satisfaction <- responses_test %>%
 overall_satisfaction
 ```
 
-```{r}
-# Satisfaction by Location 
-
+```{r Satisfaction by Location}
 satisfaction_by_location <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
@@ -84,9 +101,7 @@ satisfaction_by_location <- responses_test %>%
 satisfaction_by_location
 ```
 
-```{r}
-# Mean satisfaction (after re-scaling from -2 to 2)
-
+```{r Mean Satisfaction}
 satisfaction_summary <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA") %>%
@@ -114,8 +129,7 @@ satisfaction_summary <- responses_test %>%
 # Mean satisfaction is 0.1653944
 ```
 
-```{r}
-# Satisfaction for students who took a gap year
+```{r Gap Year Satisfaction}
 gap_year_satisfaction <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   select(satisfaction, gap_year) %>%
@@ -149,8 +163,7 @@ gap_year_satisfaction <- responses_test %>%
 gap_year_satisfaction
 ```
 
-```{r}
-# Satisfaction for people in singles vs. people with suitemates
+```{r Satisfaction by Living Situation}
 satisfaction_by_living <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%
   filter(satisfaction != "NA",

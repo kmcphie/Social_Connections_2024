@@ -134,7 +134,13 @@ ui <- navbarPage(
                   people with suitemates would be more satisfied on average
                   than people placed in singles. However, here as well, the 
                   trends between the two seemed to be pretty similar."),
-                plotOutput("satisfaction_by_living"))
+                plotOutput("satisfaction_by_living"),
+                br(),
+                h4(tags$b("Best Way to Make Connections")),
+                p("We asked survey respondents what they thought the best way to
+                  form connections with people in general was, regardless of if
+                  this matched their own personal experience."),
+                plotOutput("best_way"))
              ))
            )
   ),

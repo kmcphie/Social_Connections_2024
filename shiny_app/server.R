@@ -203,6 +203,26 @@ server <- function(input, output) {
       scale_y_continuous(labels = scales::percent_format())
   })
   
+  output$best_way <- renderPlot({
+    responses %>%
+      select(best) %>%
+      mutate(count = n()) %>%
+      ggplot(aes(x = fct_infreq(best))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      coord_flip() +
+      theme_bw() +
+      labs(
+        title = "Best Perceived Way \n to Form Connections",
+        x = NULL, # "Reported Best Way to Make Connections"
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            #axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 14, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
   ########## FOURTH PAGE: ABOUT ##########
   
   output$katherine <- renderImage({
