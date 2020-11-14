@@ -1,29 +1,16 @@
-########## PREP ##########
+# This is what we used for the non-anonymous data. Now, we have the anonymous
+# data that was cleaned on the private repo and imported, which is
+# named responses_final.rds, so technically we don't need any of this anymore.
 
 # Load necessary libraries.
 
 library(readxl)
 
-# Reading in responses_3 (this is supposed to be the final, clean version, so
-# please confirm with group chat before changing variable names)
-
-responses_3 <- read_excel("shiny_app/raw_data/responses_3.xlsx")
-
-responses_final <- responses_3 %>%
-  mutate(id = 1:nrow(responses_3), .before = 1)
-
-write_rds(responses_final, "shiny_app/not_anonymous_responses_final.rds")
-
-
-########## PREVIOUS DATA ##########
-#------------------------------------------------------------------------------#
-#------------------------------------------------------------------------------#
-#------------------------------------------------------------------------------#
-
 # Load in the data.
 
 responses_1 <- read_excel("shiny_app/raw_data/responses_1.xlsx")
 responses_2 <- read_excel("shiny_app/raw_data/responses_2.xlsx")
+responses_3 <- read_excel("shiny_app/raw_data/responses_3.xlsx")
 
 # Clean the data and add an ID column.
 
@@ -56,14 +43,6 @@ responses_clean <- responses_1 %>%
          name = "First and last name (this won't be linked to your responses ever, we just need to assign you a random ID)") %>%
   mutate(id = 1:nrow(responses_1), .before = 1)
 
-# Read the cleaned data into a new RDS document.
-
-write_rds(responses_clean, "shiny_app/responses.rds")
-
-
-
-# TESTING WITH RESPONSES 2 (pls don't modify)
-
 responses_test <- responses_2 %>%
   rename(gap_year = "1. Have you taken a gap year?",
          location = "2. Where are you living this semester?",
@@ -93,4 +72,11 @@ responses_test <- responses_2 %>%
          name = "First and last name (this won't be linked to your responses ever, we just need to assign you a random ID)") %>%
   mutate(id = 1:nrow(responses_2), .before = 1)
 
+responses_final <- responses_3 %>%
+  mutate(id = 1:nrow(responses_3), .before = 1)
+
+# Read the cleaned data into a new RDS document.
+
+write_rds(responses_clean, "shiny_app/responses.rds")
 write_rds(responses_test, "shiny_app/responses_test.rds")
+write_rds(responses_final, "shiny_app/not_anonymous_responses_final.rds")
