@@ -75,6 +75,104 @@ meet <- meet_merged %>%
 meet
 ```
 
+```{r Closeness}
+closeness_1 <- responses_final %>%
+  mutate(closeness = p1_closeness) %>%
+  select(closeness)
+
+closeness_2 <- responses_final %>%
+  mutate(closeness = p2_closeness) %>%
+  select(closeness)
+
+closeness_3 <- responses_final %>%
+  mutate(closeness = p3_closeness) %>%
+  select(closeness)
+
+closeness_4 <- responses_final %>%
+  mutate(closeness = p4_closeness) %>%
+  select(closeness)
+
+closeness_merged <- rbind(closeness_1, closeness_2, by = "closeness")
+closeness_merged <- rbind(closeness_merged, closeness_3, by = "closeness")
+closeness_merged <- rbind(closeness_merged, closeness_4, by = "closeness")
+
+closeness <- closeness_merged %>%
+  filter(closeness != "NA" & closeness != "closeness") %>%
+  group_by(closeness) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  mutate(total = as.numeric(closeness) * count) %>%
+  summarize(avg_closeness = sum(total) / sum(count), .groups = "drop")
+
+closeness
+
+# Average closeness is 3.508906
+```
+
+```{r Contact}
+stay_in_contact <- responses_final %>%
+  mutate(contact = as_factor(contact)) %>%
+  filter(contact != "NA" & contact != "contact") %>%
+  group_by(contact) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = fct_infreq(contact))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Ways That First-Years \n Stay Connected",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+
+stay_in_contact
+```
+
+```{r In-Person}
+in_person <- responses_final %>%
+  mutate(in_person = as_factor(in_person)) %>%
+  filter(in_person != "NA" & in_person != "in_person") %>%
+  group_by(in_person) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = fct_infreq(in_person))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Things That First-Years \n Do In-Person",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+
+in_person
+```
+
+```{r Group Size}
+group_size <- responses_final %>%
+  filter(group_size != "NA" & group_size != "group_size") %>%
+  group_by(group_size) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  mutate(total = as.numeric(group_size) * count) %>%
+  summarize(avg_group_size = sum(total) / sum(count), .groups = "drop")
+
+group_size
+
+# Average group size is 4.18299
+```
+
+
+
 ```{r Overall Satisfaction}
 overall_satisfaction <- responses_test %>%
   mutate(satisfaction = as_factor(satisfaction)) %>%

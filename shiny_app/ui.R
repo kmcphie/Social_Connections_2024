@@ -144,7 +144,19 @@ ui <- navbarPage(
                 br(),
                 p("In contrast, here is a graph of the way that first-years
                   actually met each other."),
-                plotOutput("meet"))
+                plotOutput("meet"),
+                br(),
+                p("Here are the most common ways first-years stay in contact 
+                  with each other."),
+                plotOutput("stay_in_contact"),
+                br(),
+                p("And when first-years do hang out in-person, here's what they
+                  do."),
+                plotOutput("in_person"),
+                br(),
+                p("And other random info to incorporate somewhere:
+                  Average group size is 4.18299
+                  Average closeness is 3.508906 (on 1 - 5 scale)"))
              ))
            )
   ),

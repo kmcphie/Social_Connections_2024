@@ -52,7 +52,7 @@ server <- function(input, output) {
                     "Living" = "Survey Respondent Distribution by Living Situation",
                     "Gender" = "Survey Respondent Distribution by Gender",
                     "Race" = "Survey Respondent Distribution by Race",
-                    "Pre-Orientation Program" = "Survey Respondent Distribution by Pre-Orientation Program",
+                    "Pre-Orientation Program" = "Survey Respondent Distribution by \nPre-Orientation Program",
                     "Sports" = "Survey Respondent Distribution by Sports Involvement")
     # x <- switch(input$var,
     #             "Gap Year" = "Took a gap year",
@@ -262,6 +262,52 @@ server <- function(input, output) {
       theme_bw() +
       labs(
         title = "Way First-Years \n Met Closest Friends",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$stay_in_contact <- renderPlot({
+    responses %>%
+      mutate(contact = as_factor(contact)) %>%
+      filter(contact != "NA" & contact != "contact") %>%
+      group_by(contact) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(contact))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Ways That First-Years \n Stay Connected",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$in_person <- renderPlot({
+    responses %>%
+      mutate(in_person = as_factor(in_person)) %>%
+      filter(in_person != "NA" & in_person != "in_person") %>%
+      group_by(in_person) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(in_person))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Things That First-Years \n Do In-Person",
         x = NULL,
         y = "Percent"
       ) +
