@@ -4,6 +4,22 @@
 
 library(readxl)
 
+# Reading in responses_3 (this is supposed to be the final, clean version, so
+# please confirm with group chat before changing variable names)
+
+responses_3 <- read_excel("shiny_app/raw_data/responses_3.xlsx")
+
+responses_final <- responses_3 %>%
+  mutate(id = 1:nrow(responses_1), .before = 1)
+
+write_rds(responses_final, "shiny_app/responses_final.rds")
+
+
+########## PREVIOUS DATA ##########
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
+
 # Load in the data.
 
 responses_1 <- read_excel("shiny_app/raw_data/responses_1.xlsx")
