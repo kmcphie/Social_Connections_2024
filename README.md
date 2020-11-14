@@ -8,8 +8,7 @@ Jeremiah Kim conducted [a very similar project]("https://jeremiah-kim.shinyapps.
 [View the live Shiny App here](https://kmcphie.shinyapps.io/Social_Connections_2024/)
 
 ### Repository Guide
-* /shiny_app: Files to render Shiny App.
-* testing: .Rmd scripts for testing purposes only
-* emails: scraping emails from the Harvard facebook to help with survey publicizing
+* /shiny_app: Files to render Shiny App
+* /testing: .Rmd scripts for testing purposes
 * .gitignore
 * README.md
