@@ -10,6 +10,10 @@ library(tidyverse)
 ```
 
 ```{r}
+responses <- read_rds("./testing/responses_final.rds")
+```
+
+```{r}
 responses <- read_excel("../shiny_app/raw_data/responses_1.xlsx")
 
 responses_clean <- responses %>%
