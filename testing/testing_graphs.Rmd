@@ -33,6 +33,47 @@ best_way <- responses_final %>%
 best_way
 ```
 
+```{r Meet}
+meet_1 <- responses_final %>%
+  mutate(meet = p1_meet) %>%
+  select(meet)
+
+meet_2 <- responses_final %>%
+  mutate(meet = p2_meet) %>%
+  select(meet)
+
+meet_3 <- responses_final %>%
+  mutate(meet = p3_meet) %>%
+  select(meet)
+
+meet_4 <- responses_final %>%
+  mutate(meet = p4_meet) %>%
+  select(meet)
+
+meet_merged <- rbind(meet_1, meet_2, by = "meet")
+meet_merged <- rbind(meet_merged, meet_3, by = "meet")
+meet_merged <- rbind(meet_merged, meet_4, by = "meet")
+
+meet <- meet_merged %>%
+  mutate(count = n()) %>%
+  filter(meet != "NA" & meet != "meet") %>%
+  ggplot(aes(x = fct_infreq(meet))) +
+    geom_col(aes(y = count / sum(count)),
+             fill = "#6fb4d2") +
+    coord_flip() +
+    theme_bw() +
+    labs(
+      title = "Way First-Years \n Met Closest Friends",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+
+meet
+```
 
 ```{r Overall Satisfaction}
 overall_satisfaction <- responses_test %>%

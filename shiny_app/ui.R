@@ -140,7 +140,11 @@ ui <- navbarPage(
                 p("We asked survey respondents what they thought the best way to
                   form connections with people in general was, regardless of if
                   this matched their own personal experience."),
-                plotOutput("best_way"))
+                plotOutput("best_way"),
+                br(),
+                p("In contrast, here is a graph of the way that first-years
+                  actually met each other."),
+                plotOutput("meet"))
              ))
            )
   ),
