@@ -115,7 +115,62 @@ server <- function(input, output) {
   
   ########## SECOND PAGE: SOCIAL WEB ##########
   
-  ########## THIRD PAGE: ANALYSIS ##########
+  ########## THIRD PAGE: MOST CONNECTED ##########
+  
+  output$static_network <- renderPlot({
+    color <- brewer.pal(4, "Set3")
+  
+  edges_full <- responses %>%
+    select(id, first_id, second_id, third_id, fourth_id) %>%
+    pivot_longer(cols = 2:5,
+                 names_to = "degree", 
+                 values_to = "endpoint") %>%
+    mutate(colors = case_when(
+      degree == "first_id" ~ color[1],
+      degree == "second_id" ~ color[2],
+      degree == "third_id" ~ color[3],
+      degree == "fourth_id" ~ color[4]
+    ))
+  
+  # Specified the edges, nodes, and top four friends
+  
+  edges <- edges_full %>% 
+    select(id, endpoint)
+  
+  nodes <- responses %>% 
+    select(id) 
+  
+  first <- responses %>% 
+    select(first_id) 
+  
+  second <- responses %>% 
+    select(second_id) 
+  
+  third <- responses %>% 
+    select(third_id) 
+  
+  fourth <- responses %>% 
+    select(fourth_id) 
+  
+  all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
+  
+  
+  nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
+  
+  g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
+  
+  l <- layout_on_sphere(g)
+  
+  
+  plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
+  
+  title("Network",cex.main=3,col.main="black")
+  
+  legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
+         col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
+  })
+  
+  ########## FOURTH PAGE: ANALYSIS ##########
   
   output$overall_satisfaction <- renderPlot({
     responses %>%

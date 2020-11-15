@@ -14,35 +14,13 @@ library(shiny)
 library(shinythemes)
 library(readxl)
 library(visNetwork)
-library(network) 
-library(sna)
-library(ggraph)
-library(threejs)
-library(networkD3)
-library(ndtv)
 library(RColorBrewer)
 ```
 
 ```{r}
 color <- brewer.pal(4, "Set3")
 
-network_responses_clean <- responses_clean %>%
-  select(p1_name, p2_name, p3_name, p4_name, name, most_connected, id) %>%
-  pivot_longer(cols = 1:6,
-               names_to = "degree",
-               values_to = "name") %>%
-  mutate(endpoint = group_indices(., name)) %>%
-  select(id, degree, endpoint) %>%
-  pivot_wider(names_from = degree,
-              values_from = endpoint) %>%
-  select(name, p1_name, p2_name, p3_name, p4_name, most_connected) %>%
-  rename("id" = name,
-         "first_id" = p1_name,
-         "second_id" = p2_name,
-         "third_id" = p3_name,
-         "fourth_id" = p4_name)
-
-edges_full <- network_responses_clean %>%
+edges_full <- responses %>%
   select(id, first_id, second_id, third_id, fourth_id) %>%
   pivot_longer(cols = 2:5,
                names_to = "degree", 
@@ -59,19 +37,19 @@ edges_full <- network_responses_clean %>%
       edges <- edges_full %>% 
         select(id, endpoint)
       
-      nodes <- network_responses_clean %>% 
+      nodes <- responses %>% 
         select(id) 
       
-      first <- network_responses_clean %>% 
+      first <- responses %>% 
         select(first_id) 
       
-      second <- network_responses_clean %>% 
+      second <- responses %>% 
         select(second_id) 
       
-      third <- network_responses_clean %>% 
+      third <- responses %>% 
         select(third_id) 
       
-      fourth <- network_responses_clean %>% 
+      fourth <- responses %>% 
         select(fourth_id) 
       
       all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
@@ -86,68 +64,10 @@ edges_full <- network_responses_clean %>%
       
       plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
       
-# visNetwork(nodes, edges)
-      
-#       title("Friend Network",cex.main=3,col.main="black")
-#       
-#       legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
-#              col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
-# 
-# output$helen_plot <- renderPlot({
-#       survey_data <- read_csv("data/FINAL_PUBLIC_DATA-4-23-20.csv") 
-#       library(RColorBrewer)
-#       color <- brewer.pal(4, "Set3") 
-#       
-#       # Created a friend network plot
-#       
-#       edges_full <- survey_data %>% 
-#         select(id, first_id, second_id, third_id, fourth_id) %>% 
-#         pivot_longer(cols = c(first_id, second_id, third_id, fourth_id), names_to = "degree", values_to = "endpoint") %>% 
-#         mutate(colors = case_when(
-#           degree == "first_id" ~ color[1],
-#           degree == "second_id" ~ color[2],
-#           degree == "third_id" ~ color[3],
-#           degree == "fourth_id" ~ color[4]
-#         ))
-#       
-#       # Specified the edges, nodes, and top four friends
-#       
-#       edges <- edges_full %>% 
-#         select(id, endpoint)
-#       
-#       nodes <- survey_data %>% 
-#         select(id) 
-#       
-#       first <- survey_data %>% 
-#         select(first_id) 
-#       
-#       second <- survey_data %>% 
-#         select(second_id) 
-#       
-#       third <- survey_data %>% 
-#         select(third_id) 
-#       
-#       fourth <- survey_data %>% 
-#         select(fourth_id) 
-#       
-#       all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
-#       
-#       
-#       nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
-#       
-#       
-#       g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
-#       
-#       
-#       l <- layout_on_sphere(g)
-#       
-#       
-#       #png("ms_6/helen_plot.png", 1800, 1800) 
-#       plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
-#       title("Friend Network",cex.main=3,col.main="black")
-#       
-#       legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
-#              col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
-#     })
+      title("Friend Network",cex.main=3,col.main="black")
+
+      legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
+             col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
+
 ```
 

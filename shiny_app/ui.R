@@ -6,6 +6,8 @@ library(shiny)
 library(shinythemes)
 library(tidyverse)
 library(ggplot2)
+library(RColorBrewer)
+library(igraph)
 
 # Read in datasets created using the 'gather_raw_data.R' script.
 
@@ -87,7 +89,22 @@ ui <- navbarPage(
            )
   ),
   
-  ########## THIRD PAGE: ANALYSIS ##########
+  ########## THIRD PAGE: MOST CONNECTED ##########
+  
+  tabPanel("Most Connected",
+           fluidPage(
+           br(),
+           br(),
+           fluidRow(column(1), column(10,
+            h4(tags$b("The Social Network")),
+            plotOutput("static_network"),
+            br(),
+            br()
+            ))
+          )
+  ),
+  
+  ########## FOURTH PAGE: ANALYSIS ##########
   
   tabPanel("Analyzing the Data",
            fluidPage(
