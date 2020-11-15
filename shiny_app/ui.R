@@ -8,6 +8,7 @@ library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
 library(igraph)
+library(visNetwork)
 
 # Read in datasets created using the 'gather_raw_data.R' script.
 
@@ -80,9 +81,7 @@ ui <- navbarPage(
              br(),
              fluidRow(column(1), column(10,
               h4(tags$b("The Social Web")),
-              p(
-                "A graph showing the social web will go on this page."
-              ),
+              visNetworkOutput("social_web",  width = "100%", height = "1000px"),
               br(),
               br()
             ))
