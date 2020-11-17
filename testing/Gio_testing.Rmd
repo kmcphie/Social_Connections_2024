@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
 ```
 
 ```{r}
@@ -76,7 +77,7 @@ p3_p4 <- full_join(p3_list, p4_list, by = "person_id") %>%
 # Add joined datasets together and total up the number of appearances
 # for each id, then arrange in desc. order
 
-most_appearances <- full_join(p1_p2, p3_p4, by = "person_id") %>% 
+most_appearances_list <- full_join(p1_p2, p3_p4, by = "person_id") %>% 
   mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
   mutate(appearances = sum.x + sum.y) %>% 
   select(person_id, appearances) %>%
@@ -86,5 +87,23 @@ rm(p1_p2, p3_p4) # remove joined datasets from Rstudio environment
                  # to reduce clutter
 
 ```
+
+```{r}
+
+# Convert person_id column in most_connected_list to numeric 
+# so joining datasets works
+
+most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person_id))
+
+# Graph comparing most socially connected people with their
+# appearances in top 4 lists
+
+inner_join(most_connected_list, most_appearances_list,
+           by = "person_id") %>% 
+  ggplot(aes(Freq, appearances)) +
+  geom_jitter() +
+  geom_smooth(method = lm)
+```
+
 
 
