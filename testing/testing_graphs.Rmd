@@ -9,6 +9,15 @@ library(ggplot2)
 library(tidyverse)
 library(ggthemes)
 library(rstanarm)
+library(gt)
+library(gtsummary)
+
+#------------------------------------------------------------------------------#
+# NB: if you're having trouble with testing and getting the error message
+# "object 'responses_final' not found" try running this line here:
+
+responses_final = readRDS("../shiny_app/responses_final.rds")
+#------------------------------------------------------------------------------#
 ```
 
 ```{r Best}
@@ -170,6 +179,22 @@ group_size
 
 # Average group size is 4.18299
 ```
+
+```{r Most Connected Person}
+most_connected <- responses_final %>%
+  select(most_connected) %>%
+  group_by(most_connected) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(desc(count)) %>%
+  head(10) %>%
+  rename("ID" = most_connected,
+         "Number of Votes" = count) %>%
+  gt() %>%
+    tab_header(title = "Top Ten Socially Connected First-Years: Survey")
+
+most_connected
+```
+
 
 
 

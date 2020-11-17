@@ -175,6 +175,19 @@ server <- function(input, output) {
       degree == "fourth_id" ~ color[4]
     ))
   
+  output$most_connected <- render_gt({
+    responses %>%
+      select(most_connected) %>%
+      group_by(most_connected) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      arrange(desc(count)) %>%
+      head(10) %>%
+      rename("ID" = most_connected,
+             "Number of Votes" = count) %>%
+      gt() %>%
+      tab_header(title = "Top Ten Socially Connected First-Years: Survey")
+  })
+  
   # Specified the edges, nodes, and top four friends
   
   edges <- edges_full %>% 
@@ -415,7 +428,7 @@ server <- function(input, output) {
       scale_y_continuous(labels = scales::percent_format())
   })
   
-  ########## FOURTH PAGE: ABOUT ##########
+  ########## FIFTH PAGE: ABOUT ##########
   
   output$katherine <- renderImage({
     list(src = "www/katherine.png", 

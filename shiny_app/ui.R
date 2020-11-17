@@ -9,6 +9,8 @@ library(ggplot2)
 library(RColorBrewer)
 library(igraph)
 library(visNetwork)
+library(gt)
+library(gtsummary)
 
 # Read in datasets created using the 'gather_raw_data.R' script.
 
@@ -98,6 +100,15 @@ ui <- navbarPage(
             h4(tags$b("The Social Network")),
             plotOutput("static_network"),
             br(),
+            p("When survey respondents were asked to name the person they 
+              thought was the most socially connected in the Class of 2024,
+              these were the top results. (Note that survey respondents were
+              assigned a random ID number when filling out the survey to 
+              preserve anonymity.) Just over 15% of survey respondents chose the
+              same individual as the most socially connected.
+              year."),
+            gt_output("most_connected"),
+            br(),
             br()
             ))
           )
@@ -177,7 +188,7 @@ ui <- navbarPage(
            )
   ),
   
-  ########## FOURTH PAGE: ABOUT ##########
+  ########## FIFTH PAGE: ABOUT ##########
   
   tabPanel("About", 
            fluidPage(
