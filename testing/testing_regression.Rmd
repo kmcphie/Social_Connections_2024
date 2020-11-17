@@ -39,8 +39,46 @@ stan_glm(group_size ~ gender + gap_year + living + location,
          data = responses_clean,
          refresh = 0,
          family = poisson())
+
 ```
 
+```{r}
+
+responses_final
+
+model_data <- responses_final %>%
+  mutate(gender = str_replace(gender, 
+                              pattern = "Genderqueer/Gender Non-Conforming", 
+                              replacement = "Other")) %>%
+  mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                              replacement = "Other")) %>%
+  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
+  select(on_campus, gender, satisfaction, group_size)
+
+# group all on campus individuals to be on campus and alternatively
+
+fit_gs <- stan_glm(data = model_data,
+   formula = satisfaction ~ group_size + on_campus + on_campus*group_size - 1,
+   family = gaussian(),
+   refresh = 0)
+
+print(fit_gs, digits = 5)
+
+fit_graph <- fit_gs %>%
+  as_tibble() %>%
+  ggplot(aes(x = group_size, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  theme_bw()
+
+tbl_regression(fit_gs, intercept = TRUE) %>%
+  as_gt() %>%
+ # fmt_number(columns = 2:3, decimal = 3) %>%
+  tab_header(title = "Regression of Satisfaction",
+             subtitle = "The Effect of Group Size and Gender on Satisfaction")
+
+
+```
 
 
 
