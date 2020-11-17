@@ -178,6 +178,9 @@ server <- function(input, output) {
   output$most_connected <- render_gt({
     responses %>%
       select(most_connected) %>%
+      mutate(most_connected = ifelse(most_connected == 289,
+                                     NA, most_connected)) %>% 
+      drop_na() %>%
       group_by(most_connected) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
