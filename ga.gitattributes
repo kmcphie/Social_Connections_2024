@@ -1,3 +1,1 @@
-*.html linguist-detectable=true
-*.css linguist-detectable=false
-*.R linguist-detectable=true
+/shiny_app/www/*.css linguist-detectable=false
