@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+responses_final = readRDS("../shiny_app/responses_final.rds")
 ```
 
 ```{r}
@@ -58,7 +59,7 @@ p4_list <- p4_list[-1,]
 
 ```{r}
 
-# List of people and how many times they appear in top 4 friends list 
+# List of people and how many times they appear in top 4 friend lists 
 
 # Merge p1_list and p2_list and sum up the number of appearances
 # for each id
