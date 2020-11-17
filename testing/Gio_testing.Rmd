@@ -8,17 +8,18 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
+library(dplyr)
 ```
 
 ```{r}
 
 # List of most connected people and how many times they're listed
 
-most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>% 
+most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>%
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
-most_connected_list <- most_connected_list[-1,] # remove NAs
+most_connected_list <- most_connected_list[-1,] # remove NA responses
 
 # List of 1st closest people and how many times they're listed
 
@@ -54,5 +55,36 @@ p4_list <- p4_list[-1,]
 
 ```
 
+```{r}
+
+# List of people and how many times they appear in top 4 friends list 
+
+# Merge p1_list and p2_list and sum up the number of appearances
+# for each id
+
+p1_p2 <- full_join(p1_list, p2_list, by = "person_id") %>% 
+  mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+  mutate(sum = Freq.x + Freq.y)
+
+# Merge p3_list and p4_list and sum up the number of appearances
+# for each id
+
+p3_p4 <- full_join(p3_list, p4_list, by = "person_id") %>% 
+  mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+  mutate(sum = Freq.x + Freq.y)
+
+# Add joined datasets together and total up the number of appearances
+# for each id, then arrange in desc. order
+
+most_appearances <- full_join(p1_p2, p3_p4, by = "person_id") %>% 
+  mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+  mutate(appearances = sum.x + sum.y) %>% 
+  select(person_id, appearances) %>%
+  arrange(desc(appearances))
+
+rm(p1_p2, p3_p4) # remove joined datasets from Rstudio environment
+                 # to reduce clutter
+
+```
 
 
