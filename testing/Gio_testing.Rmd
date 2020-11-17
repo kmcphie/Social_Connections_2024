@@ -18,11 +18,15 @@ most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>%
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
+most_connected_list <- most_connected_list[-1,] # remove NAs
+
 # List of 1st closest people and how many times they're listed
 
 p1_list <- as.data.frame(table(responses_final$first_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
+
+p1_list <- p1_list[-1,]
 
 # List of 2nd closest people and how many times they're listed
 
@@ -30,17 +34,23 @@ p2_list <- as.data.frame(table(responses_final$second_id)) %>%
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
+p2_list <- p2_list[-1,]
+
 # List of 3rd closest people and how many times they're listed
 
 p3_list <- as.data.frame(table(responses_final$third_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
+p3_list <- p3_list[-1,]
+
 # List of 4th closest people and how many times they're listed
 
 p4_list <- as.data.frame(table(responses_final$fourth_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
+
+p4_list <- p4_list[-1,]
 
 ```
 
