@@ -7,57 +7,39 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(visNetwork)
 library(tidyverse)
-
-```
-
-```{r}
-
-# Still learning visNetwork, having trouble figuring out how to
-# create the groups and tie them to each student
-
-nodes <- responses_clean %>% 
-  select(id)
-edges <- responses_clean %>% 
-  filter(location == "The Yard") %>% 
-  mutate(from = id) %>%
-  mutate(to = location) %>%
-  select(id, from, to)
-
-visNetwork(nodes, edges)
 ```
 
 ```{r}
 
 # List of most connected people and how many times they're listed
 
-most_connected_list <- as.data.frame(table(responses_clean$most_connected)) %>% 
-  rename(Person = Var1) %>% 
+most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>% 
+  rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
 # List of 1st closest people and how many times they're listed
 
-p1_list <- as.data.frame(table(responses_clean$p1_name)) %>% 
-  rename(Person = Var1) %>% 
+p1_list <- as.data.frame(table(responses_final$first_id)) %>% 
+  rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
 # List of 2nd closest people and how many times they're listed
 
-p2_list <- as.data.frame(table(responses_clean$p2_name)) %>% 
-  rename(Person = Var1) %>% 
+p2_list <- as.data.frame(table(responses_final$second_id)) %>% 
+  rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
 # List of 3rd closest people and how many times they're listed
 
-p3_list <- as.data.frame(table(responses_clean$p3_name)) %>% 
-  rename(Person = Var1) %>% 
+p3_list <- as.data.frame(table(responses_final$third_id)) %>% 
+  rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
 # List of 4th closest people and how many times they're listed
 
-p4_list <- as.data.frame(table(responses_clean$p4_name)) %>% 
-  rename(Person = Var1) %>% 
+p4_list <- as.data.frame(table(responses_final$fourth_id)) %>% 
+  rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
 ```
