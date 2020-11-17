@@ -11,4 +11,5 @@ Jeremiah Kim conducted [a very similar project]("https://jeremiah-kim.shinyapps.
 * /shiny_app: Files to render Shiny App
 * /testing: .Rmd scripts for testing purposes
 * .gitignore
+* .gitattributes
 * README.md
