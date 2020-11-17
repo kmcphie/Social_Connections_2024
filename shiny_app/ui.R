@@ -105,8 +105,7 @@ ui <- navbarPage(
               these were the top results. (Note that survey respondents were
               assigned a random ID number when filling out the survey to 
               preserve anonymity.) Just over 15% of survey respondents chose the
-              same individual as the most socially connected.
-              year."),
+              same individual as the most socially connected."),
             gt_output("most_connected"),
             br(),
             br()
@@ -166,11 +165,23 @@ ui <- navbarPage(
                 h4(tags$b("Best Way to Make Connections")),
                 p("We asked survey respondents what they thought the best way to
                   form connections with people in general was, regardless of if
-                  this matched their own personal experience."),
+                  this matched their own personal experience. They thought that
+                  living in close proximity would be the best way to connect
+                  with people, followed by actually being a roommate/suitemate,
+                  which is a very similar concept, followed by friend of a
+                  friend."),
                 plotOutput("best_way"),
                 br(),
                 p("In contrast, here is a graph of the way that first-years
-                  actually met each other."),
+                  actually met each other. Friend of a friend was actually the
+                  top way first-years met, although it only came in third for
+                  what people expected. Already knowing someone before coming
+                  to Harvard also came in second, surprisingly high. Perhaps
+                  this was because first-years had more limited opportunities
+                  to meet each other this year and subsequently relied on 
+                  previous connections. Third- and fourth-most-common options
+                  were living in close proximity and beeing roommates/suitemates
+                  just like expected."),
                 plotOutput("meet"),
                 br(),
                 p("Here are the most common ways first-years stay in contact 
