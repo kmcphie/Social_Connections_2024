@@ -183,6 +183,9 @@ group_size
 ```{r Most Connected Person}
 most_connected <- responses_final %>%
   select(most_connected) %>%
+  mutate(most_connected = ifelse(most_connected == 289,
+                                 NA, most_connected)) %>% 
+  drop_na() %>% 
   group_by(most_connected) %>%
   summarize(count = n(), .groups = "drop") %>%
   arrange(desc(count)) %>%

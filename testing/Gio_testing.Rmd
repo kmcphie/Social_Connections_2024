@@ -20,7 +20,7 @@ most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>%
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
-most_connected_list <- most_connected_list[-1,] # remove NA responses
+most_connected_list <- most_connected_list[-1,] # remove NAs
 
 # List of 1st closest people and how many times they're listed
 
@@ -83,7 +83,7 @@ most_appearances_list <- full_join(p1_p2, p3_p4, by = "person_id") %>%
   select(person_id, appearances) %>%
   arrange(desc(appearances))
 
-rm(p1_p2, p3_p4) # remove joined datasets from Rstudio environment
+rm(p1_p2, p3_p4) # remove joined datasets from environment
                  # to reduce clutter
 
 ```
@@ -95,17 +95,25 @@ rm(p1_p2, p3_p4) # remove joined datasets from Rstudio environment
 
 most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person_id))
 
-# Graph comparing most socially connected people with their
-# appearances in top 4 lists
+# List that has the most connected people, how many votes
+# they got as "most socially connected", and how often
+# they actually appeared in top 4 friend lists.
 
 most_comparison <- inner_join(most_connected_list,
                               most_appearances_list,
                               by = "person_id") %>%
   rename(votes = Freq)
 
+# Comparison graph
+
 ggplot(most_comparison, aes(votes, appearances)) +
-geom_jitter() +
-geom_smooth(method = lm)
+  geom_jitter() +
+  geom_smooth(method = lm) +
+  labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
+       subtitle = "No correlation between being the most connected and being close friends",
+       x = "Number of Votes as Most Socially Connected Person",
+       y = "Number of Appearances in Top 4 Friend Lists")
+  
 ```
 
 
