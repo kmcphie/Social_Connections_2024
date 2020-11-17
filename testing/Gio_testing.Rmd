@@ -98,11 +98,14 @@ most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person
 # Graph comparing most socially connected people with their
 # appearances in top 4 lists
 
-inner_join(most_connected_list, most_appearances_list,
-           by = "person_id") %>% 
-  ggplot(aes(Freq, appearances)) +
-  geom_jitter() +
-  geom_smooth(method = lm)
+most_comparison <- inner_join(most_connected_list,
+                              most_appearances_list,
+                              by = "person_id") %>%
+  rename(votes = Freq)
+
+ggplot(most_comparison, aes(votes, appearances)) +
+geom_jitter() +
+geom_smooth(method = lm)
 ```
 
 
