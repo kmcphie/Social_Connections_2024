@@ -440,10 +440,12 @@ expectations %>%
     geom_bar(fill = "#6fb4d2") +
     theme_bw() +
     labs(x = "Matches", y = "Count",
-         title = "Frequency of Reality Meeting Expectations",
-         subtitle = "Number of matches between speculation and reality on best channels to connect with peers") +
+         title = "Frequency of Reality Meeting Expectations") +
     annotate("text", x = 1, y = 140, label = "84") +
-    annotate("text", x = 2, y = 270, label = "246")
+    annotate("text", x = 2, y = 270, label = "246") +
+    theme(title = element_text(size = 14, face = "bold"),
+          axis.title.x = element_text(size = 12, face = "plain"),
+          axis.title.y = element_text(size = 12, face= "plain"))
   
 })
   

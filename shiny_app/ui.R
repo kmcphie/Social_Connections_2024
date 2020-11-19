@@ -188,7 +188,12 @@ ui <- navbarPage(
                   aligned with reality, we graphed the frequency of responses
                   to perceived best ways to form connections and how often they 
                   matched with how students reported meeting one another in 
-                  reality."),
+                  reality. Of those who responded, students in the aggregate 
+                  were about 75% accurate in their speculations. Between this
+                  finding and those prior, it appears that traditional forms
+                  of meetign and sustaining connections held true as the best
+                  and most frequent among first-year students, even under 
+                  Covid-19 and a hybrid learning and social environment."),
                 plotOutput("expectation_matches"),
                 br(),
                 p("Here are the most common ways first-years stay in contact 
