@@ -271,7 +271,7 @@ library(readxl)
 library(data.table)
 library(tidyverse)
 
-expectations <- read_excel("shiny_app/raw_data/expectations.xlsx")
+expectations <- read_excel("shiny_app/data/expectations.xlsx")
 
 # TRUE/FALSE Dissonace1 Match Graph
 
@@ -297,6 +297,8 @@ dissonance1_digits <- expectations %>%
   group_by(reality) %>%
   summarize(sum = sum(reality == TRUE),
             sum2 = sum(reality == FALSE))
+
+###############################################################################
 
 # Top Expectations Graph
 

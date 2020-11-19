@@ -48,6 +48,8 @@ stan_glm(group_size ~ gender + gap_year + living + location,
 # Model: Part 1, (Basic Stan)
 # [Satisfaction ~ Group_Size + On_Campus + On_Campus*Group_Size]
 
+# Recitation: How do I graph a posterior with multiple covariates?
+
 library(gtsummary)
 library(gt)
 library(tidymodels)
@@ -112,6 +114,9 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
 ```{r}
 
 # Model: Workflow Edition (Part 2)
+
+# Recitation: Clarify the purpose of this. For reference on efficacy of models
+# or is it something that should be shared in the final product?
 
 model_data_split <- initial_split(model_data)
 model_data_train <- training(model_data_split)

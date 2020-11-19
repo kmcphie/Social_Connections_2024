@@ -184,6 +184,13 @@ ui <- navbarPage(
                   just like expected."),
                 plotOutput("meet"),
                 br(),
+                p("Accordingly, in examining the number of times expectations
+                  aligned with reality, we graphed the frequency of responses
+                  to perceived best ways to form connections and how often they 
+                  matched with how students reported meeting one another in 
+                  reality."),
+                plotOutput("expectation_matches"),
+                br(),
                 p("Here are the most common ways first-years stay in contact 
                   with each other."),
                 plotOutput("stay_in_contact"),

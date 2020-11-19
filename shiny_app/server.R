@@ -431,6 +431,22 @@ server <- function(input, output) {
       scale_y_continuous(labels = scales::percent_format())
   })
   
+output$expectation_matches <- renderPlot({
+expectations %>%
+    select(best, p_meet_total) %>%
+    mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
+    drop_na() %>%
+    ggplot(aes(x = reality)) +
+    geom_bar(fill = "#6fb4d2") +
+    theme_bw() +
+    labs(x = "Matches", y = "Count",
+         title = "Frequency of Reality Meeting Expectations",
+         subtitle = "Number of matches between speculation and reality on best channels to connect with peers") +
+    annotate("text", x = 1, y = 140, label = "84") +
+    annotate("text", x = 2, y = 270, label = "246")
+  
+})
+  
   ########## FIFTH PAGE: ABOUT ##########
   
   output$katherine <- renderImage({
