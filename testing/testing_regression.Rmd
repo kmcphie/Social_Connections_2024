@@ -22,16 +22,17 @@ responses_clean$gap_yeardummy[which(responses_clean$gap_year == "Yes")] <- 1
 ```
 
 ```{r}
+
 fit <- stan_glm(gap_yeardummy ~ p1_closeness + gender + race,
                 data = responses_clean,
                 refresh = 0,
                 family = binomial())
 
-
 ```
 
 
 ```{r}
+
 ggplot(responses_clean, aes(x = group_size)) +
 geom_density()
 
@@ -44,6 +45,15 @@ stan_glm(group_size ~ gender + gap_year + living + location,
 
 ```{r}
 
+# Model: Part 1, (Basic Stan)
+# [Satisfaction ~ Group_Size + On_Campus + On_Campus*Group_Size]
+
+library(gtsummary)
+library(gt)
+library(tidymodels)
+library(rstanarm)
+library(broom.mixed)
+
 responses_final
 
 model_data <- responses_final %>%
@@ -52,13 +62,33 @@ model_data <- responses_final %>%
                               replacement = "Other")) %>%
   mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
                               replacement = "Other")) %>%
-  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
-  select(on_campus, gender, satisfaction, group_size)
+  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                          "At Home (international student)"), TRUE, FALSE)) %>%
+  select(on_campus, gender, satisfaction, group_size) %>%
+  mutate(on_campus = as.numeric(on_campus)) %>%
+    mutate(satisfaction = str_replace(
+      satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+  mutate(satisfaction = str_replace(
+    satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+  mutate(satisfaction = str_replace(
+    satisfaction, pattern = "Neutral", replacement = "0")) %>%
+  mutate(satisfaction = str_replace(
+    satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+  mutate(satisfaction = str_replace(
+    satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+  mutate(satisfaction = str_replace(
+    satisfaction, pattern = "Very -1", replacement = "-2"))
 
-# group all on campus individuals to be on campus and alternatively
+model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+model_data$group_size <- as.integer(as.character(model_data$group_size))
+
+# Grouped all on campus individuals to be on campus or not. Replaced
+# satisfaction levels with an integer value. Grouped extraneous gender
+# variants as "Other." Converted Satisfaction and Group_Size values to 
+# integers.
 
 fit_gs <- stan_glm(data = model_data,
-   formula = satisfaction ~ group_size + on_campus + on_campus*group_size - 1,
+   formula = satisfaction ~ group_size + on_campus + on_campus:group_size - 1,
    family = gaussian(),
    refresh = 0)
 
@@ -73,16 +103,36 @@ fit_graph <- fit_gs %>%
 
 tbl_regression(fit_gs, intercept = TRUE) %>%
   as_gt() %>%
- # fmt_number(columns = 2:3, decimal = 3) %>%
-  tab_header(title = "Regression of Satisfaction",
-             subtitle = "The Effect of Group Size and Gender on Satisfaction")
-
+  tab_header(title = "Satisfaction Regression",
+             subtitle = 
+        "The Effect of Group Size and On-Campus Living on Social Satisfaction")
 
 ```
 
+```{r}
 
+# Model: Workflow Edition (Part 2)
 
+model_data_split <- initial_split(model_data)
+model_data_train <- training(model_data_split)
+model_data_test <- testing(model_data_split)
+model_data_folds <- vfold_cv(model_data_train, v = 5)
 
+model_wfl <- workflow() %>% 
+  add_model(linear_reg() %>% 
+              set_engine("lm")) %>% 
+  add_recipe(recipe(satisfaction ~ group_size + on_campus,
+                    data = model_data_train) %>%
+               step_interact(~ group_size:on_campus))
 
+results <- model_wfl %>% 
+  fit(data = model_data_train) %>% 
+  predict(new_data = model_data_test) %>% 
+  bind_cols(model_data_test %>% select(satisfaction)) %>% 
+  metrics(truth = satisfaction, estimate = `.pred`)
 
+model_cross <- model_wfl %>% 
+  fit_resamples(resamples = model_data_folds) %>% 
+  collect_metrics()
 
+```
