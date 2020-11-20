@@ -48,7 +48,8 @@ stan_glm(group_size ~ gender + gap_year + living + location,
 # Model: Part 1, (Basic Stan)
 # [Satisfaction ~ Group_Size + On_Campus + On_Campus*Group_Size]
 
-# Recitation: How do I graph a posterior with multiple covariates?
+# Recitation: How do I graph a posterior with multiple covariates? Check
+# interpretation? Clarify purpose of workflow?
 
 library(gtsummary)
 library(gt)
@@ -58,6 +59,8 @@ library(broom.mixed)
 
 responses_final
 
+set.seed(10)
+
 model_data <- responses_final %>%
   mutate(gender = str_replace(gender, 
                               pattern = "Genderqueer/Gender Non-Conforming", 
@@ -66,7 +69,7 @@ model_data <- responses_final %>%
                               replacement = "Other")) %>%
   mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                           "At Home (international student)"), TRUE, FALSE)) %>%
-  select(on_campus, gender, satisfaction, group_size) %>%
+  select(on_campus, gender, satisfaction, group_size, location, race) %>%
   mutate(on_campus = as.numeric(on_campus)) %>%
     mutate(satisfaction = str_replace(
       satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
@@ -90,18 +93,23 @@ model_data$group_size <- as.integer(as.character(model_data$group_size))
 # integers.
 
 fit_gs <- stan_glm(data = model_data,
-   formula = satisfaction ~ group_size + on_campus + on_campus:group_size - 1,
+   formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
    family = gaussian(),
    refresh = 0)
 
 print(fit_gs, digits = 5)
+
+# model_interval <- posterior_interval(fit_gs, prob = 0.95)
 
 fit_graph <- fit_gs %>%
   as_tibble() %>%
   ggplot(aes(x = group_size, y = after_stat(count / sum(count)))) +
   geom_histogram(binwidth = 0.01, bins = 100,
                  color = "white", fill = "#6fb4d2") +
-  theme_bw()
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Group Size", y = "Probability")
+
 
 tbl_regression(fit_gs, intercept = TRUE) %>%
   as_gt() %>%
@@ -109,14 +117,52 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
              subtitle = 
         "The Effect of Group Size and On-Campus Living on Social Satisfaction")
 
+# Interpretation: Our median value for group_size, -0.03, is the estimated 
+# change in average group_size for students when the on_campus variable is held at zero, 
+# or "off-campus." The median value for on_campus, 0.06, is the estimated change
+# in "being on_campus" when group_size is held at zero. The median value for 
+# group_size:on_campus represents the estimated effect on satisfaction when 
+# both group_size and on_campus are held constant. Thus, when group_size is held
+# constant and the value of on_campus is equal to one (the student is living on
+# campus), then we can expect an increase in satisfaction of about 0.10 on average.
+
+# 
+
+
+############################################################################
+# Model testing
+
+fit2 <- stan_glm(data = model_data,
+         formula = satisfaction ~ on_campus - 1,
+         family = gaussian(),
+         refresh = 0)
+
+print(fit2, digits = 4)
+
+interval <- posterior_interval(fit2, prob = 0.95)
+
+
+fit2 %>%
+  as_tibble() %>%
+  ggplot(aes(x = on_campus, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  # geom_vline(aes(xintercept = interval[1]), color = "blue1") +
+  # geom_vline(aes(xintercept = interval[3]), color = "blue1") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format())
+
 ```
 
 ```{r}
 
 # Model: Workflow Edition (Part 2)
 
-# Recitation: Clarify the purpose of this. For reference on efficacy of models
-# or is it something that should be shared in the final product?
+# Recitation: Clarify the purpose of this. Is it for private reference on 
+# efficacy of models or is it something that should be shared in the final 
+# product? How do I know if I have a good model?
+# 
+# ShinyApp Issue
 
 model_data_split <- initial_split(model_data)
 model_data_train <- training(model_data_split)
@@ -125,7 +171,7 @@ model_data_folds <- vfold_cv(model_data_train, v = 5)
 
 model_wfl <- workflow() %>% 
   add_model(linear_reg() %>% 
-              set_engine("lm")) %>% 
+              set_engine("stan")) %>% 
   add_recipe(recipe(satisfaction ~ group_size + on_campus,
                     data = model_data_train) %>%
                step_interact(~ group_size:on_campus))
@@ -139,5 +185,329 @@ results <- model_wfl %>%
 model_cross <- model_wfl %>% 
   fit_resamples(resamples = model_data_folds) %>% 
   collect_metrics()
+
+```
+
+```{r}
+
+# Average satisfaction as a function of group_size, divided by on_campus
+
+fit_gs %>% 
+  as_tibble() %>% 
+  mutate(male_days = `(Intercept)` + sexMale) %>% 
+  rename(female_days = `(Intercept)`) %>% 
+  select(female_days, male_days) %>% 
+  pivot_longer(cols = female_days:male_days, 
+               names_to = "parameters",
+               values_to = "days") %>% 
+  ggplot(aes(days, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+    labs(title = "Posterior Probability Distribution",
+         subtitle = "Men live longer",
+         x = "Average Days Lived Post Election",
+         y = "Probability") + 
+    scale_x_continuous(labels = scales::number_format()) +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme_classic()
+
+```
+
+```{r}
+
+# SHOTGUN MODELING
+
+one <- stan_glm(formula = satisfaction ~ group_size + 1,
+                data = model_data,
+                refresh = 0,
+                family = gaussian())
+one %>%
+  as_tibble() %>%
+  ggplot(aes(x = group_size, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format())
+
+two <- stan_glm(formula = satisfaction ~ on_campus + 1,
+                data = model_data,
+                refresh = 0,
+                family = gaussian())
+
+two %>%
+  as_tibble() %>%
+  ggplot(aes(x = on_campus, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format())
+
+three <- stan_glm(formula = satisfaction ~ group_size*on_campus + 1,
+                data = model_data,
+                refresh = 0,
+                family = gaussian())
+
+three %>%
+  as_tibble() %>%
+  ggplot(aes(x = on_campus, y = after_stat(count / sum(count)))) +
+  geom_histogram(binwidth = 0.01, bins = 100,
+                 color = "white", fill = "#6fb4d2") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format())
+  
+  
+  
+  
+  # find way to pull distributions from the joint model, not individually.
+  
+  
+  
+  
+  #  pivot_longer(cols = genderFemale:genderOther, 
+  #              names_to = "parameters",
+  #              values_to = "group_size") %>%
+  # ggplot(aes(x = group_size, fill = "paramters")) +
+  # geom_histogram(aes(y = after_stat(count/sum(count))),
+  #                  alpha = 0.5, 
+  #                  bins = 100, 
+  #                  position = "identity") +
+  # theme_bw() +
+  # scale_y_continuous(labels = scales::percent_format())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+```{r}
+
+# IDIVIDUAL POSTERIORS
+
+
+# Gender 
+
+  # Group_Size
+
+model_data2 <- model_data %>%
+  filter(gender != "Other")
+
+expo1 <- stan_glm(data = model_data2,
+                 formula = group_size ~ gender,
+                 refresh = 0)
+
+graphy <- expo1 %>%
+  as_tibble() %>%
+  mutate(male = `(Intercept)` + genderMale) %>%
+  rename(female = `(Intercept)`) %>%
+  select(male, female) %>%
+  pivot_longer(cols = male:female, 
+               names_to = "parameters",
+               values_to = "group_size")
+
+graphy %>%
+  ggplot(aes(group_size, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+  # Satisfaction
+
+
+model_data2 <- model_data %>%
+  filter(gender != "Other")
+
+expos <- stan_glm(data = model_data2,
+                 formula = satisfaction ~ gender,
+                 refresh = 0)
+
+graphl <- expos %>%
+  as_tibble() %>%
+  mutate(male = `(Intercept)` + genderMale) %>%
+  rename(female = `(Intercept)`) %>%
+  select(male, female) %>%
+  pivot_longer(cols = male:female, 
+               names_to = "parameters",
+               values_to = "satisfaction")
+
+graphl %>%
+  ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+# Yard vs. Quad
+    
+  # Satisfaction Combat
+
+model_data3 <- model_data %>%
+  filter(location %in% c("The Yard", "The Quad", "A River House")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "The Yard", 
+                              replacement = "yard")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "The Quad", 
+                              replacement = "quad")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "A River House", 
+                              replacement = "river"))
+
+expo2 <- stan_glm(data = model_data3,
+                 formula = satisfaction ~ location,
+                 refresh = 0)
+
+graphy2 <- expo2 %>%
+  as_tibble() %>%
+  mutate(yard = `(Intercept)` + locationyard) %>%
+  rename(quad = `(Intercept)`) %>%
+  select(yard, quad) %>%
+  pivot_longer(cols = yard:quad, 
+               names_to = "parameters",
+               values_to = "satisfaction")
+
+graphy2 %>%
+  ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+  # Group Size Combat
+
+
+expo3 <- stan_glm(data = model_data3,
+                 formula = group_size ~ location,
+                 refresh = 0)
+
+expo3 %>%
+  as_tibble() %>%
+  mutate(yard = `(Intercept)` + locationyard) %>%
+  rename(quad = `(Intercept)`) %>%
+  select(yard, quad) %>%
+  pivot_longer(cols = yard:quad, 
+               names_to = "parameters",
+               values_to = "group_size") %>%
+  ggplot(aes(group_size, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+# Yard, Quad, AND, River... for fun.
+
+fun <- stan_glm(data = model_data3,
+                formula = satisfaction ~ location,
+                refresh = 0)
+
+fun %>%
+  as_tibble() %>%
+  mutate(river = `(Intercept)` + locationriver) %>%
+  mutate(yard = `(Intercept)` + locationriver + locationyard) %>%
+  rename(quad = `(Intercept)`) %>%
+  select(yard, quad, river) %>%
+  pivot_longer(cols = yard:river, 
+               names_to = "parameters",
+               values_to = "satisfaction") %>%
+  ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+# On Campus v. Off
+
+  # Satisfaction
+
+model_data4 <- model_data %>%
+  mutate(on_campus = if_else(on_campus == "1", "ON", "OFF"))
+
+
+on <- stan_glm(data = model_data4,
+               family = gaussian(),
+               refresh = 0,
+               formula = satisfaction ~ on_campus)
+
+on %>%
+  as_tibble() %>%
+  mutate(on = `(Intercept)` + on_campusON) %>%
+  rename(off = `(Intercept)`) %>%
+  select(on, off) %>%
+  pivot_longer(cols = off:on, 
+               names_to = "parameters",
+               values_to = "satisfaction") %>%
+  ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+  # Group Size
+
+model_data4 <- model_data %>%
+  mutate(on_campus = if_else(on_campus == "1", "ON", "OFF"))
+
+
+on2 <- stan_glm(data = model_data4,
+               family = gaussian(),
+               refresh = 0,
+               formula = group_size ~ on_campus)
+
+on2 %>%
+  as_tibble() %>%
+  mutate(on = `(Intercept)` + on_campusON) %>%
+  rename(off = `(Intercept)`) %>%
+  select(on, off) %>%
+  pivot_longer(cols = off:on, 
+               names_to = "parameters",
+               values_to = "group_size") %>%
+  ggplot(aes(group_size, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+
+
+# Race
 
 ```
