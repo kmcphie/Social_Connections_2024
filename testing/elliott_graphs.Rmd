@@ -219,6 +219,7 @@ library(gtsummary)
 library(broom.mixed)
 library(rstanarm)
 library(gt)
+library(tidyverse)
 
 model_data <- responses_clean %>%
   mutate(gender = str_replace(gender, 
