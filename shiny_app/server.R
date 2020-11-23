@@ -116,18 +116,20 @@ server <- function(input, output) {
   ########## SECOND PAGE: SOCIAL WEB ##########
   
   output$social_web <- renderVisNetwork({
+    color <- brewer.pal(10, "Blues")
+    
     nodes2 <- read_csv("data/nodes2.csv")
     edges2 <- read_csv("data/edges2.csv")
     
     visNetwork(nodes2, edges2) %>%
-      visGroups(groupname = "Dorms", color = "darkblue",
+      visGroups(groupname = "Dorms", color = color[5],
                 shape = "square", size = 65) %>%
-      visGroups(groupname = "Pre-Orientation", color = "darkred", 
+      visGroups(groupname = "Pre-Orientation", color = color[3], 
                 shape = "square", size = 45) %>%
-      visGroups(groupname = "Sports", color = "darkgreen", 
+      visGroups(groupname = "Sports", color = color[1], 
                 shape = "square", size = 45) %>%
       visGroups(groupname = "Student", shape = "circle") %>%
-      visGroups(groupname = "Off Campus", color = "cornflowerblue", 
+      visGroups(groupname = "Off Campus", color = color[7], 
                 shape = "square", size = 65) %>%
       
       # add functionality to highlight close connections when hovering over node
