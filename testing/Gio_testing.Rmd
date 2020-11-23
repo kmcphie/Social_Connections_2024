@@ -105,15 +105,20 @@ most_comparison <- inner_join(most_connected_list,
                               by = "person_id") %>%
   rename(votes = Freq)
 
-# Comparison graph
+# Comparison graph (should I keep the blue gradient or just stick to black?)
 
-ggplot(most_comparison, aes(votes, appearances)) +
+ggplot(most_comparison, aes(votes, appearances,
+                            color = appearances)) +
   geom_jitter() +
-  geom_smooth(method = lm) +
+  geom_smooth(method = lm, formula = y ~ x) +
+  theme_bw() +
+  xlim(0.5, 15) +
   labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
        subtitle = "No correlation between being the most connected and being close friends",
        x = "Number of Votes as Most Socially Connected Person",
-       y = "Number of Appearances in Top 4 Friend Lists")
+       y = "Number of Appearances in Top 4 Friend Lists") +
+  scale_color_gradient(low = "deepskyblue4", high = "#6fb4d2",
+                       guide = FALSE)
   
 ```
 
