@@ -112,7 +112,7 @@ ggplot(most_comparison, aes(votes, appearances,
   geom_jitter() +
   geom_smooth(method = lm, formula = y ~ x) +
   theme_bw() +
-  xlim(0.5, 15) +
+  xlim(0.5, 13) +
   labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
        subtitle = "No correlation between being the most connected and being close friends",
        x = "Number of Votes as Most Socially Connected Person",
