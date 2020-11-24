@@ -10,14 +10,16 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
-responses_final = readRDS("../shiny_app/responses_final.rds")
+library(RColorBrewer)
+library(gt)
+responses <- readRDS("responses_final.rds")
 ```
 
-```{r}
+```{r lists}
 
 # List of most connected people and how many times they're listed
 
-most_connected_list <- as.data.frame(table(responses_final$most_connected)) %>%
+most_connected_list <- as.data.frame(table(responses$most_connected)) %>%
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
@@ -25,7 +27,7 @@ most_connected_list <- most_connected_list[-1,] # remove NAs
 
 # List of 1st closest people and how many times they're listed
 
-p1_list <- as.data.frame(table(responses_final$first_id)) %>% 
+p1_list <- as.data.frame(table(responses$first_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
@@ -33,7 +35,7 @@ p1_list <- p1_list[-1,]
 
 # List of 2nd closest people and how many times they're listed
 
-p2_list <- as.data.frame(table(responses_final$second_id)) %>% 
+p2_list <- as.data.frame(table(responses$second_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
@@ -41,7 +43,7 @@ p2_list <- p2_list[-1,]
 
 # List of 3rd closest people and how many times they're listed
 
-p3_list <- as.data.frame(table(responses_final$third_id)) %>% 
+p3_list <- as.data.frame(table(responses$third_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
@@ -49,7 +51,7 @@ p3_list <- p3_list[-1,]
 
 # List of 4th closest people and how many times they're listed
 
-p4_list <- as.data.frame(table(responses_final$fourth_id)) %>% 
+p4_list <- as.data.frame(table(responses$fourth_id)) %>% 
   rename(person_id = Var1) %>% 
   arrange(desc(Freq))
 
@@ -57,7 +59,7 @@ p4_list <- p4_list[-1,]
 
 ```
 
-```{r}
+```{r most appearances list}
 
 # List of people and how many times they appear in top 4 friend lists 
 
@@ -89,7 +91,7 @@ rm(p1_p2, p3_p4) # remove joined datasets from environment
 
 ```
 
-```{r}
+```{r comparison graph}
 
 # Convert person_id column in most_connected_list to numeric 
 # so joining datasets works
@@ -112,7 +114,7 @@ ggplot(most_comparison, aes(votes, appearances,
   geom_jitter() +
   geom_smooth(method = lm, formula = y ~ x) +
   theme_bw() +
-  xlim(0.5, 13) +
+  xlim(0.5, 13.5) +
   labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
        subtitle = "No correlation between being the most connected and being close friends",
        x = "Number of Votes as Most Socially Connected Person",
@@ -121,6 +123,176 @@ ggplot(most_comparison, aes(votes, appearances,
                        guide = FALSE)
   
 ```
+```{r igraph object for centrality testing}
+color <- brewer.pal(4, "Set3")
+
+edges_full <- responses %>%
+  select(id, first_id, second_id, third_id, fourth_id) %>%
+  pivot_longer(cols = 2:5,
+               names_to = "degree", 
+               values_to = "endpoint") %>%
+  mutate(colors = case_when(
+          degree == "first_id" ~ color[1],
+          degree == "second_id" ~ color[2],
+          degree == "third_id" ~ color[3],
+          degree == "fourth_id" ~ color[4]
+        ))
+      
+      # Specified the edges, nodes, and top four friends
+      
+      edges <- edges_full %>% 
+        select(id, endpoint)
+      
+      nodes <- responses %>% 
+        select(id) 
+      
+      first <- responses %>% 
+        select(first_id) 
+      
+      second <- responses %>% 
+        select(second_id) 
+      
+      third <- responses %>% 
+        select(third_id) 
+      
+      fourth <- responses %>% 
+        select(fourth_id) 
+      
+      all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
+      
+      nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
+      
+      g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
+```
+
+```{r degree centrality}
+
+# Made a tibble showing the degree centrality
+
+deg <- degree(g, mode="all")
+      
+      degree <- tibble(deg) %>% 
+        mutate(degree_id = nodes$id) %>% 
+        arrange(desc(deg)) %>% 
+        filter(degree_id != 289) %>% 
+        select(degree_id, deg)
+      
+      degree_10 <- degree %>% 
+        head(10)
+
+      
+# Created a gt table with the data for degree centrality
+            
+gt(degree_10) %>% 
+        tab_header(title = "Top 10 Degree Centrality") %>% 
+        cols_label(degree_id = "ID",
+                   deg = "Number of Connections")
+```
+
+```{r closeness centrality}
+
+# Found the closeness score of each student
+
+close <- closeness(g, mode="all", weights=NA, normalized=T)
+      
+      closeness <- tibble(close) %>% 
+        mutate(close_id = nodes$id) %>% 
+        arrange(desc(close)) %>% 
+        filter(close_id != 289) %>% 
+        select(close_id, close)
+      
+      closeness_10 <- closeness %>% 
+        head(10)
+      
+      # Created a gt table of the top 10 students with the highest closeness score
+      
+      gt(closeness_10) %>% 
+        tab_header(title = "Top 10 Closeness Centrality") %>% 
+        cols_label(close_id = "ID",
+                   close = "Closeness Score")
+```
+
+```{r betweenness centrality}
+
+# Found the betweenness score of each student
+
+     between <- betweenness(g, directed=F, weights=NA, normalized = T)
+      
+      betweenness <- tibble(between) %>% 
+        mutate(between_id = nodes$id) %>% 
+        arrange(desc(between)) %>% 
+        filter(between_id != 289) %>% 
+        select(between_id, between)
+      
+      betweenness_10 <- betweenness %>% 
+        head(10)
+      
+      # Created a gt table of the top 10 students with the highest betweenness score
+      
+      gt(betweenness_10) %>% 
+        tab_header(title = "Top 10 Betweenness Centrality") %>% 
+        cols_label(between_id = "ID",
+                   between = "Betweenness Score")
+```
+
+```{r eigenvector centrality}
+
+# Created a tibble showing the eigenvector statistics
+
+eigen <- eigen_centrality(g)
+      eigen <- eigen$vector
+      
+      eigenvector <- tibble(eigen) %>% 
+        mutate(eigen_id = nodes$id) %>% 
+        arrange(desc(eigen)) %>% 
+        filter(eigen_id != 289) %>% 
+        select(eigen_id, eigen)
+      
+      eigenvector_10 <- eigenvector %>% 
+        head(10)
+      
+      # Created a gt table for the top 10 eigenvector scores
+      
+      gt(eigenvector_10) %>% 
+        tab_header(title = "Top 10 Eigenvector Centrality") %>% 
+        cols_label(eigen_id = "ID",
+                   eigen = "Eigenvector Score")
+```
+```{r top 10 centrality comparison}
+
+# Top 10 most connected people 
+
+most_10 <- responses %>%
+      select(most_connected) %>%
+      mutate(most_connected = ifelse(most_connected == 289,
+                                     NA, most_connected)) %>% 
+      drop_na() %>%
+      group_by(most_connected) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      arrange(desc(count)) %>%
+      head(10)
+
+# Specified the top 10 results of each test
+      
+      most_id_10 <- most_10$most_connected
+      degree_id_10 <- degree_10$degree_id
+      close_id_10 <- closeness_10$close_id
+      between_id_10 <- betweenness_10$between_id
+      eigen_id_10 <- eigenvector_10$eigen_id
+      comp <- tibble(most_id_10, degree_id_10, close_id_10, between_id_10, eigen_id_10) 
+      
+      # Created a gt table to display all top 10 scores
+      
+      gt(comp) %>% 
+        tab_header(title = "Top 10 ID Comparison") %>% 
+        cols_label(most_id_10 = "Survey",
+                   eigen_id_10 = "Eigenvector Centrality",
+                   degree_id_10 = "Degree Centrality",
+                   close_id_10 = "Closeness Centrality",
+                   between_id_10 = "Betweenness Centrality")
+```
+
+
 
 
 
