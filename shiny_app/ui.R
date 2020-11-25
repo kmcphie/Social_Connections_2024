@@ -197,7 +197,7 @@ ui <- navbarPage(
                   reality. Of those who responded, students in the aggregate 
                   were about 75% accurate in their speculations. Between this
                   finding and those prior, it appears that traditional forms
-                  of meetign and sustaining connections held true as the best
+                  of meeting and sustaining connections held true as the best
                   and most frequent among first-year students, even under 
                   Covid-19 and a hybrid learning and social environment."),
                 plotOutput("expectation_matches"),
