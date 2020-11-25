@@ -287,7 +287,7 @@ ui <- navbarPage(
                        p("Hi, I am Ava Swanson! I am a first-year undergraduate at Harvard pursuing a 
                          concentration in Government. I am involved in the John 
                          Adams Society, Women in Business, HCFA, HRC, and the Institute of 
-                         Politics. I love baking, enjoy hiking and the great outdoors, and study classical piano. You can reach me at",
+                         Politics. I love baking, enjoy hiking and the great outdoors, and study classical piano! You can reach me at",
                          a("avaswanson@college.harvard.edu",
                            href="mailto:avaswanson@college.harvard.edu?Subject=Social%20Connections%20Project"
                          ),
