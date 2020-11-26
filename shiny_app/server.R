@@ -1,6 +1,7 @@
 # Read in datasets created using the 'gather_raw_data.R' script.
 
 responses <- readRDS("responses_final.rds")
+expectations <- readRDS("expectations.rds")
 
 # Define server logic.
 
