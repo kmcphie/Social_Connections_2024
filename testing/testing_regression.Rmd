@@ -11,53 +11,25 @@ Analysis of probability
 Show actual regression and table output ideally, but at least description
 
 ```{r setup, include=FALSE}
+
 library(tidyverse)
 library(rstanarm)
-```
-
-```{r}
-responses_clean$gap_yeardummy <- 0 
-
-responses_clean$gap_yeardummy[which(responses_clean$gap_year == "Yes")] <- 1
-```
-
-```{r}
-
-fit <- stan_glm(gap_yeardummy ~ p1_closeness + gender + race,
-                data = responses_clean,
-                refresh = 0,
-                family = binomial())
-
-```
-
-
-```{r}
-
-ggplot(responses_clean, aes(x = group_size)) +
-geom_density()
-
-stan_glm(group_size ~ gender + gap_year + living + location,
-         data = responses_clean,
-         refresh = 0,
-         family = poisson())
-
-```
-
-```{r}
-
-# Model: Part 1, (Basic Stan)
-# [Satisfaction ~ Group_Size + On_Campus + On_Campus*Group_Size]
-
-# Recitation: How do I graph a posterior with multiple covariates? Check
-# interpretation? Clarify purpose of workflow?
-
 library(gtsummary)
 library(gt)
 library(tidymodels)
 library(rstanarm)
 library(broom.mixed)
+library(broom.mixed)
+library(ggridges)
 
-responses_final
+```
+
+
+```{r}
+
+
+### Model Data ###
+
 
 set.seed(10)
 
@@ -70,7 +42,7 @@ model_data <- responses_final %>%
   mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                           "At Home (international student)"), TRUE, FALSE)) %>%
   select(on_campus, gender, satisfaction, group_size, location, race) %>%
-  mutate(on_campus = as.numeric(on_campus)) %>%
+  # mutate(on_campus = as.numeric(on_campus)) %>%
     mutate(satisfaction = str_replace(
       satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
   mutate(satisfaction = str_replace(
@@ -87,6 +59,120 @@ model_data <- responses_final %>%
 model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
 model_data$group_size <- as.integer(as.character(model_data$group_size))
 
+```
+
+```{r}
+
+
+### FINAL PRODUCT ###
+
+
+  # Flagship Stan Model
+
+fit_gs <- stan_glm(data = model_data,
+   formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+   family = gaussian(),
+   refresh = 0)
+
+
+
+######################################
+
+
+
+  # Output Table
+
+tbl_regression(fit_gs, intercept = FALSE) %>%
+  as_gt() %>%
+  tab_header(title = "Satisfaction Regression",
+             subtitle = 
+        "The Effect of Group Size and On-Campus Living on Social Satisfaction")
+
+
+
+######################################
+
+
+
+# Graphs Part 1 -- Flagship Stan Model w Epreds
+
+new_data = tibble(group_size = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
+                  on_campus = TRUE)
+
+preds <- posterior_epred(fit_gs, newdata = new_data) %>%
+  as_tibble() %>%
+  rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
+         "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
+         "20" = `13`)
+
+    ## Estimated Average Satisfaction Across Group Sizes 1:20 w/ epred ##
+
+long_preds <- preds %>%
+    pivot_longer(cols = "0":"20", 
+               names_to = "Group_Size",
+               values_to = "Satisfaction")
+
+long$"Group_Size" <- factor(long$"Group_Size", levels= c("0":"20"))
+  
+long %>%
+  ggplot(aes(x = `Satisfaction`, y = Group_Size, fill = stat(x))) +
+  geom_density_ridges_gradient(bandwidth = 0.2) +
+  scale_fill_viridis_c(name = "Group Size") +
+  theme_classic() +
+  labs(title = "Estimated Average Satisfaction", subtitle = 
+         "Group Sizes 0-20 for On-Campus Students", y = "Group Size")
+
+  
+  ## Estimated Average Difference in Satisfaction Between On-Campus Students Group Sizes 0 and 5 w/ epred ##
+  
+preds %>%
+  as_tibble() %>%
+  mutate(diff = `5` - `0`) %>%
+  ggplot(aes(x = diff)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 100, 
+                 fill = "steelblue", alpha = 0.6) +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(y = "Percentage", x = "Difference", title = 
+         "Estimated Average Difference in Satisfaction", subtitle = 
+         "Between On-Campus Students with Group Sizes 5 and 0")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
 # Grouped all on campus individuals to be on campus or not. Replaced
 # satisfaction levels with an integer value. Grouped extraneous gender
 # variants as "Other." Converted Satisfaction and Group_Size values to 
@@ -153,6 +239,13 @@ fit2 %>%
   scale_y_continuous(labels = scales::percent_format())
 
 ```
+# increase group size by one but stay off campus, go from -0.66 to about -0.5something,
+# increase group size by one and move from off campus to on campus, then we have to account for 
+all four; we take our intercept and we add ourgroup size and on campus and we add (subtract)
+interaction term for groupsize: on campus. Negative to a positive satisfaction level.
+results in 0.11. 
+
+
 
 ```{r}
 
@@ -508,6 +601,139 @@ on2 %>%
   theme_bw()
 
 
-# Race
+```
+```{r}
+
+
+### FINAL PRODUCT ###
+
+
+library(broom.mixed)
+library(ggridges)
+
+  # Flagship Stan Model
+
+fit_gs <- stan_glm(data = model_data,
+   formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+   family = gaussian(),
+   refresh = 0)
+
+
+
+######################################
+
+
+
+  # Output Table
+
+tbl_regression(fit_gs, intercept = FALSE) %>%
+  as_gt() %>%
+  tab_header(title = "Satisfaction Regression",
+             subtitle = 
+        "The Effect of Group Size and On-Campus Living on Social Satisfaction")
+
+
+
+######################################
+
+
+
+# Graphs Part 1 -- Flagship Stan Model w Epreds
+
+new_data = tibble(group_size = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
+                  on_campus = TRUE)
+
+preds <- posterior_epred(fit_gs, newdata = new_data) %>%
+  as_tibble() %>%
+  rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
+         "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
+         "20" = `13`)
+
+    ## Estimated Average Satisfaction Across Group Sizes 1:20 w/ epred ##
+
+long_preds <- preds %>%
+    pivot_longer(cols = "0":"20", 
+               names_to = "Group_Size",
+               values_to = "Satisfaction")
+
+long$"Group_Size" <- factor(long$"Group_Size", levels= c("0":"20"))
+  
+long %>%
+  ggplot(aes(x = `Satisfaction`, y = Group_Size, fill = stat(x))) +
+  geom_density_ridges_gradient(bandwidth = 0.2) +
+  scale_fill_viridis_c(name = "Group Size") +
+  theme_classic() +
+  labs(title = "Estimated Average Satisfaction", subtitle = 
+         "Group Sizes 0-20 for On-Campus Students", y = "Group Size")
+
+  
+  ## Estimated Average Difference in Satisfaction Between On-Campus Students Group Sizes 0 and 5 w/ epred ##
+  
+preds %>%
+  as_tibble() %>%
+  mutate(diff = `5` - `0`) %>%
+  ggplot(aes(x = diff)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 100, 
+                 fill = "steelblue", alpha = 0.6) +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(y = "Percentage", x = "Difference", title = 
+         "Estimated Average Difference in Satisfaction", subtitle = 
+         "Between On-Campus Students with Group Sizes 5 and 0")
+
+
+
+
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+# EXTRANEOUS
+
+responses_clean$gap_yeardummy <- 0 
+
+responses_clean$gap_yeardummy[which(responses_clean$gap_year == "Yes")] <- 1
+
+
+fit <- stan_glm(gap_yeardummy ~ p1_closeness + gender + race,
+                data = responses_clean,
+                refresh = 0,
+                family = binomial())
+
+
+ggplot(responses_clean, aes(x = group_size)) +
+geom_density()
+
+stan_glm(group_size ~ gender + gap_year + living + location,
+         data = responses_clean,
+         refresh = 0,
+         family = poisson())
+
+```
+
