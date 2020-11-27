@@ -11,6 +11,9 @@ library(igraph)
 library(visNetwork)
 library(gt)
 library(gtsummary)
+library(rstanarm)
+library(broom.mixed)
+library(ggridges)
 
 # Read in datasets created using the 'gather_raw_data.R' script.
 
@@ -225,7 +228,99 @@ ui <- navbarPage(
               br(),
               br(),
               mainPanel(
-                h4(tags$b("Creating a Regression Model")))
+                h4(tags$b("Satisfaction Regression")),
+                p("Our flagship model regressed the variables Group Size, On 
+                Campus, and the interaction between the two onto Satisfaction. 
+                For context, Group Size indicates the number of virtual 
+                relationships that were translated into in-person connections, 
+                and On Campus indicates whether or not the first-year student is 
+                living on campus during Fall 2020. Satisfaction represents the 
+                self-reported level of social satisfaction, with levels 
+                \"Very Dissatisfied,\" \"Dissatisfied,\" \"Neutral,\" 
+                \"Satisfied,\" and \"Very Satisfied.\" These levels were 
+                numerically converted to \"-2,\" \"-1,\" \"0,\" \"1,\" and \"2,\" 
+                respectively."),
+                br(),
+                gt_output("satisfaction_regression"),
+                br(),
+                p("Included is our output table from our flagship model. The 
+                  beta value of our Intercept indicates the predicted value of 
+                  satisfaction when \"Group Size\" is equal to zero and the 
+                  student is living off-campus with no interaction between the 
+                  two predictors. The beta value for group_size reveals the 
+                  predicted change in satisfaction for every increase in 1 for 
+                  \"Group Size\" while holding \"On Campus\" constant. The beta 
+                  value for on_campus represents the predicted change in 
+                  satisfaction when \"Group Size\" is held constant and the 
+                  student were to switch from living off-campus to on-campus."),
+                p("Our interaction term is group_size*on_campus, which we include 
+                  because we suspect the value of one predictor will depend on 
+                  the value of the other (for instance, we assume Group Size 
+                  values are dramatically smaller for students who live off 
+                  campus due to lack of opportunity to form an in-person 
+                  connection from one that was previously virtual). To interpret 
+                  this interaction term, we must do so in the context of the 
+                  other predictors. If we add the beta values for the Intercept,
+                  group_size, on_campus, and the interaction term, we receive a 
+                  value of about 0.11. Essentially, this means that if we 
+                  increase a student's group_size by 1 and change campus status 
+                  from off to on, we can expect a predicted change of 
+                  satisfaction from -0.66 to 0.11. Such a change from a largely 
+                  negative to a positive social experience during the hybrid 
+                  Covid semester is nothing to sneeze at."),
+                br(),
+                h4(tags$b("Graphs")),
+                p("We have included graphical displays of our flagship model. 
+                  The first two represent estimated averages through posterior 
+                  distributions on conditional expectations."),
+                br(),
+                plotOutput("graph_1"),
+                br(),
+                p("In the graph above, we examine the estimated average 
+                  satisfaction for on-campus students with Group Sizes 0-10 and 
+                  15 and 20. We gather that as Group Size increases, overall 
+                  social satisfaction tends to also positively increase."),
+                br(),
+                plotOutput("graph_2"),
+                br(),
+                p("# TEXT (Graph 2): In our second graph, we examine the predicted average
+  # difference in social satisfaction between on campus students who have
+  # group sizes of 5 and those with group sizes of 0. It appears there is a 
+  # median predicted average difference in satisfaction of roughly 0.27 in favor
+  # of those with the larger group size."),
+                br(),
+                plotOutput("graph_3"),
+                br(),
+                p("# TEXT (Graph 3): Rather than modeling predicted average distributions after 
+  # conditional expectations of student characteristics, graphs 3 through 5 
+  # model outputs directly through posterior probability distributions. Graph 3,
+  # using our flagship model, displays the predicted probability distribution
+  # for social satisfaction between students living on and off campus. There
+  # appears to be a significant difference in predicted satisfactions 
+  # between those living on and off campus, with those living off-campus
+  # expected to have a decidedly negative social experience compared to their
+  # on-campus counterparts."),
+                br(),
+                plotOutput("graph_4"),
+                br(),
+                p("# TEXT (Graph 4): Using a new model that specifies between residential location 
+  # rather than simply whether a student is on or off campus, we regressed
+  # the location variable from our dataset onto satisfaction, selecting only
+  # to use locations on campus. In particular, we wanted to analyze differences
+  # between those living in the Yard and those living in the Quad, given that this
+  # year due to dedensified Covid living, a significant portion of first year students
+  # are living in the Quad, which is characteristically upper-classmen housing. 
+  # Graph 4 reveals a higher predicted distribution for satisfaction for those living
+  # in the Yard than those in the Quad, although there is immense overlap and the difference
+  # is not nearly as dramatic as that for on vs. off campus social satisfaction."),
+                br(),
+                plotOutput("graph_5"),
+                br(),
+                p("# TEXT (Graph 5): Once again using a similarly new model as the one in Graph 4, except
+  # this time regressing on-campus location on Group Size, we see a similar disparity
+  # in the predicted distributions for Group Size between Quad and Yard first-years as
+  # the distributions for satisfaction. Yard students tend to have a higher predicted
+  # Group Size, although there is immense overlap."))
              ))
            )
   ),

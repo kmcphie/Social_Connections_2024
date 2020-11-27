@@ -435,7 +435,7 @@ server <- function(input, output) {
   })
   
   output$expectation_matches <- renderPlot({
-  expectations %>%
+    expectations %>%
       select(best, p_meet_total) %>%
       mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
       drop_na() %>%
@@ -450,10 +450,345 @@ server <- function(input, output) {
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) +
       scale_x_discrete(labels = c("No", "Yes"))
-  
   })
   
   ########## FIFTH PAGE: REGRESSION MODEL ##########
+  
+  output$satisfaction_regression <- render_gt({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    fit_gs <- stan_glm(data = model_data,
+                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       family = gaussian(),
+                       refresh = 0)
+    
+    tbl_regression(fit_gs, intercept = TRUE) %>%
+      as_gt() %>%
+      tab_header(title = "Satisfaction Regression",
+                 subtitle = 
+                   "The Effect of Group Size and On-Campus Living on Social Satisfaction")
+  })
+  
+  output$graph_1 <- renderPlot({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    fit_gs <- stan_glm(data = model_data,
+                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       family = gaussian(),
+                       refresh = 0)
+    
+    new_data = tibble(group_size = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
+                      on_campus = TRUE)
+    
+    preds <- posterior_epred(fit_gs, newdata = new_data) %>%
+      as_tibble() %>%
+      rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
+             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
+             "20" = `13`)
+    
+    long_preds <- preds %>%
+      pivot_longer(cols = "0":"20", 
+                   names_to = "Group_Size",
+                   values_to = "Satisfaction")
+    
+    long_preds$"Group_Size" <- factor(long_preds$"Group_Size", levels= c("0":"20"))
+    
+    long_preds %>%
+      ggplot(aes(x = `Satisfaction`, y = Group_Size, fill = stat(x))) +
+      geom_density_ridges_gradient(bandwidth = 0.2) +
+      scale_fill_viridis_c(name = "Group Size") +
+      theme_classic() +
+      labs(title = "Estimated Average Social Satisfaction", subtitle = 
+             "Group Sizes 0-20 for On-Campus Students", y = "Group Size")
+  })
+  
+  output$graph_2 <- renderPlot({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    fit_gs <- stan_glm(data = model_data,
+                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       family = gaussian(),
+                       refresh = 0)
+    
+    new_data = tibble(group_size = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
+                      on_campus = TRUE)
+    
+    preds <- posterior_epred(fit_gs, newdata = new_data) %>%
+      as_tibble() %>%
+      rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
+             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
+             "20" = `13`)
+    
+    preds %>%
+      as_tibble() %>%
+      mutate(diff = `5` - `0`) %>%
+      ggplot(aes(x = diff)) +
+      geom_histogram(aes(y = after_stat(count / sum(count))), bins = 100, 
+                     fill = "steelblue", alpha = 0.6) +
+      theme_bw() +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+      labs(y = "Percentage", x = "Difference", title = 
+             "Estimated Average Difference in Social Satisfaction", subtitle = 
+             "Between On-Campus Students with Group Sizes 5 and 0")
+  })
+  
+  output$graph_3 <- renderPlot({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    fit_gs <- stan_glm(data = model_data,
+                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       family = gaussian(),
+                       refresh = 0)
+    
+    fit_gs %>%
+      as_tibble() %>%
+      mutate(on = `(Intercept)` + on_campusTRUE) %>%
+      rename(off = `(Intercept)`) %>%
+      select(on, off) %>%
+      pivot_longer(cols = off:on, 
+                   names_to = "parameters",
+                   values_to = "satisfaction") %>%
+      ggplot(aes(satisfaction, fill = parameters)) +
+      geom_histogram(aes(y = after_stat(count/sum(count))),
+                     alpha = 0.5, 
+                     bins = 100, 
+                     position = "identity") +
+      scale_y_continuous(labels = scales::percent_format()) +
+      theme_bw() +
+      labs(x = "Social Satisfaction", y = "Probabiliy", title = 
+             "Posterior Probability Distribution", subtitle = 
+             "Average Satisfaction for On vs. Off Campus Students", fill = "Off vs. On Campus")
+  })
+  
+  output$graph_4 <- renderPlot({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    model_data3 <- model_data %>%
+      filter(location %in% c("The Yard", "The Quad", "A River House")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "The Yard", 
+                                    replacement = "yard")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "The Quad", 
+                                    replacement = "quad")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "A River House", 
+                                    replacement = "river"))
+    # filter(location == c("yard", "quad"))
+    
+    yvq_model_1 <- stan_glm(data = model_data3,
+                            formula = satisfaction ~ location,
+                            refresh = 0)
+    
+    yvq_model_clean1 <- yvq_model_1 %>%
+      as_tibble() %>%
+      mutate(yard = `(Intercept)` + locationyard + locationriver) %>%
+      rename(quad = `(Intercept)`) %>%
+      select(yard, quad) %>%
+      pivot_longer(cols = yard:quad, 
+                   names_to = "parameters",
+                   values_to = "satisfaction")
+    
+    yvq_model_clean1 %>%
+      ggplot(aes(satisfaction, fill = parameters)) +
+      geom_histogram(aes(y = after_stat(count/sum(count))),
+                     alpha = 0.5, 
+                     bins = 100, 
+                     position = "identity") +
+      scale_y_continuous(labels = scales::percent_format()) +
+      theme_bw() +
+      labs(x = "Social Satisfaction", y = "Probability", title = 
+             "Posterior Probability Distribution", subtitle = 
+             "Average Satisfaction for Quad vs. Yard Students",
+           caption = "Model Formula: satisfaction ~ location", fill = "Quad vs. Yard")
+  })
+  
+  output$graph_5 <- renderPlot({
+    model_data <- responses %>%
+      mutate(gender = str_replace(gender, 
+                                  pattern = "Genderqueer/Gender Non-Conforming", 
+                                  replacement = "Other")) %>%
+      mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
+                                  replacement = "Other")) %>%
+      mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                                                  "At Home (international student)"), TRUE, FALSE)) %>%
+      select(on_campus, gender, satisfaction, group_size, location, race) %>%
+      # mutate(on_campus = as.numeric(on_campus)) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Satisfied", replacement = "1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Neutral", replacement = "0")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Dissatisfied", replacement = "-1")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very Dissatisfied", replacement = "-2")) %>%
+      mutate(satisfaction = str_replace(
+        satisfaction, pattern = "Very -1", replacement = "-2"))
+    
+    model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
+    model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    model_data3 <- model_data %>%
+      filter(location %in% c("The Yard", "The Quad", "A River House")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "The Yard", 
+                                    replacement = "yard")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "The Quad", 
+                                    replacement = "quad")) %>%
+      mutate(location = str_replace(location, 
+                                    pattern = "A River House", 
+                                    replacement = "river"))
+    # filter(location == c("yard", "quad"))
+    
+    yvq_model_2 <- stan_glm(data = model_data3,
+                            formula = group_size ~ location,
+                            refresh = 0)
+    
+    yvq_model_clean2 <- yvq_model_2 %>%
+      as_tibble() %>%
+      mutate(yard = `(Intercept)` + locationyard + locationriver) %>%
+      rename(quad = `(Intercept)`) %>%
+      select(yard, quad) %>%
+      pivot_longer(cols = yard:quad, 
+                   names_to = "parameters",
+                   values_to = "group_size")
+    
+    yvq_model_clean2 %>%
+      ggplot(aes(group_size, fill = parameters)) +
+      geom_histogram(aes(y = after_stat(count/sum(count))),
+                     alpha = 0.5, 
+                     bins = 100, 
+                     position = "identity") +
+      scale_y_continuous(labels = scales::percent_format()) +
+      theme_bw() +
+      labs(x = "Group Size", y = "Probability", title = 
+             "Posterior Probability Distribution", subtitle = 
+             "Average Group Size for Quad vs. Yard Students",
+           caption = "Model Formula: group_size ~ location", fill = "Quad vs. Yard")
+  })
 
 
   ########## SIXTH PAGE: ABOUT ##########
