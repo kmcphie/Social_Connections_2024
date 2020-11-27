@@ -434,26 +434,29 @@ server <- function(input, output) {
       scale_y_continuous(labels = scales::percent_format())
   })
   
-output$expectation_matches <- renderPlot({
-expectations %>%
-    select(best, p_meet_total) %>%
-    mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
-    drop_na() %>%
-    ggplot(aes(x = reality)) +
-    geom_bar(fill = "#6fb4d2") +
-    theme_bw() +
-    labs(x = "Response Matches Reality?", y = "Number of Responses",
-         title = "Frequency of Expectations Meeting Reality") +
-    annotate("text", x = 1, y = 140, label = "84") +
-    annotate("text", x = 2, y = 270, label = "246") +
-    theme(title = element_text(size = 14, face = "bold"),
-          axis.title.x = element_text(size = 12, face = "plain"),
-          axis.title.y = element_text(size = 12, face= "plain")) +
-    scale_x_discrete(labels = c("No", "Yes"))
+  output$expectation_matches <- renderPlot({
+  expectations %>%
+      select(best, p_meet_total) %>%
+      mutate(reality = if_else(best %in% p_meet_total, TRUE, FALSE)) %>%
+      drop_na() %>%
+      ggplot(aes(x = reality)) +
+      geom_bar(fill = "#6fb4d2") +
+      theme_bw() +
+      labs(x = "Response Matches Reality?", y = "Number of Responses",
+           title = "Frequency of Expectations Meeting Reality") +
+      annotate("text", x = 1, y = 140, label = "84") +
+      annotate("text", x = 2, y = 270, label = "246") +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_x_discrete(labels = c("No", "Yes"))
   
-})
+  })
   
-  ########## FIFTH PAGE: ABOUT ##########
+  ########## FIFTH PAGE: REGRESSION MODEL ##########
+
+
+  ########## SIXTH PAGE: ABOUT ##########
   
   output$katherine <- renderImage({
     list(src = "www/katherine.png", 

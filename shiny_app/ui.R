@@ -217,7 +217,20 @@ ui <- navbarPage(
            )
   ),
   
-  ########## FIFTH PAGE: ABOUT ##########
+  ########## FIFTH PAGE: REGRESSION MODEL ##########
+  
+  tabPanel("Model",
+           fluidPage(
+             fluidRow(column(1), column(10,
+              br(),
+              br(),
+              mainPanel(
+                h4(tags$b("Creating a Regression Model")))
+             ))
+           )
+  ),
+  
+  ########## SIXTH PAGE: ABOUT ##########
   
   tabPanel("About", 
            fluidPage(
