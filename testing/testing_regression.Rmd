@@ -67,7 +67,10 @@ model_data$group_size <- as.integer(as.character(model_data$group_size))
 ### FINAL PRODUCT ###
 
 
-  # Flagship Stan Model
+
+# Flagship Stan Model
+
+
 
 fit_gs <- stan_glm(data = model_data,
    formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
@@ -80,7 +83,9 @@ fit_gs <- stan_glm(data = model_data,
 
 
 
-  # Output Table
+# Output Table
+
+
 
 tbl_regression(fit_gs, intercept = FALSE) %>%
   as_gt() %>%
@@ -96,6 +101,8 @@ tbl_regression(fit_gs, intercept = FALSE) %>%
 
 # Graphs Part 1 -- Flagship Stan Model w Epreds
 
+
+
 new_data = tibble(group_size = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
                   on_campus = TRUE)
 
@@ -105,16 +112,18 @@ preds <- posterior_epred(fit_gs, newdata = new_data) %>%
          "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
          "20" = `13`)
 
-    ## Estimated Average Satisfaction Across Group Sizes 1:20 w/ epred ##
+
+  ## Estimated Average Satisfaction Across Group Sizes 1:20 w/ epred ##
+
 
 long_preds <- preds %>%
     pivot_longer(cols = "0":"20", 
                names_to = "Group_Size",
                values_to = "Satisfaction")
 
-long$"Group_Size" <- factor(long$"Group_Size", levels= c("0":"20"))
+long_preds$"Group_Size" <- factor(long_preds$"Group_Size", levels= c("0":"20"))
   
-long %>%
+long_preds %>%
   ggplot(aes(x = `Satisfaction`, y = Group_Size, fill = stat(x))) +
   geom_density_ridges_gradient(bandwidth = 0.2) +
   scale_fill_viridis_c(name = "Group Size") +
@@ -122,9 +131,10 @@ long %>%
   labs(title = "Estimated Average Satisfaction", subtitle = 
          "Group Sizes 0-20 for On-Campus Students", y = "Group Size")
 
-  
+
   ## Estimated Average Difference in Satisfaction Between On-Campus Students Group Sizes 0 and 5 w/ epred ##
-  
+   
+
 preds %>%
   as_tibble() %>%
   mutate(diff = `5` - `0`) %>%
@@ -136,6 +146,81 @@ preds %>%
   labs(y = "Percentage", x = "Difference", title = 
          "Estimated Average Difference in Satisfaction", subtitle = 
          "Between On-Campus Students with Group Sizes 5 and 0")
+
+
+
+######################################
+
+
+
+# Graphs Part 2 -- Variable Posterior Probability Distribution Comparisons
+
+
+
+  # Posterior Probability Distribution of Satisfaction for On vs. Off Campus
+
+
+fit_gs %>%
+  as_tibble() %>%
+  mutate(on = `(Intercept)` + on_campusTRUE) %>%
+  rename(off = `(Intercept)`) %>%
+  select(on, off) %>%
+  pivot_longer(cols = off:on, 
+               names_to = "parameters",
+               values_to = "satisfaction") %>%
+   ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw() +
+  labs(x = "Satisfaction", y = "Probabiliy", title = 
+         "Posterior Probability Distribution", subtitle = 
+         "Average Satisfaction for On vs. Off Campus Students")
+
+
+  # Posterior Probability Distribution of Satisfaction, Yard vs. Quad
+
+
+model_data3 <- model_data %>%
+  filter(location %in% c("The Yard", "The Quad", "A River House")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "The Yard", 
+                              replacement = "yard")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "The Quad", 
+                              replacement = "quad")) %>%
+  mutate(location = str_replace(location, 
+                              pattern = "A River House", 
+                              replacement = "river"))
+
+yvq_model <- stan_glm(data = model_data3,
+                 formula = satisfaction ~ location,
+                 refresh = 0)
+
+yvq_model_clean <- yvq_model %>%
+  as_tibble() %>%
+  mutate(yard = `(Intercept)` + locationyard) %>%
+  rename(quad = `(Intercept)`) %>%
+  select(yard, quad) %>%
+  pivot_longer(cols = yard:quad, 
+               names_to = "parameters",
+               values_to = "satisfaction")
+
+yvq_model_clean %>%
+  ggplot(aes(satisfaction, fill = parameters)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw() +
+  labs(x = "Satisfaction", y = "Probability", title = 
+         "Posterior Probability Distribution", subtitle = 
+         "Average Satisfaction for Yard vs. Quad Students")
+
+
 ```
 
 
@@ -324,18 +409,21 @@ one %>%
   theme_bw() +
   scale_y_continuous(labels = scales::percent_format())
 
-two <- stan_glm(formula = satisfaction ~ on_campus + 1,
+sat_on <- stan_glm(formula = satisfaction ~ on_campus - 1,
                 data = model_data,
                 refresh = 0,
                 family = gaussian())
 
-two %>%
+sat_on %>%
   as_tibble() %>%
-  ggplot(aes(x = on_campus, y = after_stat(count / sum(count)))) +
+  ggplot(aes(x = on_campusFALSE, y = after_stat(count / sum(count)))) +
   geom_histogram(binwidth = 0.01, bins = 100,
                  color = "white", fill = "#6fb4d2") +
   theme_bw() +
   scale_y_continuous(labels = scales::percent_format())
+
+
+
 
 three <- stan_glm(formula = satisfaction ~ group_size*on_campus + 1,
                 data = model_data,
