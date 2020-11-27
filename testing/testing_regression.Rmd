@@ -177,8 +177,7 @@ fit_gs %>%
   theme_bw() +
   labs(x = "Social Satisfaction", y = "Probabiliy", title = 
          "Posterior Probability Distribution", subtitle = 
-         "Average Satisfaction for On vs. Off Campus Students",
-       caption = "Model Formula: satisfaction ~ group_size + \non_campus + on_campus:group_size + 1")
+         "Average Satisfaction for On vs. Off Campus Students")
 
 
   # Posterior Probability Distribution of Satisfaction, Yard vs. Quad (New Model Generated)
@@ -253,7 +252,50 @@ yvq_model_clean2 %>%
        caption = "Model Formula: group_size ~ location")
 
 
-  # Posterior Probability Distribution of Satisfaction, by Race
+```
+
+
+
+```{r}
+
+# TEST with epred yard v quad stuff #
+
+yvq_model_1 <- stan_glm(data = model_data3,
+                 formula = satisfaction ~ location + group_size + group_size:location,
+                 refresh = 0)
+
+# new_data3 = tibble(location = c("yard", "quad", "yard", "quad", "yard", "quad", "yard", "quad", "yard", "quad"),
+#                   satisfaction = c(-2, -2, -1, -1, 0, 0, 1, 1, 2, 2))
+
+new_data2 = tibble(location = c("yard", "quad", "yard", "quad", "yard", "quad"),
+                   group_size = c(0, 0, 5, 5, 10, 10))
+
+posterior_epred(yvq_model_1, newdata = new_data2) %>%
+  as_tibble() %>%
+  # rename("-2" = `1`, "-1" = `2`, "0" = `3`, "1" = `4`, "2" = `5`) %>%
+  # rename("yard" = `1`, "quad" = `2`) %>%
+  pivot_longer(cols = `1`:`6`, 
+               names_to = "location",
+               values_to = "satisfaction") %>%
+  ggplot(aes(satisfaction, fill = location)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 100, 
+                   position = "identity") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_bw()
+  # facet_wrap(~ location)
+  
+  
+  ggplot(aes(x = `satisfaction`, y = location, fill = stat(x))) +
+  geom_density_ridges_gradient(bandwidth = 0.2) +
+  scale_fill_viridis_c(name = "location") +
+  theme_classic()
+
+  
+# RACE #
+
+# Posterior Probability Distribution of Satisfaction, by Race
 
 
   race_data <- model_data %>%
@@ -323,105 +365,6 @@ race_clean_2 %>%
          "Posterior Probability Distribution", subtitle = 
          "Average Group Size by Racial/Ethnicity",
         caption = "Model Formula: group_size ~ race")
-
-```
-
-
-
-```{r}
-
-# TEST with epred yard v quad stuff #
-
-yvq_model_1 <- stan_glm(data = model_data3,
-                 formula = satisfaction ~ location + group_size + group_size:location,
-                 refresh = 0)
-
-# new_data3 = tibble(location = c("yard", "quad", "yard", "quad", "yard", "quad", "yard", "quad", "yard", "quad"),
-#                   satisfaction = c(-2, -2, -1, -1, 0, 0, 1, 1, 2, 2))
-
-new_data2 = tibble(location = c("yard", "quad", "yard", "quad", "yard", "quad"),
-                   group_size = c(0, 0, 5, 5, 10, 10))
-
-posterior_epred(yvq_model_1, newdata = new_data2) %>%
-  as_tibble() %>%
-  # rename("-2" = `1`, "-1" = `2`, "0" = `3`, "1" = `4`, "2" = `5`) %>%
-  # rename("yard" = `1`, "quad" = `2`) %>%
-  pivot_longer(cols = `1`:`6`, 
-               names_to = "location",
-               values_to = "satisfaction") %>%
-  ggplot(aes(satisfaction, fill = location)) +
-    geom_histogram(aes(y = after_stat(count/sum(count))),
-                   alpha = 0.5, 
-                   bins = 100, 
-                   position = "identity") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_bw()
-  # facet_wrap(~ location)
-  
-  
-  ggplot(aes(x = `satisfaction`, y = location, fill = stat(x))) +
-  geom_density_ridges_gradient(bandwidth = 0.2) +
-  scale_fill_viridis_c(name = "location") +
-  theme_classic()
-
-  
-# RACE #
-
-race_data <- model_data3 %>%
-  mutate(race = str_replace(race, pattern = "Hispanic or Latino", replacement = "Latino")) %>%
-  mutate(race = str_replace(race, pattern = "Black or African American", replacement = "Black"))
-
-
-race <- stan_glm(data = race_data,
-                 formula = satisfaction ~ race,
-                 refresh = 0)
-
-race_x <- race %>%
-  as_tibble() %>%
-  mutate(Black = `(Intercept)` + raceBlack) %>%
-  mutate(Latino = `(Intercept)` + raceBlack + raceLatino) %>%
-  mutate(Other = `(Intercept)` + raceBlack + raceLatino + raceOther) %>%
-  mutate(White = `(Intercept)` + raceBlack + raceLatino + raceOther + raceWhite) %>%
-  rename(Asian = `(Intercept)`)
-
-race_x2 <- race_x %>%
-  select(Asian, White, Black, Latino, Other)
-
-race_x3 <- race_x2 %>%
-  pivot_longer(cols = Asian:Other, 
-               names_to = "parameters",
-               values_to = "satisfaction")
-
-race_x3 %>%
-  ggplot(aes(satisfaction, fill = parameters)) +
-    geom_histogram(aes(y = after_stat(count/sum(count))),
-                   alpha = 0.9, 
-                   bins = 100, 
-                   position = "identity") +
-  theme_classic() +
-  scale_y_continuous(labels = scales::percent_format())
-
-###
-
-race2 <- stan_glm(data = race_data,
-                 formula = group_size ~ race - 1,
-                 refresh = 0)
-
-race_y <- race2 %>%
-  as_tibble() %>%
-  select(-sigma) %>%
-  pivot_longer(cols = raceAsian:raceWhite, 
-               names_to = "parameters",
-               values_to = "group_size")
-
-race_y %>%
-  ggplot(aes(group_size, fill = parameters)) +
-    geom_histogram(aes(y = after_stat(count/sum(count))),
-                   alpha = 0.8, 
-                   bins = 100, 
-                   position = "identity") +
-  theme_classic() +
-  scale_y_continuous(labels = scales::percent_format())
 
 
 
