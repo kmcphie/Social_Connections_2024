@@ -139,11 +139,10 @@ ui <- navbarPage(
                 plotOutput("overall_satisfaction"),
                 br(),
                 p("When looking at how survey respondents' satisfaction differed
-                  by location, interesting trends emerged. Students in the Yard
-                  reported higher levels of satisfaction overall, followed by
-                  students in the River Houses, then students in the Quad, and 
-                  then students living at home (both international students and 
-                  students in the US)."),
+                  by location, interesting trends emerged. Students in the Yard,
+                  River Houses, and Quad had similar levels of satisfaction, but
+                  students living at home (both international students and 
+                  students in the US) were significantly more dissatisfied."),
                 plotOutput("satisfaction_by_location"),
                 br(),
                 p("We were curious to see what the overall satisfaction levels
