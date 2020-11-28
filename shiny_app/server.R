@@ -266,22 +266,27 @@ server <- function(input, output) {
       mutate(satisfaction = as_factor(satisfaction)) %>%
       filter(satisfaction != "NA") %>%
       select(satisfaction, location) %>%
+      mutate(location = ifelse(location == "At Home (in the US)" | 
+                                 location == "At Home (international student)",
+                               "At Home",
+                               location)) %>%
       filter(location %in% c("The Yard", 
                              "A River House", 
                              "At Home",
                              "The Quad")) %>%
-      group_by(satisfaction, location) %>%
+      group_by(location, satisfaction) %>%
       summarize(count = n(), .groups = "drop") %>%
+      group_by(location) %>%
+      mutate(perc = count / sum(count)) %>%
       ggplot(aes(x = fct_relevel(satisfaction,
                                  levels = c("Very Dissatisfied",
                                             "Dissatisfied",
                                             "Neutral",
                                             "Satisfied",
                                             "Very Satisfied")), 
-                 y = count / sum(count))) +
-      geom_col() +
-      facet_wrap(~location) +
+                 y = perc)) +
       geom_col(fill = "#6fb4d2") +
+      facet_wrap(~location) +
       theme_bw() +
       labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
            x = "Self-Reported Level of Satisfaction with Social Connections",
