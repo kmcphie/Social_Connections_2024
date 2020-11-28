@@ -82,14 +82,6 @@ ui <- navbarPage(
   
   tabPanel("The Social Web",
            fluidPage(
-             br(),
-             br(),
-             p("A total of 393 first-years students responded to our survey, thus totaling 
-               a response rate of ??? from the Class of 2024. This network 
-               models respondents connections to pre-orientation programs, 
-               sports, and living situation."),
-             br(),
-             br(),
              fluidRow(column(1), column(10,
               h4(tags$b("The Social Web")),
               visNetworkOutput("social_web",  width = "100%", height = "1000px"),
@@ -113,8 +105,12 @@ ui <- navbarPage(
               thought was the most socially connected in the Class of 2024,
               these were the top results. (Note that survey respondents were
               assigned a random ID number when filling out the survey to 
-              preserve anonymity.) Just over 15% of survey respondents chose the
-              same individual as the most socially connected."),
+              preserve anonymity.) About 9% of survey respondents chose the
+              same individual as the most socially connected. Last year, in
+              Jeremiah Kim's final project, 22% of survey respondents chose the
+              same individual as the most socially connected, so there is a 
+              sharp decrease this year that is perhaps indicative of a more
+              fragmented class overall."),
             gt_output("most_connected"),
             br(),
             br()
