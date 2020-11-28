@@ -283,44 +283,51 @@ ui <- navbarPage(
                 br(),
                 plotOutput("graph_2"),
                 br(),
-                p("In our second graph, we examine the predicted average
-  difference in social satisfaction between on campus students who have
-  group sizes of 5 and those with group sizes of 0. It appears there is a 
-  median predicted average difference in satisfaction of roughly 0.27 in favor
-  of those with the larger group size."),
+                p("In our second graph, we examine the predicted average 
+                  difference in social satisfaction between on campus students 
+                  who have group sizes of 5 and those with group sizes of 0. It 
+                  appears there is a median predicted average difference in 
+                  satisfaction of roughly 0.27 in favor of those with the larger 
+                  group size."),
                 br(),
                 plotOutput("graph_3"),
                 br(),
                 p("Rather than modeling predicted average distributions after 
-  conditional expectations of student characteristics, graphs 3 through 5 
-  model outputs directly through posterior probability distributions. Graph 3,
-  using our flagship model, displays the predicted probability distribution
-  for social satisfaction between students living on and off campus. There
-  appears to be a significant difference in predicted satisfactions 
-  between those living on and off campus, with those living off-campus
-  expected to have a decidedly negative social experience compared to their
-  on-campus counterparts."),
+                  conditional expectations of student characteristics, graphs 3 
+                  through 5 model outputs directly through posterior probability 
+                  distributions. Graph 3, using our flagship model, displays the 
+                  predicted probability distribution for social satisfaction 
+                  between students living on and off campus. There appears to be 
+                  a significant difference in predicted satisfactions between 
+                  those living on and off campus, with those living off-campus
+                  expected to have a decidedly negative social experience 
+                  compared to their on-campus counterparts."),
                 br(),
                 plotOutput("graph_4"),
                 br(),
                 p("Using a new model that specifies between residential location 
-  rather than simply whether a student is on or off campus, we regressed
-  the location variable from our dataset onto satisfaction, selecting only
-  to use locations on campus. In particular, we wanted to analyze differences
-  between those living in the Yard and those living in the Quad, given that this
-  year due to dedensified Covid living, a significant portion of first year students
-  are living in the Quad, which is characteristically upper-classmen housing. 
-  Graph 4 reveals a higher predicted distribution for satisfaction for those living
-  in the Yard than those in the Quad, although there is immense overlap and the difference
-  is not nearly as dramatic as that for on vs. off campus social satisfaction."),
+                  rather than simply whether a student is on or off campus, we 
+                  regressed the location variable from our dataset onto 
+                  satisfaction, selecting only to use locations on campus. In 
+                  particular, we wanted to analyze differences between those 
+                  living in the Yard and those living in the Quad, given that 
+                  this year due to dedensified Covid living, a significant 
+                  portion of first year students are living in the Quad, which 
+                  is characteristically upper-classmen housing. Graph 4 reveals 
+                  a higher predicted distribution for satisfaction for those 
+                  living in the Yard than those in the Quad, although there is 
+                  immense overlap and the difference is not nearly as dramatic 
+                  as that for on vs. off campus social satisfaction."),
                 br(),
                 plotOutput("graph_5"),
                 br(),
-                p("Once again using a similarly new model as the one in Graph 4, except
-  this time regressing on-campus location on Group Size, we see a similar disparity
-  in the predicted distributions for Group Size between Quad and Yard first-years as
-  the distributions for satisfaction. Yard students tend to have a higher predicted
-  Group Size, although there is immense overlap."))
+                p("Once again using a similarly new model as the one in Graph 4, 
+                  except this time regressing on-campus location on Group Size, 
+                  we see a similar disparity in the predicted distributions for 
+                  Group Size between Quad and Yard first-years as the 
+                  distributions for satisfaction. Yard students tend to have a 
+                  higher predicted Group Size, although there is immense 
+                  overlap."))
              ))
            )
   ),
