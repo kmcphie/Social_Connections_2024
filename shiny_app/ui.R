@@ -270,6 +270,7 @@ ui <- navbarPage(
                   The first two represent estimated averages through posterior 
                   distributions on conditional expectations."),
                 br(),
+                h6(tags$b("Graph 1")),
                 plotOutput("graph_1"),
                 br(),
                 p("In the graph above, we examine the estimated average 
@@ -277,6 +278,7 @@ ui <- navbarPage(
                   15 and 20. We gather that as Group Size increases, overall 
                   social satisfaction tends to also positively increase."),
                 br(),
+                h6(tags$b("Graph 2")),
                 plotOutput("graph_2"),
                 br(),
                 p("In our second graph, we examine the predicted average 
@@ -286,6 +288,7 @@ ui <- navbarPage(
                   satisfaction of roughly 0.27 in favor of those with the larger 
                   group size."),
                 br(),
+                h6(tags$b("Graph 3")),
                 plotOutput("graph_3"),
                 br(),
                 p("Rather than modeling predicted average distributions after 
@@ -299,6 +302,7 @@ ui <- navbarPage(
                   expected to have a decidedly negative social experience 
                   compared to their on-campus counterparts."),
                 br(),
+                h6(tags$b("Graph 4")),
                 plotOutput("graph_4"),
                 br(),
                 p("Using a new model that specifies between residential location 
@@ -315,6 +319,7 @@ ui <- navbarPage(
                   immense overlap and the difference is not nearly as dramatic 
                   as that for on vs. off campus social satisfaction."),
                 br(),
+                h6(tags$b("Graph 5")),
                 plotOutput("graph_5"),
                 br(),
                 p("Once again using a similarly new model as the one in Graph 4, 

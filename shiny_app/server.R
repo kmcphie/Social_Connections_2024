@@ -596,7 +596,7 @@ server <- function(input, output) {
       mutate(diff = `5` - `0`) %>%
       ggplot(aes(x = diff)) +
       geom_histogram(aes(y = after_stat(count / sum(count))), bins = 100, 
-                     fill = "steelblue", alpha = 0.6) +
+                     fill = "#6fb4d2", alpha = 0.6) +
       theme_bw() +
       scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
       labs(y = "Percentage", x = "Difference", title = 
@@ -650,10 +650,14 @@ server <- function(input, output) {
                      bins = 100, 
                      position = "identity") +
       scale_y_continuous(labels = scales::percent_format()) +
+      scale_fill_manual(labels = c("Off Campus", "On Campus"),
+                        values = c("#6fb4d2", "#203e5f")) +
       theme_bw() +
-      labs(x = "Social Satisfaction", y = "Probabiliy", title = 
-             "Posterior Probability Distribution", subtitle = 
-             "Average Satisfaction for On vs. Off Campus Students", fill = "Off vs. On Campus")
+      labs(x = "Social Satisfaction", 
+           y = "Probabiliy", 
+           title = "Posterior Probability Distribution", 
+           subtitle = "Average Satisfaction for On vs. Off Campus Students", 
+           fill = "Living Situation")
   })
   
   output$graph_4 <- renderPlot({
@@ -716,11 +720,15 @@ server <- function(input, output) {
                      bins = 100, 
                      position = "identity") +
       scale_y_continuous(labels = scales::percent_format()) +
+      scale_fill_manual(labels = c("Quad", "Yard"),
+                        values = c("#6fb4d2", "#203e5f")) +
       theme_bw() +
-      labs(x = "Social Satisfaction", y = "Probability", title = 
-             "Posterior Probability Distribution", subtitle = 
-             "Average Satisfaction for Quad vs. Yard Students",
-           caption = "Model Formula: satisfaction ~ location", fill = "Quad vs. Yard")
+      labs(x = "Social Satisfaction", 
+           y = "Probability", 
+           title = "Posterior Probability Distribution", 
+           subtitle = "Average Satisfaction for Quad vs. Yard Students",
+           caption = "Model Formula: satisfaction ~ location", 
+           fill = "Living Situation")
   })
   
   output$graph_5 <- renderPlot({
@@ -783,11 +791,14 @@ server <- function(input, output) {
                      bins = 100, 
                      position = "identity") +
       scale_y_continuous(labels = scales::percent_format()) +
+      scale_fill_manual(labels = c("Quad", "Yard"),
+                        values = c("#6fb4d2", "#203e5f")) +
       theme_bw() +
-      labs(x = "Group Size", y = "Probability", title = 
-             "Posterior Probability Distribution", subtitle = 
-             "Average Group Size for Quad vs. Yard Students",
-           caption = "Model Formula: group_size ~ location", fill = "Quad vs. Yard")
+      labs(x = "Group Size", y = "Probability", 
+           title = "Posterior Probability Distribution", 
+           subtitle = "Average Group Size for Quad vs. Yard Students",
+           caption = "Model Formula: group_size ~ location", 
+           fill = "Living Situation")
   })
 
 
