@@ -412,7 +412,7 @@ server <- function(input, output) {
       coord_flip() +
       theme(legend.position = "none") +
       labs(
-        title = "Ways That First-Years \n Stay Connected",
+        title = "How First-Years \n Stay Connected",
         x = NULL,
         y = "Percent"
       ) +
@@ -435,7 +435,7 @@ server <- function(input, output) {
       coord_flip() +
       theme(legend.position = "none") +
       labs(
-        title = "Things That First-Years \n Do In-Person",
+        title = "Activities That First-Years \n Do In-Person",
         x = NULL,
         y = "Percent"
       ) +
