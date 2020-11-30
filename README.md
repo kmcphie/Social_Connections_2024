@@ -10,6 +10,6 @@ Jeremiah Kim conducted [a very similar project]("https://jeremiah-kim.shinyapps.
 ### Repository Guide
 * /shiny_web_app: Files to render the interactive web application created using the Shiny framework
 * /testing: R markdown files to test things
-* .gitignore
 * .gitattributes
+* .gitignore
 * README.md
