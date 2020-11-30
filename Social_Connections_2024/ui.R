@@ -15,7 +15,10 @@ library(rstanarm)
 library(broom.mixed)
 library(ggridges)
 
-# Read in datasets created using the 'gather_raw_data.R' script.
+# Read in datasets. 
+# NB: to preserve anonymity, the original survey responses were read into a 
+# private project, which is where cleaning and assigning the random IDs was done. 
+# The outputted RDS file was then copied into this project, which is public.
 
 responses <- readRDS("responses_final.rds")
 
