@@ -61,8 +61,6 @@ p4_list <- p4_list[-1,]
 
 ```{r most appearances list}
 
-# List of people and how many times they appear in top 4 friend lists 
-
 # Merge p1_list and p2_list and sum up the number of appearances
 # for each id
 
@@ -80,6 +78,8 @@ p3_p4 <- full_join(p3_list, p4_list, by = "person_id") %>%
 # Add joined datasets together and total up the number of appearances
 # for each id, then arrange in desc. order
 
+# List of people and how many times they appear in top 4 friend lists 
+
 most_appearances_list <- full_join(p1_p2, p3_p4, by = "person_id") %>% 
   mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
   mutate(appearances = sum.x + sum.y) %>% 
@@ -94,7 +94,7 @@ rm(p1_p2, p3_p4) # remove joined datasets from environment
 ```{r comparison graph}
 
 # Convert person_id column in most_connected_list to numeric 
-# so joining datasets works
+# to facilitate merging of datasets
 
 most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person_id))
 
@@ -107,7 +107,9 @@ most_comparison <- inner_join(most_connected_list,
                               by = "person_id") %>%
   rename(votes = Freq)
 
-# Comparison graph
+# Comparison graph of votes versus appearances
+# I excluded the person with the most votes (as they are a
+# significant outlier) by limiting the x-axis to 13.5 votes.
 
 ggplot(most_comparison, aes(votes, appearances,
                             color = appearances)) +
@@ -121,7 +123,6 @@ ggplot(most_comparison, aes(votes, appearances,
        y = "Number of Appearances in Top 4 Friend Lists") +
   scale_color_gradient(low = "#3a93ba", high = "#a9d2e4",
                        guide = FALSE)
-  
 ```
 ```{r igraph object for centrality testing}
 color <- brewer.pal(4, "Set3")
