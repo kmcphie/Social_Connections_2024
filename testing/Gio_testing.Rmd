@@ -108,17 +108,17 @@ most_comparison <- inner_join(most_connected_list,
   rename(votes = Freq)
 
 # Comparison graph of votes versus appearances
-# I excluded the person with the most votes (as they are a
-# significant outlier) by limiting the x-axis to 13.5 votes.
+# I excluded people with more than 11 votes to avoid the outliers
+# influencing our results.
 
 ggplot(most_comparison, aes(votes, appearances,
                             color = appearances)) +
   geom_jitter() +
   geom_smooth(method = lm, formula = y ~ x) +
   theme_bw() +
-  xlim(0.5, 13.5) +
+  xlim(0.5, 11) +
   labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
-       subtitle = "No correlation between being the most connected and being close friends",
+       subtitle = "No strong correlation between being the most connected and being close friends",
        x = "Number of Votes as Most Socially Connected Person",
        y = "Number of Appearances in Top 4 Friend Lists") +
   scale_color_gradient(low = "#3a93ba", high = "#a9d2e4",

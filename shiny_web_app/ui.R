@@ -123,6 +123,8 @@ ui <- navbarPage(
               fragmented class overall."),
             gt_output("most_connected"),
             br(),
+            p("Writeup will go here"),
+            plotOutput("comparison_graph"),
             br()
             ))
           )

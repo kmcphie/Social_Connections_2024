@@ -204,6 +204,105 @@ server <- function(input, output) {
       tab_header(title = "Top Ten Socially Connected First-Years: Survey")
   })
   
+  output$comparison_graph <- renderPlot({
+   
+    # List of most connected people and how many times they're listed
+    
+    most_connected_list <- as.data.frame(table(responses$most_connected)) %>%
+      rename(person_id = Var1) %>% 
+      arrange(desc(Freq))
+    
+    most_connected_list <- most_connected_list[-1,] # remove NAs
+    
+    # List of 1st closest people and how many times they're listed
+    
+    p1_list <- as.data.frame(table(responses$first_id)) %>% 
+      rename(person_id = Var1) %>% 
+      arrange(desc(Freq))
+    
+    p1_list <- p1_list[-1,]
+    
+    # List of 2nd closest people and how many times they're listed
+    
+    p2_list <- as.data.frame(table(responses$second_id)) %>% 
+      rename(person_id = Var1) %>% 
+      arrange(desc(Freq))
+    
+    p2_list <- p2_list[-1,]
+    
+    # List of 3rd closest people and how many times they're listed
+    
+    p3_list <- as.data.frame(table(responses$third_id)) %>% 
+      rename(person_id = Var1) %>% 
+      arrange(desc(Freq))
+    
+    p3_list <- p3_list[-1,]
+    
+    # List of 4th closest people and how many times they're listed
+    
+    p4_list <- as.data.frame(table(responses$fourth_id)) %>% 
+      rename(person_id = Var1) %>% 
+      arrange(desc(Freq))
+    
+    p4_list <- p4_list[-1,]
+    
+    # Merge p1_list and p2_list and sum up the number of appearances
+    # for each id
+    
+    p1_p2 <- full_join(p1_list, p2_list, by = "person_id") %>% 
+      mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+      mutate(sum = Freq.x + Freq.y)
+    
+    # Merge p3_list and p4_list and sum up the number of appearances
+    # for each id
+    
+    p3_p4 <- full_join(p3_list, p4_list, by = "person_id") %>% 
+      mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+      mutate(sum = Freq.x + Freq.y)
+    
+    # Add joined datasets together and total up the number of appearances
+    # for each id, then arrange in desc. order
+    
+    # List of people and how many times they appear in top 4 friend lists 
+    
+    most_appearances_list <- full_join(p1_p2, p3_p4, by = "person_id") %>% 
+      mutate_all(~ ifelse(is.na(.), 0, .)) %>% 
+      mutate(appearances = sum.x + sum.y) %>% 
+      select(person_id, appearances) %>%
+      arrange(desc(appearances))
+    
+    # Convert person_id column in most_connected_list to numeric 
+    # to facilitate merging of datasets
+    
+    most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person_id))
+    
+    # List that has the most connected people, how many votes
+    # they got as "most socially connected", and how often
+    # they actually appeared in top 4 friend lists.
+    
+    most_comparison <- inner_join(most_connected_list,
+                                  most_appearances_list,
+                                  by = "person_id") %>%
+      rename(votes = Freq)
+    
+    # Comparison graph of votes versus appearances
+    # I excluded the person with the most votes (as they are a
+    # significant outlier) by limiting the x-axis to 13.5 votes.
+    
+    ggplot(most_comparison, aes(votes, appearances,
+                                color = appearances)) +
+      geom_jitter() +
+      geom_smooth(method = lm, formula = y ~ x) +
+      theme_bw() +
+      xlim(0.5, 11) +
+      labs(title = "How Often are the Most Socially Connected People Listed as Close Friends?",
+           subtitle = "No strong correlation between being the most connected and being close friends",
+           x = "Number of Votes as Most Socially Connected Person",
+           y = "Number of Appearances in Top 4 Friend Lists") +
+      scale_color_gradient(low = "#3a93ba", high = "#a9d2e4",
+                           guide = FALSE)
+  })
+  
   ########## FOURTH PAGE: ANALYSIS ##########
   
   output$overall_satisfaction <- renderPlot({
