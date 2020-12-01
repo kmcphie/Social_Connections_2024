@@ -150,22 +150,6 @@ server <- function(input, output) {
       degree == "fourth_id" ~ color[4]
     ))
   
-  output$most_connected <- render_gt({
-    responses %>%
-      select(most_connected) %>%
-      mutate(most_connected = ifelse(most_connected == 289,
-                                     NA, most_connected)) %>% 
-      drop_na() %>%
-      group_by(most_connected) %>%
-      summarize(count = n(), .groups = "drop") %>%
-      arrange(desc(count)) %>%
-      head(10) %>%
-      rename("ID" = most_connected,
-             "Number of Votes" = count) %>%
-      gt() %>%
-      tab_header(title = "Top Ten Socially Connected First-Years: Survey")
-  })
-  
   # Specified the edges, nodes, and top four friends
   
   edges <- edges_full %>% 
@@ -202,6 +186,22 @@ server <- function(input, output) {
   
   legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
          col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
+  })
+  
+  output$most_connected <- render_gt({
+    responses %>%
+      select(most_connected) %>%
+      mutate(most_connected = ifelse(most_connected == 289,
+                                     NA, most_connected)) %>% 
+      drop_na() %>%
+      group_by(most_connected) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      arrange(desc(count)) %>%
+      head(10) %>%
+      rename("ID" = most_connected,
+             "Number of Votes" = count) %>%
+      gt() %>%
+      tab_header(title = "Top Ten Socially Connected First-Years: Survey")
   })
   
   ########## FOURTH PAGE: ANALYSIS ##########
