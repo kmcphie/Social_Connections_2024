@@ -89,7 +89,7 @@ server <- function(input, output) {
   ########## SECOND PAGE: SOCIAL WEB ##########
   
   output$social_web <- renderVisNetwork({
-    color <- brewer.pal(10, "Blues")
+    color <- brewer.pal(9, "Blues")
     
     nodes2 <- read_csv("data/nodes2.csv")
     edges2 <- read_csv("data/edges2.csv")

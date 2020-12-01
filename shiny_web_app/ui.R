@@ -375,6 +375,14 @@ ui <- navbarPage(
                 ".",
                 align = "center"
               ),
+              p(
+                "View things we wish we had known before starting this project",
+                a("here", 
+                  href="https://docs.google.com/document/d/17vlDGgshSXExvD02TYnPiRk1ekGbckL6bK43laXSYqE/edit?usp=sharing"
+                ),
+                ".",
+                align = "center"
+              ),
               br(),
               h4(tags$b("About Our Team"),
                  align = "center")
