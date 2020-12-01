@@ -1,4 +1,4 @@
-########## ########## PREP ##########
+########## PREP ##########
 
 # Load necessary libraries.
 
@@ -71,7 +71,7 @@ ui <- navbarPage(
                                           "Race", 
                                           "Pre-Orientation Program",
                                           "Sports"),
-                              selected = "Living")
+                              selected = "Location")
                 ),
                 mainPanel(plotOutput("respondent_dist"))
               ),
@@ -85,12 +85,12 @@ ui <- navbarPage(
   
   tabPanel("The Social Web",
            fluidPage(
-             fluidRow(column(1), column(10,
-              h4(tags$b("The Social Web")),
+             #fluidRow(column(1), column(10,
+              #h4(tags$b("The Social Web")),
               visNetworkOutput("social_web",  width = "100%", height = "1000px"),
-              br(),
-              br()
-            ))
+              #br(),
+              #br()
+            #))
            )
   ),
   
@@ -200,7 +200,7 @@ ui <- navbarPage(
                   finding and those prior, it appears that traditional forms
                   of meeting and sustaining connections held true as the best
                   and most frequent among first-year students, even under 
-                  Covid-19 and a hybrid learning and social environment."),
+                  COVID-19 and a hybrid learning and social environment."),
                 plotOutput("expectation_matches"),
                 br(),
                 p("Here are the most common ways first-years stay in contact 
@@ -265,7 +265,7 @@ ui <- navbarPage(
                   from off to on, we can expect a predicted change of 
                   satisfaction from -0.66 to 0.11. Such a change from a largely 
                   negative to a positive social experience during the hybrid 
-                  Covid semester is nothing to sneeze at."),
+                  COVID semester is nothing to sneeze at."),
                 br(),
                 h4(tags$b("Graphs")),
                 p("We have included graphical displays of our flagship model. 
@@ -313,7 +313,7 @@ ui <- navbarPage(
                   satisfaction, selecting only to use locations on campus. In 
                   particular, we wanted to analyze differences between those 
                   living in the Yard and those living in the Quad, given that 
-                  this year due to dedensified Covid living, a significant 
+                  this year due to dedensified COVID living, a significant 
                   portion of first year students are living in the Quad, which 
                   is characteristically upper-classmen housing. Graph 4 reveals 
                   a higher predicted distribution for satisfaction for those 
@@ -343,13 +343,21 @@ ui <- navbarPage(
              br(),
              fluidRow(column(1), column(10,
               h4(tags$b("About Our Project"),
-              align = "center"),
+                 align = "center"),
+              br(),
               p(
                 "This was a final project for",
                 a("Gov 50: Data", 
                   href="https://www.davidkane.info/files/gov_50_fall_2020.html"
                 ),
                 "at Harvard College.",
+                align = "center"
+              ),
+              p("Thanks to Jeremiah Kim and his team, whose",
+                a("final project",
+                  href="https://jeremiah-kim.shinyapps.io/Social_Connections"
+                ),
+                "last year was the inspiration for our project this year.",
                 align = "center"
               ),
               p(
@@ -368,7 +376,9 @@ ui <- navbarPage(
               fluidRow(
                 column(5, imageOutput("katherine")),
                 column(5, offset = 0, 
-                      h5(tags$b("Katherine McPhie")), br(), 
+                      br(),
+                      br(),
+                      h5(tags$b("Katherine McPhie - Project Lead")), br(), 
                       p("Hi, I'm Katherine! I'm a first-year undergraduate at 
                         Harvard pursuing a concentration in Computer Science. On 
                         campus I am involved in Harvard Computer Society, Women 
@@ -380,22 +390,6 @@ ui <- navbarPage(
                           href="mailto:katherinemcphie@college.harvard.edu?Subject=Social%20Connections%20Project"
                         ),
                         ".")),
-              ),
-              br(),
-              fluidRow(
-                column(5, imageOutput("elliott")),
-                column(5, offset = 0, 
-                       h5(tags$b("Elliott Detjen")), br(), 
-                       p("I am a first-year undergraduate at Harvard pursuing a 
-                         concentration in Economics with a secondary in 
-                         Government. On campus, I write for the Harvard 
-                         Political and Economics Reviews, participate in the 
-                         John Adams Society, and preside as the chairman of the 
-                         Harvard Junto. You can reach me at",
-                         a("edetjen@college.harvard.edu",
-                           href="mailto:edetjen@college.harvard.edu?Subject=Social%20Connections%20Project"
-                         ),
-                         ".")),
               ),
               br(),
               fluidRow(
@@ -428,6 +422,21 @@ ui <- navbarPage(
                          ".")),
               ),
               br(),
+              fluidRow(
+                column(5, imageOutput("elliott")),
+                column(5, offset = 0, 
+                       h5(tags$b("Elliott Detjen")), br(), 
+                       p("I am a first-year undergraduate at Harvard pursuing a 
+                         concentration in Economics with a secondary in 
+                         Government. On campus, I write for the Harvard 
+                         Political and Economics Reviews, participate in the 
+                         John Adams Society, and preside as the chairman of the 
+                         Harvard Junto. You can reach me at",
+                         a("edetjen@college.harvard.edu",
+                           href="mailto:edetjen@college.harvard.edu?Subject=Social%20Connections%20Project"
+                         ),
+                         ".")),
+              ),
               br()
              ))
            )
