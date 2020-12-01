@@ -503,7 +503,7 @@ server <- function(input, output) {
       as_gt() %>%
       tab_header(title = "Satisfaction Regression",
                  subtitle = 
-                   "The Effect of Group Size and On-Campus Living on Social Satisfaction")
+                   "The Predicted Differences in Satisfaction as Function of Group Size and On-Campus Living")
   })
   
   output$graph_1 <- renderPlot({
