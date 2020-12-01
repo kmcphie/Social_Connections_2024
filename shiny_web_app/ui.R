@@ -87,6 +87,13 @@ ui <- navbarPage(
            fluidPage(
              #fluidRow(column(1), column(10,
               #h4(tags$b("The Social Web")),
+             br(),
+             br(),
+             p("Of the 1420 members of the class of 2024, a total 393 students 
+               responded resulting in a 28% response rate. This network models 
+               respondents' connections to their living situation, their 
+               participation in pre-orientation programs, and their 
+               participation in sports on campus."),
               visNetworkOutput("social_web",  width = "100%", height = "1000px"),
               #br(),
               #br()
