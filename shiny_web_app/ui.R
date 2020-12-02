@@ -236,7 +236,7 @@ ui <- navbarPage(
               br(),
               mainPanel(
                 h4(tags$b("Satisfaction Regression")),
-                p("Our flagship model regressed the variables Group Size, On 
+                p("Our flagship predictive model regressed the variables Group Size, On 
                 Campus, and the interaction between the two onto Satisfaction. 
                 For context, Group Size indicates the number of virtual 
                 relationships that were translated into in-person connections, 
