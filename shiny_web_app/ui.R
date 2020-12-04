@@ -123,7 +123,16 @@ ui <- navbarPage(
               fragmented class overall."),
             gt_output("most_connected"),
             br(),
-            p("Writeup will go here"),
+            p("We also wanted to see if the people that survey respondents
+              thought were the most connected matched the people that were most
+              often listed as close friends by survey respondents. As the graph
+              below shows, there is only a very weak negative correlation
+              between being voted as the most socially connected and appearing
+              in more students' close friend lists, a result not too different 
+              from Jeremiah's team's analysis last year. His team concluded
+              that the most socially connected are not necessarily close friends
+              with the most people, a trend that appears to hold even in a 
+              drastically different semester."),
             plotOutput("comparison_graph"),
             br()
             ))
