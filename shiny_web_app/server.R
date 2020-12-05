@@ -89,7 +89,12 @@ server <- function(input, output) {
   ########## SECOND PAGE: SOCIAL WEB ##########
   
   output$social_web <- renderVisNetwork({
+    
+    # Creates the palette of colors to chose from
+    
     color <- brewer.pal(9, "Blues")
+    
+    # Created these datasets in a private repo for anonymity purposes
     
     nodes2 <- read_csv("data/nodes2.csv")
     edges2 <- read_csv("data/edges2.csv")
@@ -105,14 +110,14 @@ server <- function(input, output) {
       visGroups(groupname = "Off Campus", color = color[7], 
                 shape = "square", size = 65) %>%
       
-      # add functionality to highlight close connections when hovering over node
+      # add functionality to highlight when hovering over node
       
       visOptions(nodesIdSelection = list(enabled = TRUE,
                                          style = "margin-bottom: -30px; visibility: hidden"),
                  highlightNearest = list(enabled = T, degree = 2, hover = T),
                  selectedBy = "group") %>%
       
-      # adjust physics to decrease load time
+      # decreases load time
       
       visPhysics(solver = "forceAtlas2Based",
                  timestep = 0.5,
@@ -136,6 +141,9 @@ server <- function(input, output) {
   ########## THIRD PAGE: MOST CONNECTED ##########
   
   output$static_network <- renderPlot({
+    
+    # Palette of colors used 
+    
     color <- brewer.pal(4, "Set3")
   
   edges_full <- responses %>%
@@ -143,6 +151,9 @@ server <- function(input, output) {
     pivot_longer(cols = 2:5,
                  names_to = "degree", 
                  values_to = "endpoint") %>%
+    
+    # Assigns color by degree of connection from the brewer.pal above
+    
     mutate(colors = case_when(
       degree == "first_id" ~ color[1],
       degree == "second_id" ~ color[2],
@@ -178,7 +189,6 @@ server <- function(input, output) {
   g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
   
   l <- layout_on_sphere(g)
-  
   
   plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
   
