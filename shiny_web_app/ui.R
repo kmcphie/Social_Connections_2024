@@ -39,9 +39,9 @@ ui <- navbarPage(
     "body {padding-top: 75px;}"),
   tags$b("Social Connectedness in the Class of 2024"),
   
-  ########## FIRST PAGE: OVERVIEW ##########
+  ########## FIRST PAGE: ABOUT ##########
   
-  tabPanel("Overview",
+  tabPanel("About",
            fluidPage(
              fluidRow(column(1), column(10,
               # h3(tags$b("Social Connectedness in the Harvard Class of 2024"), 
@@ -141,7 +141,7 @@ ui <- navbarPage(
   
   ########## FOURTH PAGE: ANALYSIS ##########
   
-  tabPanel("Analyzing the Data",
+  tabPanel("Analysis",
            fluidPage(
              fluidRow(column(1), column(10,
               br(),
@@ -353,14 +353,14 @@ ui <- navbarPage(
            )
   ),
   
-  ########## SIXTH PAGE: ABOUT ##########
+  ########## SIXTH PAGE: CREATORS ##########
   
-  tabPanel("About", 
+  tabPanel("Creators", 
            fluidPage(
              br(),
              br(),
              fluidRow(column(1), column(10,
-              h4(tags$b("About Our Project"),
+              h4(tags$b("Acknowledgements & Resources"),
                  align = "center"),
               br(),
               p(
@@ -379,19 +379,11 @@ ui <- navbarPage(
                 align = "center"
               ),
               p(
-                "This project's GitHub repository lives",
-                a("here", 
-                  href="https://github.com/kmcphie/Social_Connections_2024"
-                ),
-                ".",
-                align = "center"
-              ),
-              p(
-                "View things we wish we had known before starting this project",
-                a("here", 
+                "View a list of things we wish we had known before starting this 
+                project and our advice to future students",
+                a("here.", 
                   href="https://docs.google.com/document/d/17vlDGgshSXExvD02TYnPiRk1ekGbckL6bK43laXSYqE/edit?usp=sharing"
                 ),
-                ".",
                 align = "center"
               ),
               br(),
@@ -409,13 +401,12 @@ ui <- navbarPage(
                         Harvard pursuing a concentration in Computer Science. On 
                         campus I am involved in Harvard Computer Society, Women 
                         in Computer Science, Women Engineers Code, and Harvard 
-                        Open Data Project. I also sing alto for University Choir
-                        and  play trumpet in the Wind Ensemble! You can reach me 
-                        at",
-                        a("katherinemcphie@college.harvard.edu",
+                        Open Data Project. I also sing alto in the University 
+                        Choir and  play trumpet in the Wind Ensemble! You can 
+                        reach me at",
+                        a("katherinemcphie@college.harvard.edu.",
                           href="mailto:katherinemcphie@college.harvard.edu?Subject=Social%20Connections%20Project"
-                        ),
-                        ".")),
+                        ))),
               ),
               br(),
               fluidRow(
@@ -426,10 +417,9 @@ ui <- navbarPage(
                          concentration in Government. I am involved in the John 
                          Adams Society, Women in Business, HCFA, HRC, and the Institute of 
                          Politics. I love baking, enjoy hiking and the great outdoors, and study classical piano! You can reach me at",
-                         a("avaswanson@college.harvard.edu",
+                         a("avaswanson@college.harvard.edu.",
                            href="mailto:avaswanson@college.harvard.edu?Subject=Social%20Connections%20Project"
-                         ),
-                         ".")),
+                         ))),
               ),
               br(),
               fluidRow(
@@ -442,10 +432,9 @@ ui <- navbarPage(
                          science skills on public policy and social issues in 
                          the future. I love gaming, PC building, and amateur 
                          photography. You can reach me at",
-                         a("gsalcedo@college.harvard.edu",
+                         a("gsalcedo@college.harvard.edu.",
                            href="mailto:gsalcedo@college.harvard.edu?Subject=Social%20Connections%20Project"
-                         ),
-                         ".")),
+                         ))),
               ),
               br(),
               fluidRow(
@@ -458,10 +447,9 @@ ui <- navbarPage(
                          Political and Economics Reviews, participate in the 
                          John Adams Society, and preside as the chairman of the 
                          Harvard Junto. You can reach me at",
-                         a("edetjen@college.harvard.edu",
+                         a("edetjen@college.harvard.edu.",
                            href="mailto:edetjen@college.harvard.edu?Subject=Social%20Connections%20Project"
-                         ),
-                         ".")),
+                         ))),
               ),
               br()
              ))

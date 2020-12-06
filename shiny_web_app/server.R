@@ -12,7 +12,7 @@ expectations <- readRDS("expectations.rds")
 
 server <- function(input, output) {
   
-  ########## FIRST PAGE: OVERVIEW ##########
+  ########## FIRST PAGE: ABOUT ##########
   
   output$respondent_dist <- renderPlot({
     data <- switch(input$var,
@@ -314,6 +314,11 @@ server <- function(input, output) {
   })
   
   ########## FOURTH PAGE: ANALYSIS ##########
+  
+  # Some of the graphs on this page gave the warning message "Warning: 
+  # Outer names are only allowed for unnamed scalar atomic inputs." We 
+  # looked into this error message a bit and talked to our TFs about it
+  # and in the end decided that it was fine to leave it.
   
   output$overall_satisfaction <- renderPlot({
     responses %>%
@@ -924,7 +929,7 @@ server <- function(input, output) {
   })
 
 
-  ########## SIXTH PAGE: ABOUT ##########
+  ########## SIXTH PAGE: CREATORS ##########
   
   output$katherine <- renderImage({
     list(src = "www/katherine.png", 
