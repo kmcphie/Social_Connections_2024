@@ -85,42 +85,66 @@ ui <- navbarPage(
   
   tabPanel("The Social Web",
            fluidPage(
-             #fluidRow(column(1), column(10,
-              #h4(tags$b("The Social Web")),
+             fluidRow(column(1), column(10,
              br(),
              br(),
-             p("Of the 1420 members of the class of 2024, a total 393 students 
-               responded resulting in a 28% response rate. This network models 
-               respondents' connections to their living situation, their 
-               participation in pre-orientation programs, and their 
-               participation in sports on campus."),
+             h4(tags$b("The Social Web")),
+             p("Of the 1420 members of the class of 2024, a total of 393 
+               students responded to the survey, resulting in a 28% response 
+               rate. This web models the connections between first-years by 
+               linking each student (represented by the small blue circles) to 
+               their living situation, participation in a pre-orientation 
+               program, and involvement in sports on campus (represented by the 
+               squares), based on the responses to the demographic portion of 
+               the survey."),
               visNetworkOutput("social_web",  width = "100%", height = "1000px"),
-              #br(),
-              #br()
-            #))
+              br(),
+              br()
+            ))
            )
   ),
   
-  ########## THIRD PAGE: MOST CONNECTED ##########
+  ########## THIRD PAGE: ANALYZING CONNECTEDNESS ##########
   
-  tabPanel("Most Connected",
+  tabPanel("Analyzing Connectedness",
            fluidPage(
            br(),
            br(),
            fluidRow(column(1), column(10,
-            h4(tags$b("The Social Network")),
-            plotOutput("static_network"),
+            h4(tags$b("Connections to Friends")),
+            p("Survey respondents were asked to list their four closest friends 
+              in the Class of 2024 and then list how close they were to each on 
+              a 1 - 5 scale, with 5 being the closest. The average reported 
+              closeness to one's top four friends was 3.5. We visualized the 
+              connections between individuals in a social network graph, with
+              each node corresponding to a first-year student and each edge
+              representing the connection between them, color coded by which
+              level of connection they were listed as (first through fourth)."),
             br(),
-            p("When survey respondents were asked to name the person they 
-              thought was the most socially connected in the Class of 2024,
-              these were the top results. (Note that survey respondents were
-              assigned a random ID number when filling out the survey to 
-              preserve anonymity.) About 9% of survey respondents chose the
-              same individual as the most socially connected. Last year, in
-              Jeremiah Kim's final project, 22% of survey respondents chose the
-              same individual as the most socially connected, so there is a 
-              sharp decrease this year that is perhaps indicative of a more
-              fragmented class overall."),
+            plotOutput("static_network"),
+            h4(tags$b("Most Connected People")),
+            p("Survey respondents were also asked to name the single person they 
+              considered to be the most socially connected in the Class of 2024,
+              and the top results are shown in the table below. (Each survey 
+              respondent was assigned a random ID number when responding to 
+              preserve anonymity.) The definition of \"most socially connected\"
+              was left open to interpretation in the survey, which raises 
+              interesting questions about different interpretations of social
+              connectivity. Is being the \"most socially connected\" about 
+              having the largest network, or is it more about building deep 
+              connections with individuals, something that would be better 
+              measured by looking at reciprocity (did the people a given survey 
+              respondent listed as a top friend also list them as a top friend?) 
+            "),
+            p("Putting this interesting question of interpretation aside, we 
+              initially thought that with more virtual socialization taking 
+              place, social media might play a larger role in helping a few 
+              individuals become the most well-known, but this actually wasn't 
+              the case. About 9% of survey respondents chose the same individual 
+              as the most socially connected, compared to 22% of survey 
+              respondents in Jeremiah Kim's final project last year where the 
+              same survey question was asked. This sharp decrease is perhaps 
+              indicative of a more fragmented freshman class this year."),
             gt_output("most_connected"),
             br(),
             p("We also wanted to see if the people that survey respondents
@@ -139,9 +163,15 @@ ui <- navbarPage(
           )
   ),
   
-  ########## FOURTH PAGE: ANALYSIS ##########
+  ########## FOURTH PAGE: ANALYZING SATISFACTION ##########
   
-  tabPanel("Analysis",
+  # Change expectations vs. reality graph to percentage
+  # Add labels to satisfaction vs. location graph showing average satisfaction
+  # (or actually all of the other ones for that matter)
+  
+  # Think about rearranging order of satisfaction vs. living situation graph
+  
+  tabPanel("Analyzing Satisfaction",
            fluidPage(
              fluidRow(column(1), column(10,
               br(),
@@ -152,11 +182,13 @@ ui <- navbarPage(
                 satisfaction with their social connections with other 
                 first-year students. Each respondent was given 5 options: Very 
                 Dissatisfied, Dissatisfied, Neutral, Satisfied, or Very 
-                Satisfied. If we assign each option to a number, with -2
+                Satisfied. Assigning each option to a number, with -2
                 corresponding to 'Very Dissatisfied' and 2 corresponding to
                 'Very Satisfied', the average satisfaction across all survey
-                respondents is 0.17. The graph below shows the distribution of 
-                responses. "),
+                respondents was 0.17, a slight decrease from 0.79, the average 
+                satisfaction Jeremiah Kim measured in his project last year 
+                using the same -2 to 2 scale. The graph below shows the full 
+                distribution of satisfaction."),
                 plotOutput("overall_satisfaction"),
                 br(),
                 p("When looking at how survey respondents' satisfaction differed
@@ -175,16 +207,18 @@ ui <- navbarPage(
                   2024 who had just gotten off of a gap year, on the other hand, 
                   didn't have the option to take another gap year, so we 
                   wondered if this would correspond to lower levels of 
-                  satisfaction overall. However, the data actually showed that 
-                  there is roughly the same distribution of satisfaction for 
-                  those who took gap years as for the class in general, only
-                  slightly more skewed in the 'Dissatisfied' direction."),
+                  satisfaction overall. The data showed that people who took gap
+                  years tended to be slightly more dissatisfied on average, but
+                  the trend was not as significant as the living situation 
+                  trend."),
                 plotOutput("gap_year_satisfaction"),
                 br(),
                 p("We were also curious to see if of the people on campus, the
                   people with suitemates would be more satisfied on average
                   than people placed in singles. However, here as well, the 
-                  trends between the two seemed to be pretty similar."),
+                  trends between the two seemed to be pretty similar, which is
+                  interesting given that proximity was a top way that 
+                  first-years met their closest friends (see below)."),
                 plotOutput("satisfaction_by_living"),
                 br(),
                 h4(tags$b("Best Way to Make Connections")),
@@ -205,8 +239,8 @@ ui <- navbarPage(
                   this was because first-years had more limited opportunities
                   to meet each other this year and subsequently relied on 
                   previous connections. Third- and fourth-most-common options
-                  were living in close proximity and beeing roommates/suitemates
-                  just like expected."),
+                  were living in close proximity and beeing roommates/suitemates,
+                  matching students' expectations."),
                 plotOutput("meet"),
                 br(),
                 p("Accordingly, in examining the number of times expectations
@@ -221,17 +255,31 @@ ui <- navbarPage(
                   COVID-19 and a hybrid learning and social environment."),
                 plotOutput("expectation_matches"),
                 br(),
-                p("Here are the most common ways first-years stay in contact 
-                  with each other."),
+                p("Despite classes and clubs taking place virtually, and other
+                  limitations on gathering, the top way that first-years 
+                  reported staying in contact with each other was still  
+                  in-person interaction, by quite a significant margin.
+                  Given that first-years living at home largely didn't have this 
+                  option available to them, this could account for the 
+                  lower satisfaction rates they reported."),
                 plotOutput("stay_in_contact"),
                 br(),
-                p("And when first-years do hang out in-person, here's what they
-                  do."),
+                p("We were also interested to see what were the most popular
+                  things to do when hanging out in-person specifically. Due to
+                  COVID-19, there were many limitations on in-person interaction: 
+                  dining halls were only open for grab-and-go meals; all common 
+                  spaces were closed for most of the semester, with certain
+                  common spaces opening up for individual reservations later on
+                  in the semester; students were not allowed to go into others'
+                  dorms, have guests in their dorm rooms, or stay other places 
+                  overnight. No clear winner emerged for types of in-person
+                  interaction, perhaps showing that in a mostly-virtual semester
+                  with so many limitations in place, first-years probably prized 
+                  any in-person interaction at all and weren't too picky. The 
+                  average friend group size reported by first-years was 4.1."),
                 plotOutput("in_person"),
-                br(),
-                p("And other random info to incorporate somewhere:
-                  Average group size is 4.18299
-                  Average closeness is 3.508906 (on 1 - 5 scale)"))
+                br()
+                )
              ))
            )
   ),

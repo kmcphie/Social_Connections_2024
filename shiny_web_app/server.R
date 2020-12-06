@@ -14,6 +14,9 @@ server <- function(input, output) {
   
   ########## FIRST PAGE: ABOUT ##########
   
+  # interactive graph showing survey respondent distribution by the variable
+  # the user selects
+  
   output$respondent_dist <- renderPlot({
     data <- switch(input$var,
                    "Gap Year" = responses %>%
@@ -138,7 +141,7 @@ server <- function(input, output) {
       visNodes(label = "label", size = 50)
   })
   
-  ########## THIRD PAGE: MOST CONNECTED ##########
+  ########## THIRD PAGE: ANALYZING CONNECTEDNESS ##########
   
   output$static_network <- renderPlot({
     
@@ -181,21 +184,39 @@ server <- function(input, output) {
   fourth <- responses %>% 
     select(fourth_id) 
   
-  all_names <- full_join(fourth, full_join(third, full_join(first, second, by = c("first_id"="second_id")), by=c("third_id" = "first_id")), by=c("fourth_id" = "third_id"))
+  all_names <- full_join(fourth, 
+                         full_join(third, 
+                                   full_join(first, 
+                                             second, 
+                                             by = c("first_id"="second_id")), 
+                                   by=c("third_id" = "first_id")), 
+                         by=c("fourth_id" = "third_id"))
   
   
-  nodes <- unique(full_join(nodes, all_names, by=c("id"="fourth_id")))
+  nodes <- unique(full_join(nodes, all_names, by = c("id"="fourth_id")))
   
   g <- graph_from_data_frame(d = edges, vertices = nodes, directed=FALSE)
   
   l <- layout_on_sphere(g)
   
-  plot(g, vertex.label="", layout = l, edge.width = 1, vertex.size=0.5, edge.color = edges_full$colors)
+  plot(g, 
+       vertex.label = "", 
+       layout = l, 
+       edge.width = 1, 
+       vertex.size = 0.5, 
+       edge.color = edges_full$colors)
   
-  title("Network",cex.main=3,col.main="black")
+  title("The Social Network",
+        cex.main = 1.5,
+        col.main="#3b3b3b")
   
-  legend("bottomright", c("First","Second", "Third", "Fourth"), pch=21,
-         col="#777777", pt.bg=edges_full$colors, pt.cex=1, cex=.8)
+  legend("bottomright", 
+         c("First","Second", "Third", "Fourth"), 
+         pch = 21,
+         col = "#777777", 
+         pt.bg = edges_full$colors, 
+         pt.cex = 1, 
+         cex = .8)
   })
   
   output$most_connected <- render_gt({
@@ -313,7 +334,7 @@ server <- function(input, output) {
                            guide = FALSE)
   })
   
-  ########## FOURTH PAGE: ANALYSIS ##########
+  ########## FOURTH PAGE: ANALYZING SATISFACTION ##########
   
   # Some of the graphs on this page gave the warning message "Warning: 
   # Outer names are only allowed for unnamed scalar atomic inputs." We 
@@ -337,7 +358,7 @@ server <- function(input, output) {
       theme_bw() +
       theme(legend.position = "none") +
       labs(
-        title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years",
+        title = "Overall Satisfaction with Social Connections \nAmong Harvard First-Years",
         x = "Self-Reported Level of Satisfaction with Social Connections",
         y = "Percent"
       ) +
@@ -374,7 +395,7 @@ server <- function(input, output) {
       geom_col(fill = "#6fb4d2") +
       facet_wrap(~location) +
       theme_bw() +
-      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Location",
+      labs(title = "Overall Satisfaction with Social Connections \nAmong Harvard First-Years by Location",
            x = "Self-Reported Level of Satisfaction with Social Connections",
            y = "Percent") +
       theme(title = element_text(size = 14, face = "bold"),
@@ -406,7 +427,7 @@ server <- function(input, output) {
       geom_col() +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
-      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years Who Took a Gap Year Last Year",
+      labs(title = "Overall Satisfaction with Social Connections \nAmong Harvard First-Years Who Took a Gap Year Last Year",
            x = "Self-Reported Level of Satisfaction with Social Connections",
            y = "Percent") +
       theme(title = element_text(size = 14, face = "bold"),
@@ -442,7 +463,7 @@ server <- function(input, output) {
       facet_wrap(~living) +
       geom_col(fill = "#6fb4d2") +
       theme_bw() +
-      labs(title = "Overall Satisfaction with Social Connections \n Among Harvard First-Years by Living Situation",
+      labs(title = "Overall Satisfaction with Social Connections \nAmong Harvard First-Years by Living Situation",
            x = "Self-Reported Level of Satisfaction with Social Connections",
            y = "Percent") +
       theme(title = element_text(size = 14, face = "bold"),
@@ -466,7 +487,7 @@ server <- function(input, output) {
       coord_flip() +
       theme_bw() +
       labs(
-        title = "Perceived Best Way \n to Form Connections",
+        title = "Perceived Best Way \nto Form Connections",
         x = NULL,
         y = "Percent"
       ) +
@@ -476,6 +497,10 @@ server <- function(input, output) {
   })
   
   output$meet <- renderPlot({
+    
+    # need to merge the different columns for the ways people met each of the
+    # four people they are closest to
+    
     meet_1 <- responses %>%
       mutate(meet = p1_meet) %>%
       select(meet)
@@ -505,53 +530,7 @@ server <- function(input, output) {
       coord_flip() +
       theme_bw() +
       labs(
-        title = "Way First-Years \n Met Closest Friends",
-        x = NULL,
-        y = "Percent"
-      ) +
-      theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) +
-      scale_y_continuous(labels = scales::percent_format())
-  })
-  
-  output$stay_in_contact <- renderPlot({
-    responses %>%
-      mutate(contact = as_factor(contact)) %>%
-      filter(contact != "NA" & contact != "contact") %>%
-      group_by(contact) %>%
-      summarize(count = n(), .groups = "drop") %>%
-      ggplot(aes(x = fct_infreq(contact))) +
-      geom_col(aes(y = count / sum(count)),
-               fill = "#6fb4d2") +
-      theme_bw() +
-      coord_flip() +
-      theme(legend.position = "none") +
-      labs(
-        title = "How First-Years \n Stay Connected",
-        x = NULL,
-        y = "Percent"
-      ) +
-      theme(title = element_text(size = 14, face = "bold"),
-            axis.title.x = element_text(size = 12, face = "plain"),
-            axis.title.y = element_text(size = 12, face= "plain")) +
-      scale_y_continuous(labels = scales::percent_format())
-  })
-  
-  output$in_person <- renderPlot({
-    responses %>%
-      mutate(in_person = as_factor(in_person)) %>%
-      filter(in_person != "NA" & in_person != "in_person") %>%
-      group_by(in_person) %>%
-      summarize(count = n(), .groups = "drop") %>%
-      ggplot(aes(x = fct_infreq(in_person))) +
-      geom_col(aes(y = count / sum(count)),
-               fill = "#6fb4d2") +
-      theme_bw() +
-      coord_flip() +
-      theme(legend.position = "none") +
-      labs(
-        title = "Activities That First-Years \n Do In-Person",
+        title = "Way First-Years \nMet Closest Friends",
         x = NULL,
         y = "Percent"
       ) +
@@ -577,6 +556,52 @@ server <- function(input, output) {
             axis.title.x = element_text(size = 12, face = "plain"),
             axis.title.y = element_text(size = 12, face= "plain")) +
       scale_x_discrete(labels = c("No", "Yes"))
+  })
+  
+  output$stay_in_contact <- renderPlot({
+    responses %>%
+      mutate(contact = as_factor(contact)) %>%
+      filter(contact != "NA" & contact != "contact") %>%
+      group_by(contact) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(contact))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "How First-Years \nStay Connected",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
+  })
+  
+  output$in_person <- renderPlot({
+    responses %>%
+      mutate(in_person = as_factor(in_person)) %>%
+      filter(in_person != "NA" & in_person != "in_person") %>%
+      group_by(in_person) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      ggplot(aes(x = fct_infreq(in_person))) +
+      geom_col(aes(y = count / sum(count)),
+               fill = "#6fb4d2") +
+      theme_bw() +
+      coord_flip() +
+      theme(legend.position = "none") +
+      labs(
+        title = "Activities That First-Years \nDo In-Person",
+        x = NULL,
+        y = "Percent"
+      ) +
+      theme(title = element_text(size = 14, face = "bold"),
+            axis.title.x = element_text(size = 12, face = "plain"),
+            axis.title.y = element_text(size = 12, face= "plain")) +
+      scale_y_continuous(labels = scales::percent_format())
   })
   
   ########## FIFTH PAGE: REGRESSION MODEL ##########
