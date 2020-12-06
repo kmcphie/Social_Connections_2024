@@ -272,11 +272,13 @@ ui <- navbarPage(
                   common spaces opening up for individual reservations later on
                   in the semester; students were not allowed to go into others'
                   dorms, have guests in their dorm rooms, or stay other places 
-                  overnight. No clear winner emerged for types of in-person
-                  interaction, perhaps showing that in a mostly-virtual semester
-                  with so many limitations in place, first-years probably prized 
-                  any in-person interaction at all and weren't too picky. The 
-                  average friend group size reported by first-years was 4.1."),
+                  overnight. Getting food and exploring the area were the top
+                  options reported, followed by hanging out in the Yard, which
+                  makes sense given that most first-years were living there.
+                  But overall, in a mostly-virtual semester with so many 
+                  limitations in place, first-years seemed to prize any 
+                  in-person interaction at all. The average friend group size 
+                  among first-years who completed the survey was 4.1."),
                 plotOutput("in_person"),
                 br()
                 )

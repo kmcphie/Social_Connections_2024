@@ -560,10 +560,8 @@ server <- function(input, output) {
   
   output$stay_in_contact <- renderPlot({
     responses %>%
-      mutate(contact = as_factor(contact)) %>%
-      filter(contact != "NA" & contact != "contact") %>%
-      group_by(contact) %>%
-      summarize(count = n(), .groups = "drop") %>%
+      select(contact) %>%
+      mutate(count = n()) %>%
       ggplot(aes(x = fct_infreq(contact))) +
       geom_col(aes(y = count / sum(count)),
                fill = "#6fb4d2") +
@@ -571,7 +569,7 @@ server <- function(input, output) {
       coord_flip() +
       theme(legend.position = "none") +
       labs(
-        title = "How First-Years \nStay Connected",
+        title = "Ways That First-Years \n Stay Connected",
         x = NULL,
         y = "Percent"
       ) +
@@ -583,10 +581,9 @@ server <- function(input, output) {
   
   output$in_person <- renderPlot({
     responses %>%
-      mutate(in_person = as_factor(in_person)) %>%
-      filter(in_person != "NA" & in_person != "in_person") %>%
-      group_by(in_person) %>%
-      summarize(count = n(), .groups = "drop") %>%
+      select(in_person) %>%
+      filter(in_person != "Not Applicable") %>%
+      mutate(count = n()) %>%
       ggplot(aes(x = fct_infreq(in_person))) +
       geom_col(aes(y = count / sum(count)),
                fill = "#6fb4d2") +
@@ -594,7 +591,7 @@ server <- function(input, output) {
       coord_flip() +
       theme(legend.position = "none") +
       labs(
-        title = "Activities That First-Years \nDo In-Person",
+        title = "Things That First-Years \n Do In-Person",
         x = NULL,
         y = "Percent"
       ) +

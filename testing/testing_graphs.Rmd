@@ -16,7 +16,7 @@ library(gtsummary)
 # NB: if you're having trouble with testing and getting the error message
 # "object 'responses_final' not found" try running this line here:
 
-responses_final = readRDS("../shiny_app/responses_final.rds")
+responses_final = readRDS("../shiny_web_app/responses_final.rds")
 #------------------------------------------------------------------------------#
 ```
 
@@ -119,13 +119,11 @@ closeness
 
 ```{r Contact}
 stay_in_contact <- responses_final %>%
-  mutate(contact = as_factor(contact)) %>%
-  filter(contact != "NA" & contact != "contact") %>%
-  group_by(contact) %>%
-  summarize(count = n(), .groups = "drop") %>%
+  select(contact) %>%
+  mutate(count = n()) %>%
   ggplot(aes(x = fct_infreq(contact))) +
-      geom_col(aes(y = count / sum(count)),
-               fill = "#6fb4d2") +
+    geom_col(aes(y = count / sum(count)),
+             fill = "#6fb4d2") +
       theme_bw() +
       coord_flip() +
       theme(legend.position = "none") +
@@ -144,13 +142,11 @@ stay_in_contact
 
 ```{r In-Person}
 in_person <- responses_final %>%
-  mutate(in_person = as_factor(in_person)) %>%
-  filter(in_person != "NA" & in_person != "in_person") %>%
-  group_by(in_person) %>%
-  summarize(count = n(), .groups = "drop") %>%
+  select(in_person) %>%
+  mutate(count = n()) %>%
   ggplot(aes(x = fct_infreq(in_person))) +
-      geom_col(aes(y = count / sum(count)),
-               fill = "#6fb4d2") +
+    geom_col(aes(y = count / sum(count)),
+             fill = "#6fb4d2") +
       theme_bw() +
       coord_flip() +
       theme(legend.position = "none") +
