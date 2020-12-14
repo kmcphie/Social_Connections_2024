@@ -325,6 +325,35 @@ yvq_model_clean2 %>%
 ```
 
 
+```{r}
+
+# Model: Workflow 
+
+model_data_split <- initial_split(model_data)
+model_data_train <- training(model_data_split)
+model_data_test <- testing(model_data_split)
+model_data_folds <- vfold_cv(model_data_train, v = 5)
+
+model_wfl <- workflow() %>% 
+  add_model(linear_reg() %>% 
+              set_engine("stan")) %>% 
+  add_recipe(recipe(satisfaction ~ group_size + on_campus,
+                    data = model_data_train) %>%
+               step_interact(~ group_size:on_campus))
+
+results <- model_wfl %>% 
+  fit(data = model_data_train) %>% 
+  predict(new_data = model_data_test) %>% 
+  bind_cols(model_data_test %>% select(satisfaction)) %>% 
+  metrics(truth = satisfaction, estimate = `.pred`)
+
+model_cross <- model_wfl %>% 
+  fit_resamples(resamples = model_data_folds) %>% 
+  collect_metrics()
+```
+
+
+# TESTING CODE BELOW
 
 ```{r}
 
@@ -519,12 +548,6 @@ results in 0.11.
 ```{r}
 
 # Model: Workflow Edition (Part 2)
-
-# Recitation: Clarify the purpose of this. Is it for private reference on 
-# efficacy of models or is it something that should be shared in the final 
-# product? How do I know if I have a good model?
-# 
-# ShinyApp Issue
 
 model_data_split <- initial_split(model_data)
 model_data_train <- training(model_data_split)
@@ -874,6 +897,7 @@ on2 %>%
 
 
 ```
+
 ```{r}
 
 
@@ -902,7 +926,7 @@ tbl_regression(fit_gs, intercept = FALSE) %>%
   as_gt() %>%
   tab_header(title = "Satisfaction Regression",
              subtitle = 
-        "The Effect of Group Size and On-Campus Living on Social Satisfaction")
+        "The Effect of Group Size and On-Campus Living on Social Satisfaction") 
 
 
 

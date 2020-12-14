@@ -13,12 +13,18 @@ knitr::opts_chunk$set(echo = TRUE)
 # Jeremiah Mean Satisfaction by Top 4 Comparison
 # Location by Virtual Conversion Facet Graph
 # Comparing Mean Virtual Conversion Count by Location
-# Model with Satisfaction as a Function of Group Size (Virtual Conversion) & On-Campus
-# Expectations vs. Reality in Creating Connections (Matching Alignment graph + Popular Mediums)
+# Model with Satisfaction as a Function of Group Size 
+# (Virtual Conversion) & On-Campus
+# Expectations vs. Reality in Creating Connections 
+# (Matching Alignment graph + Popular Mediums)
 
 ```
 
 ```{r comparison}
+
+# THIS CODE CHUCK IS FOR EXPERIMENTATION AND TESTING PURPOSES ONLY, NO
+# SPECIFIC COMMENTS ARE INCLUDED (if any are, they are for ad hoc reference)
+
 # '23 Class vs '24 Class Mean Satisfaction Comparison/Showing up Top 4
 
 library(tidyverse)
@@ -54,11 +60,15 @@ library(ggthemes)
         guides(fill=FALSE) +
         scale_x_discrete(labels = c("No", "Yes")) +
         labs(
-          x = "Did the respondent's name appear in other respondents' top 4 friends lists?",
+          x = 
+  "Did the respondent's name appear in other respondents' top 4 friends lists?",
           y = "Mean Satisfaction Score",
           title = "Comparing mean satisfaction scores of respondents",
-          subtitle = "Respondents who appeared in others lists were more satisfied",
-          caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+          subtitle = 
+    "Respondents who appeared in others lists were more satisfied",
+          caption = 
+"Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0,
+Satisfied = 1, Very Satisfied = 2"
         ) +
         geom_hline(yintercept = all_freshmen_satisfaction_mean) +
         theme_bw()
@@ -66,6 +76,9 @@ library(ggthemes)
 ```
 
 ```{r location/group_size, fig.height = 2.5, fig.width= 6} 
+
+# THIS CODE CHUCK IS FOR EXPERIMENTATION AND TESTING PURPOSES ONLY, NO
+# SPECIFIC COMMENTS ARE INCLUDED (if any are, they are for ad hoc reference)
 
 off_campus <- responses_clean %>%
   select(location) %>%
@@ -114,7 +127,9 @@ groupsize_location <- responses_clean %>%
   geom_bar(position = "stack", fill = "#6fb4d2") +
   facet_grid(~ location) +
   theme_bw() +
-  labs(title = "Comparing Virtual Conversion Counts by Student Location", x = "Virtual to In-Person Conversion Count", y = "Percentage of First Year Class") +
+  labs(title = "Comparing Virtual Conversion Counts by Student Location", 
+       x = "Virtual to In-Person Conversion Count", y = 
+         "Percentage of First Year Class") +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 7, 
     face=3)) +
@@ -122,7 +137,8 @@ groupsize_location <- responses_clean %>%
   theme(panel.spacing = unit(2, "lines"))
 
 
-# How to use after_stat to normalize based on each individual facet wrap data graph, not 
+# How to use after_stat to normalize based on each individual facet wrap data 
+# graph, not 
 # on total count from entire data. 
    
 
@@ -173,7 +189,8 @@ graph_location_gs_means <- location_gs_means %>%
           y = "Mean Virtual Conversion Count",
           title = "Comparing Mean Virtual Conversion Count by Location",
           subtitle = 
-         "Examining the number of virtual contacts converted into in-person connections", 
+         "Examining the number of virtual contacts converted into 
+       in-person connections", 
        caption = "Total Mean of 3.747 Relationships") +
   geom_hline(yintercept = location_gs_means$mean_total) +
   theme_bw()
@@ -181,6 +198,9 @@ graph_location_gs_means <- location_gs_means %>%
 ```
 
 ```{r satisfaction/group_size by demographic totals}
+
+# THIS CODE CHUCK IS FOR EXPERIMENTATION AND TESTING PURPOSES ONLY, NO
+# SPECIFIC COMMENTS ARE INCLUDED (if any are, they are for ad hoc reference)
 
 #satg_tot
 
@@ -198,7 +218,9 @@ satg_tot <- responses_clean %>%
   facet_wrap(~ gender) +
   theme_bw() +
   geom_smooth(formula = y ~ x, se = FALSE, color = "black", method = "loess") +
-  labs(x = "Satisfaction Level", y = "Number of Social Conversions", caption = "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 1, Very Satisfied = 2"
+  labs(x = "Satisfaction Level", y = "Number of Social Conversions", caption = 
+         "Very Dissatisfied = -2, Dissatisfied = -1, Neutral = 0, Satisfied = 
+       1, Very Satisfied = 2"
         )
  
  # scale_x_discrete(labels = c("Very \n Dissatisfied",
@@ -215,6 +237,9 @@ satg_tot
 
 ```{r model}
 
+# THIS CODE CHUCK IS FOR EXPERIMENTATION AND TESTING PURPOSES ONLY, NO
+# SPECIFIC COMMENTS ARE INCLUDED (if any are, they are for ad hoc reference)
+
 library(gtsummary)
 library(broom.mixed)
 library(rstanarm)
@@ -227,13 +252,15 @@ model_data <- responses_clean %>%
                               replacement = "Other")) %>%
   mutate(gender = str_replace(gender, pattern = "Prefer not to say", 
                               replacement = "Other")) %>%
-  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", "At Home (international student)"), TRUE, FALSE)) %>%
+  mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
+                          "At Home (international student)"), TRUE, FALSE)) %>%
   select(on_campus, gender, satisfaction, group_size)
 
 # group all on campus individuals to be on campus and alternatively
 
 fit_gs <- stan_glm(data = model_data,
-                   formula = satisfaction ~ group_size + on_campus + on_campus*group_size - 1,
+                   formula = 
+              satisfaction ~ group_size + on_campus + on_campus*group_size - 1,
                    family = gaussian(),
                    refresh = 0)
 
@@ -262,6 +289,9 @@ tbl_regression(fit_gs, intercept = TRUE) %>%
 
 ```{r}
 
+# THIS CODE CHUCK IS FOR EXPERIMENTATION AND TESTING PURPOSES ONLY, NO
+# SPECIFIC COMMENTS ARE INCLUDED (if any are, they are for ad hoc reference)
+
 # Expectations vs. Reality: dissonance1 graph and category ferquency
 
 # Created new dataset that puts all of the ways people met their four people
@@ -285,7 +315,9 @@ dissonance1 <- expectations %>%
   theme_bw() +
   labs(x = "Matches", y = "Count",
        title = "Frequency of Reality Meeting Expectations",
-       subtitle = "Number of matches between speculation and reality on best channels to connect with peers") +
+       subtitle = 
+  "Number of matches between speculation and reality on best channels
+  to connect with peers") +
   annotate("text", x = 1, y = 140, label = "84") +
   annotate("text", x = 2, y = 270, label = "246") 
 
@@ -315,7 +347,9 @@ best_graph <- top_best_freq %>%
   ggplot(aes(x = best, y = n / sum(n))) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
-  labs(title = "Expectations" , subtitle = "How Respondents Speculated on the Best Mediums for Connecting with Peers (Top 5)", y = "Percentage of Respondents",
+  labs(title = "Expectations" , subtitle =
+         "How Respondents Speculated on the Best Mediums for Connecting with 
+       Peers (Top 5)", y = "Percentage of Respondents",
        x = "Expectation") +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(size = 8))
@@ -333,7 +367,8 @@ pmeet_graph <- top_pmeet_freq %>%
   ggplot(aes(x = p_meet_total, y = n / sum(n))) +
   geom_col(fill = "#6fb4d2") +
   theme_bw() +
-  labs(title = "Reality" , subtitle = "How Respondents Reported Actually Meeting Their Closest 4 Friends (Top 5)",
+  labs(title = "Reality" , subtitle = "How Respondents Reported Actually
+       Meeting Their Closest 4 Friends (Top 5)",
        x = "Reality",
        y = "Percentage of Respondents") +
     scale_y_continuous(labels = scales::percent) +
