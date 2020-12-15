@@ -25,10 +25,8 @@ responses <- readRDS("responses_final.rds")
 # Define UI.
 
 ui <- navbarPage(
-  #title = img(src="<LOGO>", height = "40px"), 
   id = "navBar",
   theme = "paper.css",
-  #theme = shinytheme("yeti"), # other options: sandstone, flatly, united, slate
   collapsible = TRUE,
   inverse = TRUE,
   windowTitle = "Social Connections 2024",
@@ -44,11 +42,6 @@ ui <- navbarPage(
   tabPanel("About",
            fluidPage(
              fluidRow(column(1), column(10,
-              # h3(tags$b("Social Connectedness in the Harvard Class of 2024"), 
-              #             align = "center"),
-              # h6(tags$b("Analyzing how Harvard first-years have been forming 
-              #           social connections during the COVID-19 pandemic."),
-              #   align = "center"),
               HTML("<section class='banner'>
                     <h2 class='sc'>Social Connectedness in the Harvard
                     Class of 2024</h2>
@@ -61,7 +54,6 @@ ui <- navbarPage(
               br(),
               sidebarLayout(
                 sidebarPanel(
-                  #helpText("Create Survey Respondent Distribution Graph"),
                   selectInput("var", 
                               label = "Choose Variable",
                               choices = c("Gap Year", 

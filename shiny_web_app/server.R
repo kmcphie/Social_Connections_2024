@@ -63,14 +63,6 @@ server <- function(input, output) {
                     "Race" = "Survey Respondent Distribution by Race",
                     "Pre-Orientation Program" = "Survey Respondent Distribution by \nPre-Orientation Program",
                     "Sports" = "Survey Respondent Distribution by Sports Involvement")
-    # x <- switch(input$var,
-    #             "Gap Year" = "Took a gap year",
-    #             "Location" = "Location for the Fall Semester",
-    #             "Living Situation (if on campus)",
-    #             "Gender" = "Gender",
-    #             "Race" = "Race",
-    #             "Pre-Orientation Program" = "Pre-Orientation Program",
-    #             "Sports" = "Involved in Sports")
     data %>%
       ggplot(aes(x = fct_infreq(variable))) + 
       geom_bar(aes(y = after_stat(count / sum(count))),
@@ -80,8 +72,8 @@ server <- function(input, output) {
       theme(legend.position = "none") +
       labs(
         title = title,
-        x = NULL, # x
-        y = "Percent" # "Count"
+        x = NULL,
+        y = "Percent"
       ) +
       theme(title = element_text(size = 14, face = "bold"),
             axis.title.x = element_text(size = 12, face = "plain"),
@@ -613,7 +605,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -652,7 +643,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -709,7 +699,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -763,7 +752,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -819,7 +807,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -847,7 +834,6 @@ server <- function(input, output) {
       mutate(location = str_replace(location, 
                                     pattern = "A River House", 
                                     replacement = "river"))
-    # filter(location == c("yard", "quad"))
     
     yvq_model_1 <- stan_glm(data = model_data3,
                             formula = satisfaction ~ location,
@@ -890,7 +876,6 @@ server <- function(input, output) {
       mutate(on_campus = if_else(!location %in% c("At Home (in the US)", 
                                                   "At Home (international student)"), TRUE, FALSE)) %>%
       select(on_campus, gender, satisfaction, group_size, location, race) %>%
-      # mutate(on_campus = as.numeric(on_campus)) %>%
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very Satisfied", replacement = "2")) %>%
       mutate(satisfaction = str_replace(
@@ -918,7 +903,6 @@ server <- function(input, output) {
       mutate(location = str_replace(location, 
                                     pattern = "A River House", 
                                     replacement = "river"))
-    # filter(location == c("yard", "quad"))
     
     yvq_model_2 <- stan_glm(data = model_data3,
                             formula = group_size ~ location,
