@@ -125,18 +125,22 @@ ui <- navbarPage(
               connectivity. Is being the \"most socially connected\" about 
               having the largest network, or is it more about building deep 
               connections with individuals, something that would be better 
-              measured by looking at reciprocity (did the people a given survey 
-              respondent listed as a top friend also list them as a top friend?) 
+              measured by looking at reciprocity (whether or not the people a 
+              given survey respondent listed as a top friend also listed them as 
+              a top friend)? The individual who was the most socially connected 
+              reported a relatively small friend group size of three people,
+              indicating that people seem to think that the latter is the case.
             "),
-            p("Putting this interesting question of interpretation aside, we 
-              initially thought that with more virtual socialization taking 
+            p("We initially thought that with more virtual socialization taking 
               place, social media might play a larger role in helping a few 
               individuals become the most well-known, but this actually wasn't 
               the case. About 9% of survey respondents chose the same individual 
               as the most socially connected, compared to 22% of survey 
               respondents in Jeremiah Kim's final project last year where the 
               same survey question was asked. This sharp decrease is perhaps 
-              indicative of a more fragmented freshman class this year."),
+              indicative of a more fragmented freshman class this year. However,
+              the most connected individual did report meeting most of their 
+              friends via social media."),
             gt_output("most_connected"),
             br(),
             p("We also wanted to see if the people that survey respondents
