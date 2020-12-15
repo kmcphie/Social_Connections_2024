@@ -618,13 +618,20 @@ server <- function(input, output) {
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very -1", replacement = "-2"))
     
+    # cleaing data for model; primarily consolidating satisfaction levels into
+    # into numeric values using str_replace.
+    
     model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
     model_data$group_size <- as.integer(as.character(model_data$group_size))
+    
+    # converting satisfaction and group size values into integers.
     
     fit_gs <- stan_glm(data = model_data,
                        formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
                        family = gaussian(),
                        refresh = 0)
+    
+    # creating the original fit_gs object and model with formula
     
     tbl_regression(fit_gs, intercept = TRUE) %>%
       as_gt() %>%
@@ -632,6 +639,8 @@ server <- function(input, output) {
                  subtitle = 
                    "The Predicted Differences in Satisfaction as Function of Group Size and On-Campus Living")
   })
+  
+  # Creating regression table to display outputs.
   
   output$graph_1 <- renderPlot({
     model_data <- responses %>%
@@ -689,6 +698,8 @@ server <- function(input, output) {
              "Group Sizes 0-20 for On-Campus Students", y = "Group Size")
   })
   
+  # Creating the epreds model plot with ggridges.
+  
   output$graph_2 <- renderPlot({
     model_data <- responses %>%
       mutate(gender = str_replace(gender, 
@@ -741,6 +752,9 @@ server <- function(input, output) {
              "Estimated Average Difference in Social Satisfaction", subtitle = 
              "Between On-Campus Students with Group Sizes 5 and 0")
   })
+  
+  # Creatin epred plot that shows differences between those with groups 5
+  # and groups sizes of zero on predicted averages.
   
   output$graph_3 <- renderPlot({
     model_data <- responses %>%
