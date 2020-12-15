@@ -8,7 +8,6 @@ How has COVID-19 affected college first-years' social connectedness? How has soc
 
 ### Repository Guide
 * /shiny_web_app: Files to render the interactive web application created using the Shiny framework
-* /testing: R markdown files to test things
 * .gitattributes
 * .gitignore
 * README.md
