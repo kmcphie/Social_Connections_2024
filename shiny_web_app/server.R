@@ -811,6 +811,9 @@ server <- function(input, output) {
            fill = "Living Situation")
   })
   
+  # Creating model graph to show first posterior probability graph for 
+  # satisfaction between on and off campus students
+  
   output$graph_4 <- renderPlot({
     model_data <- responses %>%
       mutate(gender = str_replace(gender, 
@@ -880,6 +883,9 @@ server <- function(input, output) {
            fill = "Living Situation")
   })
   
+  # Creating fourth graph that shows average satisfaction between quad and
+  # yard students using predicted values from the model
+  
   output$graph_5 <- renderPlot({
     model_data <- responses %>%
       mutate(gender = str_replace(gender, 
@@ -947,6 +953,9 @@ server <- function(input, output) {
            caption = "Model Formula: group_size ~ location", 
            fill = "Living Situation")
   })
+  
+  # Comparing yard and quad students using group size predicted values from
+  # the model
 
 
   ########## SIXTH PAGE: CREATORS ##########
