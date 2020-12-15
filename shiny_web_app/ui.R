@@ -455,10 +455,12 @@ ui <- navbarPage(
                 column(5, imageOutput("ava")),
                 column(5, offset = 0, 
                        h5(tags$b("Ava Swanson")), br(), 
-                       p("Hi, I am Ava Swanson! I am a first-year undergraduate at Harvard pursuing a 
-                         concentration in Government. I am involved in the John 
-                         Adams Society, Women in Business, HCFA, HRC, and the Institute of 
-                         Politics. I love baking, enjoy hiking and the great outdoors, and study classical piano! You can reach me at",
+                       p("Hi, I am Ava Swanson! I am a first-year undergraduate 
+                       at Harvard pursuing a concentration in Government. I am 
+                       involved in the John Adams Society, Women in Business, 
+                       HCFA, HRC, and the Institute of Politics. I love baking, 
+                       enjoy hiking and the great outdoors, and study classical 
+                       piano! You can reach me at",
                          a("avaswanson@college.harvard.edu.",
                            href="mailto:avaswanson@college.harvard.edu?Subject=Social%20Connections%20Project"
                          ))),
