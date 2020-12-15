@@ -83,6 +83,10 @@ server <- function(input, output) {
   
   ########## SECOND PAGE: SOCIAL WEB ##########
   
+  # The social web on this page gives the error "Warning: Missing column names 
+  # filled in: 'X1' [1]" We looked into this error message a bit and talked to 
+  # our TFs about it and in the end decided that it was fine to leave it.
+  
   output$social_web <- renderVisNetwork({
     
     # Creates the palette of colors to chose from
@@ -91,8 +95,16 @@ server <- function(input, output) {
     
     # Created these datasets in a private repo for anonymity purposes
     
-    nodes2 <- read_csv("data/nodes2.csv")
-    edges2 <- read_csv("data/edges2.csv")
+    nodes2 <- read_csv("data/nodes2.csv", col_types = cols(X1 = col_double(), 
+                                                           id = col_character(),
+                                                           group = col_character(),
+                                                           label = col_character(),
+                                                           font.size = col_double()
+                                                           ))
+    edges2 <- read_csv("data/edges2.csv", col_types = cols(X1 = col_double(),
+                                                           from = col_double(),
+                                                           to = col_character()
+                                                           ))
     
     visNetwork(nodes2, edges2) %>%
       visGroups(groupname = "Dorms", color = color[5],
@@ -118,7 +130,8 @@ server <- function(input, output) {
                  timestep = 0.5,
                  minVelocity = 1,
                  maxVelocity = 30,
-                 forceAtlas2Based = list(gravitationalConstant = -200, damping = 1),
+                 forceAtlas2Based = list(gravitationalConstant = -200, 
+                                         damping = 1),
                  stabilization = list(iterations = 300, updateInterval = 10),
                  adaptiveTimestep = TRUE) %>%
       
@@ -134,6 +147,12 @@ server <- function(input, output) {
   })
   
   ########## THIRD PAGE: ANALYZING CONNECTEDNESS ##########
+ 
+  # Some of the graphs on this page gave the warning message "Warning: Removed 3
+  # rows containing non-finite values (stat_smooth). Warning: Removed 3 rows 
+  # containing missing values (geom_point)." We looked into this error message a
+  # bit and talked to our TFs about it and in the end decided that it was fine 
+  # to leave it. 
   
   output$static_network <- renderPlot({
     
@@ -297,7 +316,8 @@ server <- function(input, output) {
     # Convert person_id column in most_connected_list to numeric 
     # to facilitate merging of datasets
     
-    most_connected_list$person_id <- as.numeric(as.factor(most_connected_list$person_id))
+    most_connected_list$person_id <- 
+      as.numeric(as.factor(most_connected_list$person_id))
     
     # List that has the most connected people, how many votes
     # they got as "most socially connected", and how often
@@ -314,7 +334,7 @@ server <- function(input, output) {
     
     ggplot(most_comparison, aes(votes, appearances,
                                 color = appearances)) +
-      geom_jitter() +
+      geofm_jitter() +
       geom_smooth(method = lm, formula = y ~ x) +
       theme_bw() +
       xlim(0.5, 11) +
@@ -595,6 +615,11 @@ server <- function(input, output) {
   
   ########## FIFTH PAGE: REGRESSION MODEL ##########
   
+  # Some of the graphs on this page gave the warning message "Warning in 
+  # renderPlot(...) : NAs introduced by coercion" We looked into this error 
+  # message a bit and talked to our TFs about it and in the end decided that it 
+  # was fine to leave it. 
+  
   output$satisfaction_regression <- render_gt({
     model_data <- responses %>%
       mutate(gender = str_replace(gender, 
@@ -618,7 +643,7 @@ server <- function(input, output) {
       mutate(satisfaction = str_replace(
         satisfaction, pattern = "Very -1", replacement = "-2"))
     
-    # cleaing data for model; primarily consolidating satisfaction levels into
+    # cleaning data for model; primarily consolidating satisfaction levels into
     # into numeric values using str_replace.
     
     model_data$satisfaction <- as.integer(as.character(model_data$satisfaction))
@@ -627,7 +652,8 @@ server <- function(input, output) {
     # converting satisfaction and group size values into integers.
     
     fit_gs <- stan_glm(data = model_data,
-                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       formula = satisfaction ~ group_size + on_campus + 
+                                 on_campus:group_size + 1,
                        family = gaussian(),
                        refresh = 0)
     
@@ -669,7 +695,8 @@ server <- function(input, output) {
     model_data$group_size <- as.integer(as.character(model_data$group_size))
     
     fit_gs <- stan_glm(data = model_data,
-                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       formula = satisfaction ~ group_size + on_campus + 
+                                 on_campus:group_size + 1,
                        family = gaussian(),
                        refresh = 0)
     
@@ -679,15 +706,16 @@ server <- function(input, output) {
     preds <- posterior_epred(fit_gs, newdata = new_data) %>%
       as_tibble() %>%
       rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
-             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
-             "20" = `13`)
+             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, 
+             "15" = `12`, "20" = `13`)
     
     long_preds <- preds %>%
       pivot_longer(cols = "0":"20", 
                    names_to = "Group_Size",
                    values_to = "Satisfaction")
     
-    long_preds$"Group_Size" <- factor(long_preds$"Group_Size", levels= c("0":"20"))
+    long_preds$"Group_Size" <- factor(long_preds$"Group_Size", 
+                                      levels= c("0":"20"))
     
     long_preds %>%
       ggplot(aes(x = `Satisfaction`, y = Group_Size, fill = stat(x))) +
@@ -727,7 +755,8 @@ server <- function(input, output) {
     model_data$group_size <- as.integer(as.character(model_data$group_size))
     
     fit_gs <- stan_glm(data = model_data,
-                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       formula = satisfaction ~ group_size + on_campus + 
+                                 on_campus:group_size + 1,
                        family = gaussian(),
                        refresh = 0)
     
@@ -737,8 +766,8 @@ server <- function(input, output) {
     preds <- posterior_epred(fit_gs, newdata = new_data) %>%
       as_tibble() %>%
       rename("0" = `1`, "1" = `2`, "2" = `3`, "3" = `4`, "4" = `5`, "5" = `6`,
-             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, "15" = `12`,
-             "20" = `13`)
+             "6" = `7`, "7" = `8`, "8" = `9`, "9" = `10`, "10" = `11`, 
+             "15" = `12`, "20" = `13`)
     
     preds %>%
       as_tibble() %>%
@@ -783,7 +812,8 @@ server <- function(input, output) {
     model_data$group_size <- as.integer(as.character(model_data$group_size))
     
     fit_gs <- stan_glm(data = model_data,
-                       formula = satisfaction ~ group_size + on_campus + on_campus:group_size + 1,
+                       formula = satisfaction ~ group_size + on_campus + 
+                                 on_campus:group_size + 1,
                        family = gaussian(),
                        refresh = 0)
     
