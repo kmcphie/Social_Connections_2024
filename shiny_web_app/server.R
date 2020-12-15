@@ -334,7 +334,7 @@ server <- function(input, output) {
     
     ggplot(most_comparison, aes(votes, appearances,
                                 color = appearances)) +
-      geofm_jitter() +
+      geom_jitter() +
       geom_smooth(method = lm, formula = y ~ x) +
       theme_bw() +
       xlim(0.5, 11) +
